@@ -12,15 +12,19 @@
    :process-xinclude
 
    :node
+
    :node-type
-   :node-tag
-   :node-next
-   :node-prev
-   :node-first
-   :node-last
-   :node-parent
-   :node-text-content
+
+   :parent
+   :text-content
+   :first-child
+   :last-child
+   :next-sibling
+   :prev-sibling
+   :local-name
 
    :node-filter
    :find-node
+
+   :attribute-value
    ))

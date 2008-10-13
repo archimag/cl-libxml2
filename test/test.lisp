@@ -13,7 +13,7 @@
    ((ensure-same '("foo" "bar" "zoo")
                  (with-document (doc (parse (path-to-data-file "1.xml")))
                    (iter (for child in-child-nodes (document-root-element doc) with (:type :xml-element-node))
-                         (collect (node-tag child))))))))
+                         (collect (local-name child))))))))
 
 
 (defun run-libxml2-test ()

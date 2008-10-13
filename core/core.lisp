@@ -23,57 +23,67 @@
                      :impl ptr))))
 
 
-(defun node-tag (node)
+(defun local-name (node)
   (cffi:foreign-string-to-lisp
    (cffi:foreign-slot-value (impl node)
                             '%xmlnode
                             '%name)))
 
-(defun node-next (node)
+(defun next-sibling (node)
   (slot-node node '%next))n
 
-(defun node-prev (node)
+(defun prev-sibling (node)
   (slot-node node '%prev))
 
-(defun node-first (node)
+(defun first-child (node)
   (slot-node node '%children))
 
-(defun node-last (node)
+(defun last-child (node)
   (slot-node node '%last))
 
-(defun node-parent (node)
+(defun parent (node)
   (slot-node node '%parent))
 
-(defun node-text-content (node)
+(defun text-content (node)
   (cffi:foreign-string-to-lisp
    (cffi:foreign-slot-value (impl node)
                             '%xmlnode
                             '%content)))
 
-(defmacro node-filter (&key type tag)
-  (if (or type tag)
+(defmacro node-filter (&key type local-name)
+  (if (or type local-name)
       `(lambda (node)
          (and (or (not ,type)
                   (eql (node-type node) ,type))
-              (or (not ,tag)
-                  (string= (node-tag node) ,tag))))))
+              (or (not ,local-name)
+                  (string= (local-name node) ,local-name))))))
 
 (defun find-node (first filter)
   (if first
     (if filter
         (if (funcall filter first)
             first
-            (find-node (node-next first) filter))
+            (find-node (next-sibling first) filter))
         first)))
 
 (defmacro-driver (for var in-child-nodes node &optional with filter)
   (let ((kwd (if generate 'generate 'for)))
   `(progn
-     (initially (setq ,var (node-first ,node)))
-     (,kwd ,var next (find-node (node-next ,var)
+     (initially (setq ,var (first-child ,node)))
+     (,kwd ,var next (find-node (next-sibling ,var)
                                 (node-filter ,@filter)))
      (while ,var))))
-                     
+                    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+;; attribute
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+
+(defun attribute-value (element name &optional uri)
+  (declare (ignore uri))
+  (foreign-string-to-lisp (with-foreign-string (%name name)
+                            (%xmlGetProp (impl element) %name))))
+    
+  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; document

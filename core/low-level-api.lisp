@@ -78,3 +78,7 @@
   (node %xmlNodePtr))
 
   
+(defcfun ("xmlGetProp" %xmlGetProp) :pointer
+  (node %xmlNodePtr)
+  (name :pointer))
+
