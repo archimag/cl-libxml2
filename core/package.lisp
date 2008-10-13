@@ -8,6 +8,7 @@
 
    :document
    :document-root-element
+   :with-document
    :process-xinclude
 
    :node
