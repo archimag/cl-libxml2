@@ -6,15 +6,13 @@
   (:export
    :parse
 
-   :document
+
    :document-root-element
    :with-document
    :process-xinclude
 
-   :node
-
    :node-type
-
+   :document
    :parent
    :text-content
    :first-child
@@ -22,9 +20,12 @@
    :next-sibling
    :prev-sibling
    :local-name
+   :namespace-uri
+   :namespace-prefix
 
    :node-filter
    :find-node
 
    :attribute-value
+   :remove-attribute
    ))

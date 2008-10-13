@@ -2,35 +2,37 @@
 
 (in-package #:libxml2)
 
+
+(defun pointer-or-nil-if-null (ptr)
+  (unless (null-pointer-p ptr) ptr))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; node
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defclass node ()
-  ((impl :initarg :impl :initform nil :reader impl)))
-
 (defun node-type (node)
-  (cffi:foreign-slot-value (impl node)
-                           '%xmlnode
-                           '%type))
+  (cffi:foreign-slot-value node '%xmlnode '%type))
 
 (defun slot-node (node slot)
-  (let ((ptr (cffi:foreign-slot-value (impl node)
-                                      '%xmlnode
-                                      slot)))
-    (unless (cffi:null-pointer-p ptr)
-      (make-instance 'node
-                     :impl ptr))))
-
-
+  (let ((ptr (cffi:foreign-slot-value node '%xmlnode slot)))
+    (unless (cffi:null-pointer-p ptr) ptr)))
+      
 (defun local-name (node)
   (cffi:foreign-string-to-lisp
-   (cffi:foreign-slot-value (impl node)
-                            '%xmlnode
-                            '%name)))
+   (cffi:foreign-slot-value node '%xmlnode '%name)))
+
+(defun namespace-uri (node)
+   (let ((%ns (slot-node node '%ns)))
+     (if %ns (cffi:foreign-string-to-lisp
+              (cffi:foreign-slot-value %ns '%xmlNs '%href)))))
+
+(defun namespace-prefix (node)
+   (let ((%ns (slot-node node '%ns)))
+     (if %ns (cffi:foreign-string-to-lisp
+              (cffi:foreign-slot-value %ns '%xmlNs '%prefix)))))
 
 (defun next-sibling (node)
-  (slot-node node '%next))n
+  (slot-node node '%next))
 
 (defun prev-sibling (node)
   (slot-node node '%prev))
@@ -44,11 +46,12 @@
 (defun parent (node)
   (slot-node node '%parent))
 
+(defun document (node)
+  (slot-node node '%doc))
+
 (defun text-content (node)
   (cffi:foreign-string-to-lisp
-   (cffi:foreign-slot-value (impl node)
-                            '%xmlnode
-                            '%content)))
+   (cffi:foreign-slot-value node '%xmlnode '%content)))
 
 (defmacro node-filter (&key type local-name)
   (if (or type local-name)
@@ -79,25 +82,62 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 
 (defun attribute-value (element name &optional uri)
-  (declare (ignore uri))
-  (foreign-string-to-lisp (with-foreign-string (%name name)
-                            (%xmlGetProp (impl element) %name))))
-    
-  
+  (foreign-string-to-lisp 
+   (with-foreign-string (%name name)
+     (if uri
+         (with-foreign-string (%uri uri)
+           (%xmlGetNsProp element %name %uri))
+         (%xmlGetProp element %name)))))
+
+(defun generate-ns-prefix (element)
+  (iter (for i from 1)
+        (for prefix = (format nil "ns_~A" i))
+        (finding prefix such-that (null-pointer-p (with-foreign-string (%prefix prefix)
+                                                    (%xmlSearchNs (document element)
+                                                                  element
+                                                                  %prefix))))))
+                                           
+(defun set-attribute-value (element name &optional uri value)
+  (with-foreign-strings ((%name name) (%value (or value uri)))
+    (if value
+        (let ((%ns (with-foreign-string (%href uri)
+                     (or (pointer-or-nil-if-null (%xmlSearchNsByHref (document element)
+                                                                     element
+                                                                     %href))
+                         (with-foreign-string (%prefix (generate-ns-prefix element))
+                           (%xmlNewNs element
+                                      %href
+                                      %prefix))))))
+          (%xmlSetNsProp element %ns %name %value))
+        (%xmlSetProp element %name %value)))
+  (or value uri))
+
+(defsetf attribute-value set-attribute-value)
+
+
+(defun remove-attribute (element name &optional uri)
+  (let ((%attr (with-foreign-string (%name name)
+                 (if uri
+                     (%xmlHasProp element %name)
+                     (with-foreign-string (%uri uri)
+                       (%xmlHasNsProp element %name %uri))))))
+    (print (format nil "attr is ~A" (not (null-pointer-p %attr))))
+    (unless (null-pointer-p %attr)
+      (= 0 (%xmlRemoveProp %attr)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; document
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defclass document ()
-  ((impl :initarg :impl :initform nil :accessor impl)))
-
 (defun document-free (doc)
-  (%xmlFreeDoc (impl doc)))
+  (%xmlFreeDoc doc))
 
 (defun document-root-element (doc)
-  (make-instance 'node
-                 :impl (%xmlDocGetRootElement (impl doc))))
+  (%xmlDocGetRootElement doc))
+
+(defun document-save (doc filename)
+  (with-foreign-string (%path (format nil "~A" filename))
+    (%xmlSaveFile %path doc)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; parse
@@ -108,10 +148,7 @@
 
 (defmethod parse ((path pathname))
   (with-foreign-string (_path (format nil "~A" path))
-    (make-instance 'document
-                   :impl (%xmlReadFile _path
-                                      (cffi:null-pointer)
-                                      0))))
+    (%xmlReadFile _path (cffi:null-pointer) 0)))
 
 (defmacro with-document ((var src) &rest body)
   `(let ((,var  ,src))
@@ -123,10 +160,13 @@
 ;; xinclude
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defgeneric process-xinclude (obj))
+;; (defgeneric process-xinclude (obj))
 
-(defmethod process-xinclude ((node node))
-  (%xmlXincludeProcessTree (impl node)))
+;; (defmethod process-xinclude ((node node))
+;;   (%xmlXincludeProcessTree node))
 
-(defmethod process-xinclude ((doc document))
-  (process-xinclude (document-root-element doc)))
+;; (defmethod process-xinclude ((doc document))
+;;   (process-xinclude (document-root-element doc)))
+
+(defun process-xinclude (node)
+  (%xmlXincludeProcessTree node))

@@ -15,6 +15,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defctype %xmlChar :pointer)
 
 (defcenum %xmlElementType
   (:xml-element-node 1)
@@ -62,10 +63,59 @@
   (%line :unsigned-short)
   (%extra :unsigned-short))
 
+
+;; struct _xmlNs {
+;;     struct _xmlNs *	next	: next Ns link for this node
+;;     xmlNsType	type	: global or local
+;;     const xmlChar *	href	: URL for the namespace
+;;     const xmlChar *	prefix	: prefix for the namespace
+;;     void *	_private	: application data
+;;     struct _xmlDoc *	context	: normally an xmlDoc
+;; }
+(defctype %xmlNsType %xmlElementType)
+
+(defctype %xmlNsPtr :pointer)
+
+(defcstruct %xmlNs
+  "libxml2 xmlNs struct"
+  (%next %xmlNsPtr)
+  (%type %xmlNsType)
+  (%href :pointer)
+  (%prefix :pointer)
+  (%_private :pointer)
+  (%context %xmlDocPtr))
+
+(defctype %xmlAttrPtr :pointer)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ns
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlSearchNs" %xmlSearchNs) %xmlNsPtr
+  (doc %xmlDocPtr)
+  (node %xmlNodePtr)
+  (prefix %xmlChar))
+
+(defcfun ("xmlSearchNsByHref" %xmlSearchNsByHref) %xmlNsPtr
+  (doc %xmlDocPtr)
+  (node %xmlNodePtr)
+  (href %xmlChar))
+
+(defcfun ("xmlNewNs" %xmlNewNs) %xmlNsPtr
+  (node %xmlNodePtr)
+  (href %xmlChar)
+  (prefix %xmlChar))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defcfun ("xmlReadFile" %xmlReadFile)  %xmlDocPtr
   (filename :pointer)
   (encoding :pointer)
   (options :int))
+
+(defcfun ("xmlSaveFile" %xmlSaveFile) :int
+  (filename :pointer)
+  (doc %xmlDocPtr))
 
 (defcfun ("xmlFreeDoc" %xmlFreeDoc) :void
   (doc %xmlDocPtr))
@@ -77,8 +127,50 @@
 (defcfun ("xmlXIncludeProcessTree" %xmlXIncludeProcessTree) :int
   (node %xmlNodePtr))
 
-  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; atrribute
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlGetNsProp" %xmlGetNsProp) %xmlChar
+  (node %xmlNodePtr)
+  (name %xmlChar)
+  (uri %xmlChar))
+    
 (defcfun ("xmlGetProp" %xmlGetProp) :pointer
   (node %xmlNodePtr)
   (name :pointer))
 
+(defcfun ("xmlSetNsProp" %xmlSetNsProp) %xmlAttrPtr
+  (node %xmlNodePtr)
+  (ns %xmlNsPtr)
+  (name %xmlChar)
+  (value %xmlChar))
+
+(defcfun ("xmlSetProp" %xmlSetProp) :pointer
+  (node %xmlNodePtr)
+  (name :pointer)
+  (value :pointer))
+
+;; (defcfun ("xmlUnsetNsProp" %xmlUnsetNsProp) :int
+;;   (node %xmlNodePtr)
+;;   (ns %xmlNsPtr)
+;;   (name %xmlChar))
+
+;; (defcfun ("xmlUnsetProp" %xmlUnsetProp) :int
+;;   (node %xmlNodePtr)
+;;   (name %xmlChar))
+
+(defcfun ("xmlRemoveProp" %xmlRemoveProp) :int
+  (attr %xmlAttrPtr))
+
+;; (defcfun ("xmlFreeProp" %xmlFreeProp) :void
+;;   (attr %xmlAttrPtr))
+
+(defcfun ("xmlHasProp" %xmlHasProp) %xmlAttrPtr
+  (node %xmlNodePtr)
+  (name %xmlChar))
+
+(defcfun ("xmlHasNsProp" %xmlHasNsProp) %xmlAttrPtr
+  (node %xmlNodePtr)
+  (name %xmlChar)
+  (href %xmlChar))
