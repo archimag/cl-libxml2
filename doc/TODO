@@ -1,0 +1,84 @@
+# -*- mode: org -*-
+#+TITLE: CL-LIBXML2. API.
+
+* Base API (imitate cxml-stp)
+
+** Parseing and Serializing
+** TODO parse (obj source)
+*** TODO (path pathname)
+*** TODO (uri puri)
+*** TODO (stream stream)
+*** TODO (str string)
+** TODO serialize (node target)
+*** TODO (path pathname)
+*** TODO (stream stream)
+*** TODO (:to-string)
+    
+** Names and Namespaces URIs
+*** DONE local-name (node)
+*** DONE namespace-uri (node)
+*** DONE namespace-prefix (node)
+
+** Creating nodes
+*** TODO make-document (document-element)
+*** TODO make-comment (data)
+*** TODO make-document-type (root-element-name &optional system-id public-id interanal-subset)
+*** TODO make-element (name &optional uri)
+*** TODO make-process-instruction (target data)
+*** TODO make-text (data)
+*** TODO copy (node)
+
+** Listing Child Nodes
+*** DONE parent (node)
+*** DONE document (node)
+*** DONE first-child (node)
+*** DONE last-child (node)
+*** DONE previous-sibling (node)
+*** DONE next-sibling (node)
+*** TODO iter (FOR child IN-CHILD-NODES node WITH ())
+**** DONE with (:local-name name)
+**** DONE with (:type type)
+**** TODO with (:ns  ns-uri)
+**** TODO with (:filter fun)
+
+** Adding and Removing Child Nodes
+*** TODO insert-child (parent child position)
+    Adds child as a child node of parent at postion position if allowed
+*** TODO prepend-child (parent child)
+    Adds child as the first child of parent, if allowed.
+*** TODO append-child (parent child)
+    Adds child as the last child of parent, if allowed.
+*** TODO detach (node)
+    Delete node from its parent, not free node.
+*** TODO remove-child (parent child)
+    Remove child from parent and delete it
+*** TODO remove-nth-child (idx parent)
+    Remove child idx of parent and delete it, if allowed.
+*** TODO insert-child-before (parent new-child ref-child)
+    Adds new-child before ref-child as a child node of parent, if allowed
+*** TODO insert-child-after (parent new-child ref-child)
+    Add new-child after ref-child as a child node of parent, if allowed
+*** TODO replace-child (parent old-child new-child &key (delete t))
+    Adds new-child insted of old-child as a child node of parent, if allowed.
+
+** Elements and their Attributes
+*** DONE attribute-value
+*** DONE (setf (attribute-value ...
+*** DONE remove-attribute
+*** TODO iter (FOR (value name href)  IN-NODE-ATTRIBUTES node WITH ())
+**** TODO with (:ns ns-uri)
+**** TODO with (:value str)
+**** TODO with (:name name)
+**** TODO with (:filter fun)
+*** TODO add-extra-namespace (element prefix uri)
+*** TODO remove-extra-namespace (element prefix)
+*** TODO iter (FOR (prefix uri) IN-EXTRA-NAMESPACES)
+
+
+* XPath API
+** TODO xpath-functor 
+** TODO iter (FOR item IN-XPATH query ON node &optional WITH-NS-MAP (((prefix1 ns1) (prefix2 ns2) ...) *default-ns-map*))
+
+* XSLT API
+
+* Customize 
