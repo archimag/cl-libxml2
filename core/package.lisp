@@ -4,15 +4,23 @@
   (:nicknames :libxml2)
   (:use :cl :iter :cffi)
   (:export
+   :node
+   :document
+   :ns
+   :attribute
+
+   :make-element
+   
    :parse
+   :serialize
+   :release
 
-
-   :document-root-element
+   ;;:document-root-element
    :with-document
    :process-xinclude
 
    :node-type
-   :document
+   :root
    :parent
    :text-content
    :first-child

@@ -14,8 +14,14 @@
   (use-foreign-library libxml2))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; base declarations
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defctype %xmlChar :pointer)
+(defctype %xmlCharPtr :pointer)
+(defctype %xmlNsPtr :pointer)
+(defctype %xmlDocPtr :pointer)
+(defctype %xmlNodePtr :pointer)
+(defctype %xmlAttrPtr :pointer)
 
 (defcenum %xmlElementType
   (:xml-element-node 1)
@@ -40,73 +46,63 @@
   (:xml-xinclude-end 20)
   (:xml-docb-document-node  21))
 
-(defctype %xmlDocPtr :pointer)
-
-(defctype %xmlNodePtr :pointer)
-
-(defcstruct %xmlNode
-  "libxml2 xmlNode struct"
-  (%_private :pointer)
-  (%type %xmlElementType)
-  (%name :pointer)
-  (%children %xmlNodePtr)
-  (%last %xmlNodePtr)
-  (%parent %xmlNodePtr)
-  (%next %xmlNodePtr)
-  (%prev %xmlNodePtr)
-  (%doc %xmlDocPtr)
-  (%ns :pointer)
-  (%content :pointer)
-  (%properties :pointer)
-  (%nsDef :pointer)
-  (%psvi :pointer)
-  (%line :unsigned-short)
-  (%extra :unsigned-short))
-
-
-;; struct _xmlNs {
-;;     struct _xmlNs *	next	: next Ns link for this node
-;;     xmlNsType	type	: global or local
-;;     const xmlChar *	href	: URL for the namespace
-;;     const xmlChar *	prefix	: prefix for the namespace
-;;     void *	_private	: application data
-;;     struct _xmlDoc *	context	: normally an xmlDoc
-;; }
 (defctype %xmlNsType %xmlElementType)
 
-(defctype %xmlNsPtr :pointer)
-
-(defcstruct %xmlNs
-  "libxml2 xmlNs struct"
-  (%next %xmlNsPtr)
-  (%type %xmlNsType)
-  (%href :pointer)
-  (%prefix :pointer)
-  (%_private :pointer)
-  (%context %xmlDocPtr))
-
-(defctype %xmlAttrPtr :pointer)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; ns
+;; xmlDoc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlSearchNs" %xmlSearchNs) %xmlNsPtr
-  (doc %xmlDocPtr)
-  (node %xmlNodePtr)
-  (prefix %xmlChar))
+;; struct _xmlDoc
+(defcstruct %xmlDoc
+  ;; void *	_private	: application data
+  (%private :pointer)
+  ;; xmlElementType	type	: XML_DOCUMENT_NODE, must be second !
+  (%type %xmlElementType)   
+  ;; char *	name	: name/filename/URI of the document
+  (%name %xmlCharPtr)
+  ;; struct _xmlNode *	children	: the document tree
+  (%children %xmlNodePtr)
+  ;; struct _xmlNode *	last	: last child link
+  (%last %xmlNodePtr)
+  ;; struct _xmlNode *	parent	: child->parent link
+  (%parent %xmlNodePtr)
+  ;; struct _xmlNode *	next	: next sibling link
+  (%next %xmlNodePtr)
+  ;; struct _xmlNode *	prev	: previous sibling link
+  (%prev %xmlNodePtr)
+  ;; struct _xmlDoc *	doc	: autoreference to itself End of common p
+  (%doc %xmlDocPtr)
+  ;; int	compression	: level of zlib compression
+  (%compressiong :int)
+  ;; int	standalone	: standalone document (no external refs)
+  (%stanalone :int)
+  ;; struct _xmlDtd *	intSubset	: the document internal subset
+  (%intSubset :pointer)
+  ;; struct _xmlDtd *	extSubset	: the document external subset
+  (extSubset :pointer)
+  ;; struct _xmlNs *	oldNs	: Global namespace, the old way
+  (%ns %xmlNsPtr)
+  ;; const xmlChar *	version	: the XML version string
+  (%version %xmlCharPtr)
+  ;; const xmlChar *	encoding	: external initial encoding, if any
+  (%encoding %xmlCharPtr)
+  ;; void *	ids	: Hash table for ID attributes if any
+  (%ids :pointer)
+  ;; void *	refs	: Hash table for IDREFs attributes if any
+  (%refs :pointer)
+  ;; const xmlChar *	URL	: The URI for that document
+  (%url %xmlCharPtr)
+  ;; int	charset	: encoding of the in-memory content actua
+  (%charset %xmlCharPtr)
+  ;; struct _xmlDict *	dict	: dict used to allocate names or NULL
+  (%dict :pointer)
+  ;; void *	psvi	: for type/PSVI informations
+  (%psvi :pointer)
+  ;; int	parseFlags	: set of xmlParserOption used to parse th
+  (%parseFlags :int)
+  ;; int	properties	: set of xmlDocProperties for this docume
+  (%properties :int))
 
-(defcfun ("xmlSearchNsByHref" %xmlSearchNsByHref) %xmlNsPtr
-  (doc %xmlDocPtr)
-  (node %xmlNodePtr)
-  (href %xmlChar))
-
-(defcfun ("xmlNewNs" %xmlNewNs) %xmlNsPtr
-  (node %xmlNodePtr)
-  (href %xmlChar)
-  (prefix %xmlChar))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defcfun ("xmlReadFile" %xmlReadFile)  %xmlDocPtr
   (filename :pointer)
@@ -114,13 +110,11 @@
   (options :int))
 
 (defcfun ("xmlReadMemory" %xmlReadMemory) %xmlDocPtr
-  (buffer %xmlChar)
+  (buffer %xmlCharPtr)
   (size :int)
-  (uri %xmlChar)
-  (encoding %xmlChar)
+  (uri %xmlCharPtr)
+  (encoding %xmlCharPtr)
   (options :int))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defcfun ("xmlSaveFile" %xmlSaveFile) :int
   (filename :pointer)
@@ -132,18 +126,99 @@
 (defcfun ("xmlDocGetRootElement" %xmlDocGetRootElement) %xmlNodePtr
   (doc %xmlDocPtr))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; xmlNode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; struct _xmlNode
+(defcstruct %xmlNode
+  ;; void *	_private	: application data
+  (%private :pointer)
+  ;; xmlElementType	type	: type number, must be second !
+  (%type %xmlElementType)
+  ;; const xmlChar *	name	: the name of the node, or the entity
+  (%name %xmlCharPtr)
+  ;; struct _xmlNode *	children	: parent->childs link
+  (%children %xmlNodePtr)
+  ;; struct _xmlNode *	last	: last child link
+  (%last %xmlNodePtr)
+  ;; struct _xmlNode *	parent	: child->parent link
+  (%parent %xmlNodePtr)
+  ;; struct _xmlNode *	next	: next sibling link
+  (%next %xmlNodePtr)
+  ;; struct _xmlNode *	prev	: previous sibling link
+  (%prev %xmlNodePtr)
+  ;; struct _xmlDoc *	doc	: the containing document End of common p
+  (%doc %xmlDocPtr)
+  ;; xmlNs *	ns	: pointer to the associated namespace
+  (%ns %xmlNsPtr)
+  ;; xmlChar *	content	: the content
+  (%content %xmlCharPtr)
+  ;; struct _xmlAttr *	properties	: properties list
+  (%properties %xmlAttrPtr)
+  ;; xmlNs *	nsDef	: namespace definitions on this node
+  (%nsDef %xmlNsPtr)
+  ;; void *	psvi	: for type/PSVI informations
+  (%psvi :pointer)
+  ;; unsigned short	line	: line number
+  (%line :unsigned-short)
+  ;; unsigned short	extra	: extra data for XPath/XSLT
+  (%extra :unsigned-short))
 
 (defcfun ("xmlXIncludeProcessTree" %xmlXIncludeProcessTree) :int
   (node %xmlNodePtr))
+
+(defcfun ("xmlNewNode" %xmlNewNode) %xmlNodePtr
+  (ns %xmlNsPtr)
+  (name %xmlCharPtr))
+
+(defcfun ("xmlSetTreeDoc" %xmlSetTreeDoc) :void
+  (tree %xmlNodePtr)
+  (doc %xmlDocPtr))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; xmlNs
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; struct _xmlNs
+(defcstruct %xmlNs
+  ;; struct _xmlNs *	next	: next Ns link for this node
+  (%next %xmlNsPtr)
+  ;; xmlNsType	type	: global or local
+  (%type %xmlNsType)
+  ;; const xmlChar *	href	: URL for the namespace
+  (%href :pointer)
+  ;; const xmlChar *	prefix	: prefix for the namespace  
+  (%prefix :pointer)
+  ;; void *	_private	: application data
+  (%_private :pointer)
+  ;; struct _xmlDoc *	context	: normally an xmlDoc  
+  (%context %xmlDocPtr))
+
+
+(defcfun ("xmlSearchNs" %xmlSearchNs) %xmlNsPtr
+  (doc %xmlDocPtr)
+  (node %xmlNodePtr)
+  (prefix %xmlCharPtr))
+
+(defcfun ("xmlSearchNsByHref" %xmlSearchNsByHref) %xmlNsPtr
+  (doc %xmlDocPtr)
+  (node %xmlNodePtr)
+  (href %xmlCharPtr))
+
+(defcfun ("xmlNewNs" %xmlNewNs) %xmlNsPtr
+  (node %xmlNodePtr)
+  (href %xmlCharPtr)
+  (prefix %xmlCharPtr))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; atrribute
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlGetNsProp" %xmlGetNsProp) %xmlChar
+(defcfun ("xmlGetNsProp" %xmlGetNsProp) %xmlCharPtr
   (node %xmlNodePtr)
-  (name %xmlChar)
-  (uri %xmlChar))
+  (name %xmlCharPtr)
+  (uri %xmlCharPtr))
     
 (defcfun ("xmlGetProp" %xmlGetProp) :pointer
   (node %xmlNodePtr)
@@ -152,34 +227,23 @@
 (defcfun ("xmlSetNsProp" %xmlSetNsProp) %xmlAttrPtr
   (node %xmlNodePtr)
   (ns %xmlNsPtr)
-  (name %xmlChar)
-  (value %xmlChar))
+  (name %xmlCharPtr)
+  (value %xmlCharPtr))
 
 (defcfun ("xmlSetProp" %xmlSetProp) :pointer
   (node %xmlNodePtr)
   (name :pointer)
   (value :pointer))
 
-;; (defcfun ("xmlUnsetNsProp" %xmlUnsetNsProp) :int
-;;   (node %xmlNodePtr)
-;;   (ns %xmlNsPtr)
-;;   (name %xmlChar))
-
-;; (defcfun ("xmlUnsetProp" %xmlUnsetProp) :int
-;;   (node %xmlNodePtr)
-;;   (name %xmlChar))
-
 (defcfun ("xmlRemoveProp" %xmlRemoveProp) :int
   (attr %xmlAttrPtr))
 
-;; (defcfun ("xmlFreeProp" %xmlFreeProp) :void
-;;   (attr %xmlAttrPtr))
 
 (defcfun ("xmlHasProp" %xmlHasProp) %xmlAttrPtr
   (node %xmlNodePtr)
-  (name %xmlChar))
+  (name %xmlCharPtr))
 
 (defcfun ("xmlHasNsProp" %xmlHasNsProp) %xmlAttrPtr
   (node %xmlNodePtr)
-  (name %xmlChar)
-  (href %xmlChar))
+  (name %xmlCharPtr)
+  (href %xmlCharPtr))

@@ -7,5 +7,11 @@
   ((:module :core
             :components
             ((:file "package")
-             (:file "low-level-api" :depends-on ("package"))
-             (:file "core" :depends-on ("low-level-api"))))))
+             (:file "low-level-api" :depends-on ("package" ))
+             (:file "objects" :depends-on ("package" "low-level-api"))
+             (:file "childs" :depends-on ("objects"))
+             (:file "attribute" :depends-on ("objects"))
+             (:file "parse" :depends-on ("objects"))
+             (:file "serialize" :depends-on ("objects"))
+             ))))
+             ;;(:file "core" :depends-on ("low-level-api"))))))
