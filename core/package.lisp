@@ -1,7 +1,6 @@
 ;; package.lisp
 
-(defpackage :cl-libxlm2.0.dev
-  (:nicknames :libxml2)
+(defpackage :libxml2.tree
   (:use :cl :iter :cffi)
   (:export
    :node
@@ -9,6 +8,7 @@
    :ns
    :attribute
 
+   :make-document
    :make-element
    
    :parse
@@ -17,6 +17,7 @@
 
    ;;:document-root-element
    :with-document
+   :with-parse-document
    :process-xinclude
 
    :node-type

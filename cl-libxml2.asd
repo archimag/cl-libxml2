@@ -8,7 +8,7 @@
             :components
             ((:file "package")
              (:file "low-level-api" :depends-on ("package" ))
-             (:file "objects" :depends-on ("package" "low-level-api"))
+             (:file "objects" :depends-on ("low-level-api"))
              (:file "childs" :depends-on ("objects"))
              (:file "attribute" :depends-on ("objects"))
              (:file "parse" :depends-on ("objects"))

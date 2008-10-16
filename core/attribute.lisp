@@ -1,6 +1,6 @@
 ;; attribute.lisp
 
-(in-package #:libxml2)
+(in-package #:libxml2.tree)
 
 (defun attribute-value (element name &optional uri)
   (foreign-string-to-lisp 
@@ -23,7 +23,6 @@
 (defsetf attribute-value set-attribute-value)
 
 (defun remove-attribute (element name &optional uri)
-  (print name  uri)
   (let ((%attr (with-foreign-string (%name name)
                   (if uri
                       (with-foreign-string (%uri uri)

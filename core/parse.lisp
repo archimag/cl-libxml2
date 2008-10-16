@@ -1,6 +1,6 @@
 ;; parse.lisp
 
-(in-package #:libxml2)
+(in-package #:libxml2.tree)
 
 
 (defgeneric parse (obj)
@@ -15,7 +15,7 @@
   (with-foreign-strings ((%buffer str))
     (make-instance 'document
                    :pointer (%xmlReadMemory %buffer
-                                          (print (cffi::foreign-string-length %buffer))
-                                          (null-pointer)
-                                          (null-pointer)
-                                          1))))
+                                            (cffi::foreign-string-length %buffer)
+                                            (null-pointer)
+                                            (null-pointer)
+                                            1))))

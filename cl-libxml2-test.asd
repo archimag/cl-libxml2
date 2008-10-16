@@ -5,5 +5,4 @@
   :components
   ((:module :test
             :components
-            ((:file "package")
-             (:file "test" :depends-on ("package"))))))
+            ((:file "test" )))))

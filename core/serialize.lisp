@@ -1,6 +1,6 @@
 ;; serialize.lisp
 
-(in-package #:libxml2)
+(in-package #:libxml2.tree)
 
 (defgeneric serialize (obj target))
 

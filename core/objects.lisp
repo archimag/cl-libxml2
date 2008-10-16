@@ -1,6 +1,6 @@
 ;; objects.lisp
 
-(in-package #:libxml2)
+(in-package #:libxml2.tree)
 
 (defclass libxml2-cffi-object-wrapper ()
   ((pointer :initarg :pointer :reader pointer)))
@@ -30,7 +30,6 @@
   (let ((ns (if  href
                  (search-ns-by-href (root doc) href)
                  (wrapper-slot-wrapper (root doc) '%ns 'ns))))
-    (print ns)
     (if ns
         (let ((%node (with-foreign-string (%name name)
                       (%xmlNewNode (pointer ns) %name))))
@@ -55,11 +54,30 @@
 (defmethod release ((doc document))
   (%xmlFreeDoc (pointer doc)))
 
-(defmacro with-document ((var src) &rest body)
-  `(let ((,var  ,src))
+(defun make-document (name &optional href prefix)
+  (let* ((%doc (%xmlNewDoc (null-pointer)))
+         (%node (with-foreign-string (%name name)
+                  (%xmlNewNode (null-pointer) %name)))
+         (%ns (if href
+                  (if prefix
+                      (with-foreign-strings ((%href href) (%prefix prefix))
+                        (%xmlNewNs %node %href %prefix))
+                      (with-foreign-string (%href href)
+                        (%xmlNewNs %node %href (null-pointer))))
+                  (null-pointer))))
+    (setf (foreign-slot-value %node '%xmlNode '%ns) %ns)
+    (%xmlDocSetRootElement %doc %node)
+    (make-instance 'document
+                   :pointer %doc)))
+
+(defmacro with-document ((var doc) &rest body)
+  `(let ((,var ,doc))
      (unwind-protect
           (progn ,@body)
        (release ,var))))
+
+(defmacro with-parse-document ((var src) &rest body)
+  `(with-document (,var (parse ,src)) ,@body))
 
 
 

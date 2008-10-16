@@ -1,6 +1,6 @@
 ;; core.lisp
 
-(in-package :libxml2)
+(in-package :libxml2.tree)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Define and load libxml2
@@ -125,6 +125,13 @@
 
 (defcfun ("xmlDocGetRootElement" %xmlDocGetRootElement) %xmlNodePtr
   (doc %xmlDocPtr))
+
+(defcfun ("xmlDocSetRootElement" %xmlDocSetRootElement) %xmlNodePtr
+  (doc %xmlDocPtr)
+  (root %xmlNodePtr))
+
+(defcfun ("xmlNewDoc" %xmlNewDoc) %xmlDocPtr
+  (version %xmlCharPtr))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; xmlNode
