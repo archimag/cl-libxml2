@@ -113,6 +113,15 @@
   (encoding :pointer)
   (options :int))
 
+(defcfun ("xmlReadMemory" %xmlReadMemory) %xmlDocPtr
+  (buffer %xmlChar)
+  (size :int)
+  (uri %xmlChar)
+  (encoding %xmlChar)
+  (options :int))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defcfun ("xmlSaveFile" %xmlSaveFile) :int
   (filename :pointer)
   (doc %xmlDocPtr))

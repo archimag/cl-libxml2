@@ -5,7 +5,7 @@
 
 ** Parseing and Serializing
 ** TODO parse (obj source)
-*** TODO (path pathname)
+*** DONE (path pathname)
 *** TODO (uri puri)
 *** TODO (stream stream)
 *** TODO (str string)

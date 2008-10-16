@@ -150,6 +150,14 @@
   (with-foreign-string (_path (format nil "~A" path))
     (%xmlReadFile _path (cffi:null-pointer) 0)))
 
+(defmethod parse ((str string))
+  (with-foreign-strings ((%buffer str) (%utf-8 "utf-8") (%ns "http://www.sample.org"))
+    (%xmlReadMemory %buffer
+                    (print (cffi::foreign-string-length %buffer))
+                    %ns
+                    %utf-8
+                    1)))
+
 (defmacro with-document ((var src) &rest body)
   `(let ((,var  ,src))
      (unwind-protect
