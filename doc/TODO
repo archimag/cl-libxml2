@@ -6,13 +6,13 @@
 ** Parseing and Serializing
 ** TODO parse (obj source)
 *** DONE (path pathname)
-*** TODO (uri puri)
+*** DONE (uri puri)
 *** TODO (stream stream)
 *** DONE (str string)
 ** TODO serialize (node target)
 *** DONE (path pathname)
 *** TODO (stream stream)
-*** TODO (:to-string)
+*** DONE (:to-string)
     
 ** Names and Namespaces URIs
 *** DONE local-name (node)
@@ -71,7 +71,13 @@
 * XPath API
 ** TODO xpath-functor 
 ** TODO iter (FOR item IN-XPATH query ON node &optional WITH-NS-MAP (((prefix1 ns1) (prefix2 ns2) ...) *default-ns-map*))
+** TODO getpath (node)
 
 * XSLT API
+** TODO transform
 
-* Customize 
+* Extending
+** Document loading and URL resolving
+** XPath extension functions
+** XSLT extension elements
+

@@ -48,6 +48,14 @@
 
 (defctype %xmlNsType %xmlElementType)
 
+
+;; (defcfun ("xmlFree" %xmlFree) :void
+;;    (ptr :pointer))
+
+(defun %xmlFree (ptr)
+  (foreign-funcall "free" :pointer ptr :void))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; xmlDoc
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -109,16 +117,36 @@
   (encoding :pointer)
   (options :int))
 
-(defcfun ("xmlReadMemory" %xmlReadMemory) %xmlDocPtr
-  (buffer %xmlCharPtr)
-  (size :int)
-  (uri %xmlCharPtr)
+(defcfun ("xmlReadDoc" %xmlReadDoc) %xmlDocPtr
+  (cur %xmlCharPtr)
+  (base-url %xmlCharPtr)
   (encoding %xmlCharPtr)
   (options :int))
+
+;; (defcfun ("xmlReadMemory" %xmlReadMemory) %xmlDocPtr
+;;   (buffer %xmlCharPtr)
+;;   (size :int)
+;;   (uri %xmlCharPtr)
+;;   (encoding %xmlCharPtr)
+;;   (options :int))
 
 (defcfun ("xmlSaveFile" %xmlSaveFile) :int
   (filename :pointer)
   (doc %xmlDocPtr))
+
+(defcfun ("xmlDocDumpFormatMemoryEnc" %xmlDocDumpFormatMemoryEnc) :void
+  (doc %xmlDocPtr)
+  (doc_txt_ptr :pointer)
+  (doc_txt_len :pointer)
+  (txt_encoding :pointer)
+  (format :int))
+
+(defcfun ("xmlDocDumpFormatMemory" %xmlDocDumpFormatMemory) :void
+  (doc %xmlDocPtr)
+  (doc_txt_ptr :pointer)
+  (doc_txt_len :pointer)
+  (format :int))
+
 
 (defcfun ("xmlFreeDoc" %xmlFreeDoc) :void
   (doc %xmlDocPtr))

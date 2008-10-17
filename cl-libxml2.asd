@@ -2,7 +2,7 @@
 
 (defsystem :cl-libxml2
   :version "0.0.0"
-  :depends-on (#:cffi #:iterate)
+  :depends-on (#:cffi #:iterate #:puri)
   :components
   ((:module :tree
             :components

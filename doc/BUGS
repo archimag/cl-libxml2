@@ -1,0 +1,6 @@
+# -*- mode: org -*-
+#+TITLE: CL-LIBXML2. BUGS.
+
+
+* TODO xmlFree
+   "Unhandled memory fault at #x0" by call "xmlFree". Temporarily use "free" instead "xmlFree" (it works :-().

@@ -6,16 +6,26 @@
 (defgeneric parse (obj)
   (:documentation "parse xml"))
 
+;;; parse ((path pathname))
+
 (defmethod parse ((path pathname))
   (with-foreign-string (_path (format nil "~A" path))
     (make-instance 'document
                    :pointer (%xmlReadFile _path (cffi:null-pointer) 0))))
 
+;;; parse ((str string))
+
 (defmethod parse ((str string))
-  (with-foreign-strings ((%buffer str))
+  (with-foreign-string (%str str)
     (make-instance 'document
-                   :pointer (%xmlReadMemory %buffer
-                                            (cffi::foreign-string-length %buffer)
-                                            (null-pointer)
-                                            (null-pointer)
-                                            1))))
+                   :pointer (%xmlReadDoc %str
+                                         (null-pointer)
+                                         (null-pointer)
+                                         0))))
+
+;;; parse ((uri puri))
+
+(defmethod parse ((uri puri:uri))
+  (with-foreign-string (_path (format nil "~A" uri))
+    (make-instance 'document
+                   :pointer (%xmlReadFile _path (cffi:null-pointer) 0))))
