@@ -4,7 +4,7 @@
   :version "0.0.0"
   :depends-on (#:cffi #:iterate)
   :components
-  ((:module :core
+  ((:module :tree
             :components
             ((:file "package")
              (:file "low-level-api" :depends-on ("package" ))
