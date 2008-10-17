@@ -55,7 +55,7 @@
 ;; struct _xmlDoc
 (defcstruct %xmlDoc
   ;; void *	_private	: application data
-  (%private :pointer)
+  (%_private :pointer)
   ;; xmlElementType	type	: XML_DOCUMENT_NODE, must be second !
   (%type %xmlElementType)   
   ;; char *	name	: name/filename/URI of the document
@@ -235,9 +235,9 @@
   ;; xmlNsType	type	: global or local
   (%type %xmlNsType)
   ;; const xmlChar *	href	: URL for the namespace
-  (%href :pointer)
+  (%href %xmlCharPtr)
   ;; const xmlChar *	prefix	: prefix for the namespace  
-  (%prefix :pointer)
+  (%prefix %xmlCharPtr)
   ;; void *	_private	: application data
   (%_private :pointer)
   ;; struct _xmlDoc *	context	: normally an xmlDoc  
@@ -262,6 +262,47 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; atrribute
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcenum %xmlAttributeType
+  (:xml-attribute-cdata  1)
+  (:xml-attribute-id  2)
+  (:xml-attribute-idref  3)
+  (:xml-attribute-idrefs  4)
+  (:xml-attribute-entity  5)
+  (:xml-attribute-entities  6)
+  (:xml-attribute-nmtoken  7)
+  (:xml-attribute-nmtokens  8)
+  (:xml-attribute-enumeration  9)
+  (:xml-attribute-notation  10))
+
+
+;; struct _xmlAttr
+(defcstruct %xmlAttr
+  ;; void *	_private	: application data
+  (%_private :pointer)
+  ;; xmlElementType	type	: XML_ATTRIBUTE_NODE, must be second !
+  (%type %xmlElementType)
+  ;; const xmlChar *	name	: the name of the property
+  (%name %xmlCharPtr)
+  ;; struct _xmlNode *	children	: the value of the property
+  (%children %xmlNodePtr)
+  ;; struct _xmlNode *	last	: NULL
+  (%last %xmlNodePtr)
+  ;; struct _xmlNode *	parent	: child->parent link
+  (%parent %xmlNodePtr)
+  ;; struct _xmlAttr *	next	: next sibling link
+  (%next %xmlAttrPtr)
+  ;; struct _xmlAttr *	prev	: previous sibling link
+  (%prev %xmlAttrPtr)
+  ;; struct _xmlDoc *	doc	: the containing document
+  (%doc %xmlDocPtr)
+  ;; xmlNs *	ns	: pointer to the associated namespace
+  (%ns %xmlNsPtr)
+  ;; xmlAttributeType	atype	: the attribute type if validating
+  (%atype %xmlAttributeType)
+  ;; void *	psvi	: for type/PSVI informations
+  (%psvi :pointer))
+
 
 (defcfun ("xmlGetNsProp" %xmlGetNsProp) %xmlCharPtr
   (node %xmlNodePtr)

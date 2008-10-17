@@ -36,11 +36,11 @@
 *** DONE last-child (node)
 *** DONE previous-sibling (node)
 *** DONE next-sibling (node)
-*** TODO iter (FOR child IN-CHILD-NODES node WITH ())
+*** DONE iter (FOR child IN-CHILD-NODES node WITH ())
 **** DONE with (:local-name name)
 **** DONE with (:type type)
-**** TODO with (:ns  ns-uri)
-**** TODO with (:filter fun)
+**** DONE with (:ns  ns-uri)
+**** DONE with (:filter fun)
 
 ** Adding and Removing Child Nodes
 *** DONE prepend-child (parent child)
@@ -62,12 +62,8 @@
 *** DONE attribute-value
 *** DONE (setf (attribute-value ...
 *** DONE remove-attribute
-*** TODO iter (FOR (value name href)  IN-NODE-ATTRIBUTES node WITH ())
-**** TODO with (:ns ns-uri)
-**** TODO with (:value str)
-**** TODO with (:name name)
-**** TODO with (:filter fun)
-*** TODO add-extra-namespace (element prefix uri)
+*** DONE iter (FOR (value name href)  IN-NODE-ATTRIBUTES node WITH)
+*** DONE add-extra-namespace (element prefix uri)
 *** TODO remove-extra-namespace (element prefix)
 *** TODO iter (FOR (prefix uri) IN-EXTRA-NAMESPACES)
 

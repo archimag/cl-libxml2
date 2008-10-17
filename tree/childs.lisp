@@ -81,13 +81,17 @@
 
 ;;; FOR var IN-CHILD-NODES node WITH ()
 
-(defmacro node-filter (&key type local-name)
+(defun node-filter (&key type local-name ns filter)
   (if (or type local-name)
-      `(lambda (node)
-         (and (or (not ,type)
-                  (eql (node-type node) ,type))
-              (or (not ,local-name)
-                  (string= (local-name node) ,local-name))))))
+      (lambda (node)
+        (and (or (not type)
+                 (eql (node-type node) type))
+             (or (not local-name)
+                 (string= (local-name node) local-name))
+             (or (not ns)
+                 (string= (namespace-uri node) ns))
+             (or (not filter)
+                 (funcall filter node))))))
 
 (defun find-node (first filter)
   (if first
