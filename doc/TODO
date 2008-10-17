@@ -20,13 +20,14 @@
 *** DONE namespace-prefix (node)
 
 ** Creating nodes
-*** TODO make-document (document-element)
-*** TODO make-comment (data)
+*** DONE make-document (document-element)
+*** DONE make-comment (data)
 *** TODO make-document-type (root-element-name &optional system-id public-id interanal-subset)
-*** DONE make-element (name &optional uri)
-*** TODO make-process-instruction (target data)
-*** TODO make-text (data)
-*** TODO copy (node)
+*** DONE make-element (name &optional uri href)
+*** DONE make-process-instruction (target data)
+*** DONE make-text (data)
+*** DONE copy (node)
+    Copies a node recursively.
 
 ** Listing Child Nodes
 *** DONE parent (node)
@@ -42,23 +43,19 @@
 **** TODO with (:filter fun)
 
 ** Adding and Removing Child Nodes
-*** TODO insert-child (parent child position)
-    Adds child as a child node of parent at postion position if allowed
-*** TODO prepend-child (parent child)
+*** DONE prepend-child (parent child)
     Adds child as the first child of parent, if allowed.
-*** TODO append-child (parent child)
+*** DONE append-child (parent child)
     Adds child as the last child of parent, if allowed.
-*** TODO detach (node)
+*** DONE detach (node)
     Delete node from its parent, not free node.
-*** TODO remove-child (parent child)
+*** DONE remove-child (child)
     Remove child from parent and delete it
-*** TODO remove-nth-child (idx parent)
-    Remove child idx of parent and delete it, if allowed.
-*** TODO insert-child-before (parent new-child ref-child)
+*** DONE insert-child-before (new-child ref-child)
     Adds new-child before ref-child as a child node of parent, if allowed
-*** TODO insert-child-after (parent new-child ref-child)
+*** DONE insert-child-after (new-child ref-child)
     Add new-child after ref-child as a child node of parent, if allowed
-*** TODO replace-child (parent old-child new-child &key (delete t))
+*** DONE replace-child (old-child new-child &key (delete t))
     Adds new-child insted of old-child as a child node of parent, if allowed.
 
 ** Elements and their Attributes

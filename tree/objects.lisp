@@ -8,6 +8,7 @@
 (defgeneric wrapper-slot-value (obj slot))
 
 (defgeneric release (obj) )
+(defgeneric copy (obj))
 
 
 (defmacro defwrapper (wrapper-name cffi-type)
@@ -23,27 +24,52 @@
 
 (defwrapper node %xmlNode)
 
+(defmethod release ((node node))
+  (%xmlFreeNode (pointer node)))
+
+(defmethod copy ((node node))
+  (make-instance 'node
+                 :pointer (%xmlCopyNode (pointer node) 1)))
+
 (defun wrapper-slot-node (node slot)
   (wrapper-slot-wrapper node slot 'node))
 
-(defun make-element (doc name &optional href)
-  (let ((ns (if  href
-                 (search-ns-by-href (root doc) href)
-                 (wrapper-slot-wrapper (root doc) '%ns 'ns))))
-    (if ns
-        (let ((%node (with-foreign-string (%name name)
-                      (%xmlNewNode (pointer ns) %name))))
-          (%xmlSetTreeDoc %node (pointer doc))
-          (make-instance 'node :pointer %node))
-        (let ((%node (with-foreign-string (%name name)
-                      (%xmlNewNode (null-pointer) %name))))
-          (%xmlSetTreeDoc %node (pointer doc))
-          (if href
-              (with-foreign-string (%href href)
-                (%xmlNewNs %node %href (null-pointer))))
-          (make-instance 'node :pointer %node)
-          ))))
+(defun make-element (name &optional href prefix)
+  (let ((%node (with-foreign-string (%name name)
+                 (%xmlNewNode (null-pointer) 
+                              %name))))
+    (if href
+        (let ((%ns (if prefix
+                       (with-foreign-strings ((%href href) (%prefix prefix))
+                         (%xmlNewNs %node
+                                    %href
+                                    %prefix))
+                       (with-foreign-string (%href href)
+                         (%xmlNewNs %node
+                                    %href
+                                    (null-pointer))))))
+          (setf (foreign-slot-value %node
+                                    '%xmlNode
+                                    '%ns)
+                %ns)))
+    (make-instance 'node
+                   :pointer %node)))
                 
+                
+(defun make-text (data)
+  (make-instance 'node
+                 :pointer (with-foreign-string (%data data)
+                            (%xmlNewText %data))))
+
+(defun make-comment (data)
+  (make-instance 'node
+                 :pointer (with-foreign-string (%data data)
+                            (%xmlNewComment %data))))
+
+(defun make-process-instruction (name content)
+  (make-instance 'node
+                 :pointer (with-foreign-strings ((%name name) (%content content))
+                            (%xmlNewPI %name %content))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; document
@@ -54,19 +80,29 @@
 (defmethod release ((doc document))
   (%xmlFreeDoc (pointer doc)))
 
-(defun make-document (name &optional href prefix)
-  (let* ((%doc (%xmlNewDoc (null-pointer)))
-         (%node (with-foreign-string (%name name)
-                  (%xmlNewNode (null-pointer) %name)))
-         (%ns (if href
-                  (if prefix
-                      (with-foreign-strings ((%href href) (%prefix prefix))
-                        (%xmlNewNs %node %href %prefix))
-                      (with-foreign-string (%href href)
-                        (%xmlNewNs %node %href (null-pointer))))
-                  (null-pointer))))
-    (setf (foreign-slot-value %node '%xmlNode '%ns) %ns)
-    (%xmlDocSetRootElement %doc %node)
+(defmethod copy ((doc document))
+  (make-instance 'document
+                 :pointer (%xmlCopyDoc (pointer doc) 1)))
+
+;; (defun make-document (name &optional href prefix)
+;;   (let* ((%doc (%xmlNewDoc (null-pointer)))
+;;          (%node (with-foreign-string (%name name)
+;;                   (%xmlNewNode (null-pointer) %name)))
+;;          (%ns (if href
+;;                   (if prefix
+;;                       (with-foreign-strings ((%href href) (%prefix prefix))
+;;                         (%xmlNewNs %node %href %prefix))
+;;                       (with-foreign-string (%href href)
+;;                         (%xmlNewNs %node %href (null-pointer))))
+;;                   (null-pointer))))
+;;     (setf (foreign-slot-value %node '%xmlNode '%ns) %ns)
+;;     (%xmlDocSetRootElement %doc %node)
+;;     (make-instance 'document
+;;                    :pointer %doc)))
+
+(defun make-document (document-element)
+  (let ((%doc (%xmlNewDoc (null-pointer))))
+    (%xmlDocSetRootElement %doc (pointer document-element))
     (make-instance 'document
                    :pointer %doc)))
 

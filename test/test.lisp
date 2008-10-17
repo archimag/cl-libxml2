@@ -11,35 +11,36 @@
   (merge-pathnames (pathname (concatenate 'string "data/" name))
                    (asdf:component-pathname  (asdf:find-component (asdf:find-system  "cl-libxml2-test") "test"))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deftestsuite libxml2.tree-test () ())
 
-;;; make-document
+;;; make-document/make-element
 
 (addtest (libxml2.tree-test)
-  make-document-1
+  make-document/make-element-1
   (ensure-same '("root" nil nil)
-               (with-document (doc (make-document "root"))
+               (with-document (doc (make-document (make-element "root")))
                  (list (local-name (root doc))
                        (namespace-uri (root doc))
                        (namespace-prefix (root doc))))))
 
 (addtest (libxml2.tree-test)
-  make-document-2
+  make-document/make-element-2
   (ensure-same '("root" "www.sample.org" nil)
-               (with-document (doc (make-document "root" "www.sample.org"))
+               (with-document (doc (make-document (make-element "root" "www.sample.org")))
                  (list (local-name (root doc))
                        (namespace-uri (root doc))
                        (namespace-prefix (root doc))))))
 
 (addtest (libxml2.tree-test)
-  make-document-3
+  make-document/make-element-3
   (ensure-same '("root" "www.sample.org" "my")
-               (with-document (doc (make-document "root" "www.sample.org" "my"))
+               (with-document (doc (make-document (make-element "root" "www.sample.org" "my")))
                  (list (local-name (root doc))
                        (namespace-uri (root doc))
                        (namespace-prefix (root doc))))))
+
 
 
 ;;; ITERM (FOR child IN-CHILD-NODES node WITH ())

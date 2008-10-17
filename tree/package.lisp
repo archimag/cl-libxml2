@@ -10,6 +10,10 @@
 
    :make-document
    :make-element
+   :make-text
+   :make-comment
+   :make-process-instruction
+   :copy
    
    :parse
    :serialize
@@ -19,6 +23,11 @@
    :with-document
    :with-parse-document
    :process-xinclude
+
+
+   :insert-child-before
+   :insert-child-after
+   :append-child
 
    :node-type
    :root

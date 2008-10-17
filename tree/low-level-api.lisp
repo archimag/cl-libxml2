@@ -133,6 +133,10 @@
 (defcfun ("xmlNewDoc" %xmlNewDoc) %xmlDocPtr
   (version %xmlCharPtr))
 
+(defcfun ("xmlCopyDoc" %xmlCopyDoc) %xmlDocPtr
+  (doc %xmlDocPtr)
+  (recursive :int))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; xmlNode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -172,17 +176,54 @@
   ;; unsigned short	extra	: extra data for XPath/XSLT
   (%extra :unsigned-short))
 
-(defcfun ("xmlXIncludeProcessTree" %xmlXIncludeProcessTree) :int
-  (node %xmlNodePtr))
-
 (defcfun ("xmlNewNode" %xmlNewNode) %xmlNodePtr
   (ns %xmlNsPtr)
   (name %xmlCharPtr))
+
+(defcfun ("xmlNewText" %xmlNewText) %xmlNodePtr
+  (content %xmlCharPtr))
+
+(defcfun ("xmlNewComment" %xmlNewComment) %xmlNodePtr
+  (content %xmlCharPtr))
+
+(defcfun ("xmlNewPI" %xmlNewPI) %xmlNodePtr
+  (name %xmlCharPtr)
+  (content %xmlCharPtr))
+
+(defcfun ("xmlCopyNode" %xmlCopyNode) %xmlNodePtr
+  (node %xmlNodePtr)
+  (extended :int))
+
+(defcfun ("xmlXIncludeProcessTree" %xmlXIncludeProcessTree) :int
+  (node %xmlNodePtr))
 
 (defcfun ("xmlSetTreeDoc" %xmlSetTreeDoc) :void
   (tree %xmlNodePtr)
   (doc %xmlDocPtr))
 
+(defcfun ("xmlFreeNode" %xmlFreeNode) :void
+  (node %xmlNodePtr))
+
+(defcfun ("xmlUnlinkNode" %xmlUnlinkNode) :void
+  (node %xmlNodePtr))
+
+(defcfun ("xmlAddChild" %xmlAddChild) %xmlNodePtr
+  (parent %xmlNodePtr)
+  (child %xmlNodePtr))
+
+(defcfun ("xmlAddNextSibling" %xmlAddNextSibling) %xmlNodePtr
+  (cur %xmlNodePtr)
+  (elem %xmlNodePtr))
+
+(defcfun ("xmlAddPrevSibling" %xmlAddPrevSibling) %xmlNodePtr
+  (cur %xmlNodePtr)
+  (elem %xmlNodePtr))
+
+
+(defcfun ("xmlReplaceNode" %xmlReplaceNode) %xmlNodePtr
+  (old %xmlNodePtr)
+  (cur %xmlNodePtr))
+  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; xmlNs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

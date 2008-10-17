@@ -63,7 +63,6 @@
 (defun last-child (node)
   (wrapper-slot-node node '%last))
 
-
 ;;; parent
 
 (defun parent (node)
