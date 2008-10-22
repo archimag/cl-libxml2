@@ -22,6 +22,12 @@
 (defctype %xmlDocPtr :pointer)
 (defctype %xmlNodePtr :pointer)
 (defctype %xmlAttrPtr :pointer)
+(defctype %xmlNodeSetPtr :pointer)
+(defctype %xmlDictPtr :pointer)
+(defctype %xmlHashTablePtr :pointer)
+(defctype %charPtr :pointer)
+
+
 
 (defcenum %xmlElementType
   (:xml-element-node 1)
@@ -103,7 +109,7 @@
   ;; int	charset	: encoding of the in-memory content actua
   (%charset %xmlCharPtr)
   ;; struct _xmlDict *	dict	: dict used to allocate names or NULL
-  (%dict :pointer)
+  (%dict %xmlDictPtr)
   ;; void *	psvi	: for type/PSVI informations
   (%psvi :pointer)
   ;; int	parseFlags	: set of xmlParserOption used to parse th

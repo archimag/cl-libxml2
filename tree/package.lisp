@@ -3,7 +3,16 @@
 (defpackage :libxml2.private
   (:use :cl)
   (:export
-   :pointer))
+   :pointer
+   :%xmlDocPtr
+   :%xmlNodeSetPtr
+   :%xmlDictPtr
+   :%xmlHashTablePtr
+   :%charPtr
+   :%xmlCharPtr
+   :%xmlNodePtr
+   :%xmlNsPtr
+   ))
 
 (defpackage :libxml2.tree
   (:use :cl :iter :cffi :libxml2.private)
