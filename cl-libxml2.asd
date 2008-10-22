@@ -13,6 +13,5 @@
              (:file "attribute" :depends-on ("objects"))
              (:file "parse" :depends-on ("objects"))
              (:file "serialize" :depends-on ("objects"))
-             (:file "stylesheet" :depends-on ("low-level-api" "objects" ))
              ))))
              ;;(:file "core" :depends-on ("low-level-api"))))))

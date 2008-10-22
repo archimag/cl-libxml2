@@ -22,8 +22,6 @@
    :ns
    :attribute
 
-   ;;:pointer
-
    :make-document
    :make-element
    :make-text
@@ -35,7 +33,6 @@
    :serialize
    :release
 
-   ;;:document-root-element
    :with-document
    :with-parse-document
    :process-xinclude
@@ -63,13 +60,3 @@
    :attribute-value
    :remove-attribute
    ))
-
-(defpackage :libxml2.xslt
-  (:use :cl :cffi :libxml2.private :libxml2.tree)
-  ;;(:import  :libxml2.tree::pointer)
-  (:export
-   :stylesheet
-   :parse-stylesheet
-   :with-stylesheet
-   :transform
-   :with-transfom-result))
