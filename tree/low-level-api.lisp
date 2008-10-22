@@ -364,3 +364,6 @@
   (node %xmlNodePtr)
   (name %xmlCharPtr)
   (href %xmlCharPtr))
+
+  
+
