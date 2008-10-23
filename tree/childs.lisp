@@ -27,6 +27,24 @@
      (if ns (cffi:foreign-string-to-lisp
               (wrapper-slot-value ns '%prefix)))))
 
+
+;;; base-url
+
+(defgeneric base-url (obj))
+
+(defmethod base-url ((doc document))
+  (let ((%str (wrapper-slot-value doc '%url)))
+    (unless (null-pointer-p %str)
+      (puri:parse-uri (foreign-string-to-lisp %str)))))
+
+(defmethod base-url ((node node))
+  (let ((%str (%xmlNodeGetBase (pointer (document node))
+                               (pointer node))))
+    (unwind-protect
+         (puri:parse-uri (foreign-string-to-lisp %str))
+      (%xmlFree %str))))
+                   
+
 ;;; root
 
 (defgeneric root (obj))

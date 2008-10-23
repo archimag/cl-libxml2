@@ -18,6 +18,7 @@
 *** DONE local-name (node)
 *** DONE namespace-uri (node)
 *** DONE namespace-prefix (node)
+*** DONE base-url (obj)
 
 ** Creating nodes
 *** DONE make-document (document-element)

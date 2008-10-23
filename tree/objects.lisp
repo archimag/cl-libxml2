@@ -17,6 +17,11 @@
      (defmethod wrapper-slot-value ((obj ,wrapper-name) slot)
        (cffi:foreign-slot-value (pointer obj) (quote ,cffi-type) slot))))
 
+(defmacro with-libxml2-object ((var value) &rest body)
+  `(let ((,var ,value))
+     (unwind-protect
+          (progn ,@body)
+       (release ,var))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; node
@@ -106,14 +111,9 @@
     (make-instance 'document
                    :pointer %doc)))
 
-(defmacro with-document ((var doc) &rest body)
-  `(let ((,var ,doc))
-     (unwind-protect
-          (progn ,@body)
-       (release ,var))))
 
 (defmacro with-parse-document ((var src) &rest body)
-  `(with-document (,var (parse ,src)) ,@body))
+  `(with-libxml2-object (,var (parse ,src)) ,@body))
 
 
 

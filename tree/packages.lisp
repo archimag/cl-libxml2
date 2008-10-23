@@ -33,7 +33,9 @@
    :serialize
    :release
 
-   :with-document
+   :base-url
+   
+   :with-libxml2-object
    :with-parse-document
    :process-xinclude
 

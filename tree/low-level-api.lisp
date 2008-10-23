@@ -54,10 +54,9 @@
 
 (defctype %xmlNsType %xmlElementType)
 
-
+;; fuck! fuck! fuck!
 ;; (defcfun ("xmlFree" %xmlFree) :void
 ;;    (ptr :pointer))
-
 (defun %xmlFree (ptr)
   (foreign-funcall "free" :pointer ptr :void))
 
@@ -258,6 +257,14 @@
   (old %xmlNodePtr)
   (cur %xmlNodePtr))
   
+
+(defcfun ("xmlNodeGetBase" %xmlNodeGetBase) %xmlCharPtr
+  (doc %xmlDocPtr)
+  (cur %xmlNodePtr))
+
+(defcfun ("xmlDocumentGetBase" %xmlDocumentGetBase) %xmlCharPtr
+  (doc %xmlDocPtr))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; xmlNs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
