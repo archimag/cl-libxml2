@@ -1,11 +1,11 @@
 ;; test.lisp
 
-(defpackage :libxml2-test
+(defpackage :libxml2.test
   (:use :cl :iter :libxml2.tree :lift)
   (:export
    #:run-libxml2-test))
 
-(in-package #:libxml2-test)
+(in-package #:libxml2.test)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -97,20 +97,33 @@
 
 (addtest (libxml2.tree-test)
   attribute-value-1
+  (ensure-same "Test attribute value"
+               (with-parse-document (doc "<root attr=\"Test attribute value\" />")
+                 (attribute-value (root doc) "attr"))))
+
+(addtest (libxml2.tree-test)
+  attribute-value-2
+  (ensure-same "Test attribute value"
+               (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"Test attribute value\" />")
+                 (attribute-value (root doc) "attr" "www.sample.org"))))
+
+
+(addtest (libxml2.tree-test)
+  attribute-value-3
   (ensure-same "test attrbiute value"
                (with-libxml2-object (el (make-element "root"))
                  (setf (attribute-value el "value") "test attrbiute value")
                  (attribute-value el "value"))))
 
 (addtest (libxml2.tree-test)
-  attribute-value-2
+  attribute-value-4
   (ensure-same "test attrbiute value"
                (with-parse-document (doc "<root />")
                  (setf (attribute-value (root doc) "value" "www.sample.org") "test attrbiute value")
                  (attribute-value (root doc) "value" "www.sample.org"))))
 
 (addtest (libxml2.tree-test)
-  attribute-value-3
+  attribute-value-5
   (ensure-different "test attrbiute value"
                     (with-parse-document (doc "<root />")
                       (setf (attribute-value (root doc) "value" "www.sample.org") "test attrbiute value")
@@ -146,9 +159,43 @@
                  (iter (for child in-child-nodes (root doc) with (:type :xml-element-node))
                        (collect (local-name child))))))
 
+;;; ITERM (FOR child IN-NEXT-SIBLINGS node WITH ())
+
+(addtest (libxml2.tree-test)
+  in-next-siblings
+  (ensure-same '("bar" "zoo")
+               (with-parse-document (doc  "<root><foo/><bar/><zoo/></root>")
+                 (iter (for child in-next-siblings (first-child (root doc)) with (:type :xml-element-node))
+                       (collect (local-name child))))))
+
 ;;; ITERM (FOR child IN-NEXT-SIBLINGS-FROM node WITH ())
 
-;;(addtest (libxml2.tree
+(addtest (libxml2.tree-test)
+  in-next-siblings-from
+  (ensure-same '("foo" "bar" "zoo")
+               (with-parse-document (doc  "<root><foo/><bar/><zoo/></root>")
+                 (iter (for child in-next-siblings-from (first-child (root doc)) with (:type :xml-element-node))
+                       (collect (local-name child))))))
+
+
+;;; ITERM (FOR child IN-PREV-SIBLINGS node WITH ())
+
+(addtest (libxml2.tree-test)
+  in-prev-siblings
+  (ensure-same '("bar" "foo")
+               (with-parse-document (doc  "<root><foo/><bar/><zoo/></root>")
+                 (iter (for child in-prev-siblings (last-child (root doc)) with (:type :xml-element-node))
+                       (collect (local-name child))))))
+
+;;; ITERM (FOR child IN-PREV-SIBLINGS-FROM node WITH ())
+
+(addtest (libxml2.tree-test)
+  in-prev-siblings-from
+  (ensure-same '("zoo" "bar" "foo")
+               (with-parse-document (doc  "<root><foo/><bar/><zoo/></root>")
+                 (iter (for child in-prev-siblings-from (last-child (root doc)) with (:type :xml-element-node))
+                       (collect (local-name child))))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run-libxml2-test

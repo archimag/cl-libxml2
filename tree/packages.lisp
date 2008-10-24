@@ -12,6 +12,7 @@
    :%xmlCharPtr
    :%xmlNodePtr
    :%xmlNsPtr
+   :defwrapper
    ))
 
 (defpackage :libxml2.tree
