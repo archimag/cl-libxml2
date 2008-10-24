@@ -42,6 +42,10 @@
 **** DONE with (:type type)
 **** DONE with (:ns  ns-uri)
 **** DONE with (:filter fun)
+*** DONE iter (FOR child IN-NEXT-SIBLINGS node WITH ())
+*** DONE iter (FOR child IN-NEXT-SIBLINGS-FROM node WITH ())
+*** DONE iter (FOR child IN-PREV-SIBLINGS node WITH ())
+*** DONE iter (FOR child IN-PREV-SIBLINGS-FROM node WITH ())
 
 ** Adding and Removing Child Nodes
 *** DONE prepend-child (parent child)

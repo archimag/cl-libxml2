@@ -146,6 +146,9 @@
                  (iter (for child in-child-nodes (root doc) with (:type :xml-element-node))
                        (collect (local-name child))))))
 
+;;; ITERM (FOR child IN-NEXT-SIBLINGS-FROM node WITH ())
+
+;;(addtest (libxml2.tree
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run-libxml2-test

@@ -10,7 +10,7 @@
      (if uri
          (with-foreign-string (%uri uri)
            (%xmlGetNsProp (pointer element) %name %uri))
-         (%xmlGetProp (pointer element) %name)))))
+         (%xmlGetNsProp (pointer element) %name (null-pointer))))))
 
 
 (defun set-attribute-value (element name &optional uri value)
@@ -19,7 +19,7 @@
         (let ((ns (or (search-ns-by-href element uri)
                       (make-ns element uri))))
           (%xmlSetNsProp (pointer element) (pointer ns) %name %value))
-        (%xmlSetProp (pointer element) %name %value)))
+        (%xmlSetNsProp (pointer element) (null-pointer) %name %value)))
   (or value uri))
 
 (defsetf attribute-value set-attribute-value)
@@ -31,7 +31,7 @@
                   (if uri
                       (with-foreign-string (%uri uri)
                         (%xmlHasNsProp (pointer element) %name %uri))
-                      (%xmlHasProp (pointer element) %name)))))
+                      (%xmlHasNsProp (pointer element) %name (null-pointer))))))
     (unless (null-pointer-p %attr)
       (= 0 (%xmlRemoveProp %attr)))))
 

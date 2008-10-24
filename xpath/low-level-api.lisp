@@ -13,30 +13,8 @@
 (defctype %xmlXPathFuncLookupFunc :pointer)
 (defctype %xmlStructuredErrorFunc :pointer)
 
-;; enum xmlXPathObjectType
-(defcenum %xmlXPathObjectType
-  (:xpath-undefined  0)
-  (:xpath-nodeset  1)
-  (:xpath-boolean  2)
-  (:xpath-number  3)
-  (:xpath-string  4)
-  (:xpath-point  5)
-  (:xpath-range  6)
-  (:xpath-locationset  7)
-  (:xpath-users  8)
-  (:xpath-xslt-tree 9))
-
-;;struct xmlXPathObject
-(defcstruct %xmlXPathObject 
-  (%type %xmlXPathObjectType)
-  (%nodesetval %xmlNodeSetPtr)
-  (%boolval :int)
-  (%floatval :double)
-  (%stringval %xmlCharPtr)
-  (%user :pointer)
-  (%index :int)
-  (%user2 :pointer)
-  (%index2 :int))
+(defctype %xmlXPathObjectPtr :pointer)
+(defctype %xmlXPathCompExprPtr :pointer)
 
 
 (defcenum %xmlErrorLevel
@@ -77,7 +55,6 @@
   (%ctxt :pointer)
   ;; void *	node	: the node in the tree
   (%node :pointer))
-
 
 
 ;;struct xmlXPathContext
@@ -161,18 +138,59 @@
   ;; void *	cache
   (%cache :pointer))
 
+;; enum xmlXPathObjectType
+(defcenum %xmlXPathObjectType
+  (:xpath-undefined  0)
+  (:xpath-nodeset  1)
+  (:xpath-boolean  2)
+  (:xpath-number  3)
+  (:xpath-string  4)
+  (:xpath-point  5)
+  (:xpath-range  6)
+  (:xpath-locationset  7)
+  (:xpath-users  8)
+  (:xpath-xslt-tree 9))
+
+;;struct xmlNodeSet
+(defcstruct %xmlNodeSet
+  ;; int	nodeNr	: number of nodes in the set
+  (%nodeNr :int)
+  ;; int	nodeMax	: size of the array as allocated
+  (%nodeMax :int)
+  ;; xmlNodePtr *	nodeTab	: array of nodes in no particular order @
+  (%nodeTab %xmlNodePtr))
+
+;;struct xmlXPathObject
+(defcstruct %xmlXPathObject 
+  (%type %xmlXPathObjectType)
+  (%nodesetval %xmlNodeSetPtr)
+  (%boolval :int)
+  (%floatval :double)
+  (%stringval %xmlCharPtr)
+  (%user :pointer)
+  (%index :int)
+  (%user2 :pointer)
+  (%index2 :int))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defcfun ("xmlXPathNewContext" %xmlXPathNewContext) %xmlXPathContextPtr
   (doc %xmlDocPtr))
 
-;;(defcfun ("xmlXPathNewContext" %xmlXPathNewContext) %xmlXPathContextPtr
-;;  (doc %xmlDocPtr))
+(defcfun ("xmlXPathEvalExpression" %xmlXPathEvalExpression) %xmlXPathObjectPtr
+  (str %xmlCharPtr)
+  (ctxt %xmlXPathContextPtr))
 
-;;xmlXPtrEval
-;;xmlXPathEvalExpression
-;;xmlXPathCompile
-;;xmlXPathCompiledEval
-;;xmlXPathFreeCompExpr
-;;xmlXPathFreeContext
+(defcfun ("xmlXPathCompile" %xmlXPathCompile) %xmlXPathCompExprPtr
+  (str %xmlCharPtr))
+
+(defcfun ("xmlXPathCompiledEval" %xmlXPathCompiledEval) %xmlXPathObjectPtr
+  (comp %xmlXPathCompExprPtr)
+  (ctxt %xmlXPathContextPtr))
+
+(defcfun ("xmlXPathFreeCompExpr" %xmlXPathFreeCompExpr) :void
+  (comp %xmlXPathCompExprPtr))
+
+
+(defcfun ("xmlXPathFreeContext" %xmlXPathFreeContext) :void
+  (ctxt %xmlXPathContextPtr))

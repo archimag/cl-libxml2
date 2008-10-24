@@ -138,10 +138,12 @@
                                                                   %prefix))))))
 
 (defun make-ns (element href &optional prefix)
-  (with-foreign-strings ((%href href) (%prefix (or prefix (generate-ns-prefix element))))
-    (%xmlNewNs (pointer element)
-               %href
-               %prefix)))
+  (make-instance 'ns
+                 :pointer (with-foreign-strings ((%href href) (%prefix (or prefix (generate-ns-prefix element))))
+                            (%xmlNewNs (pointer element)
+                                       %href
+                                       %prefix))))
+
 
 (defun search-ns-by-href (element href)
   (let ((%ns (with-foreign-string (%href href)

@@ -97,7 +97,17 @@
   (cffi:foreign-string-to-lisp
    (wrapper-slot-value node '%content)))
 
-;;; FOR var IN-CHILD-NODES node WITH ()
+;;; process-xinclude
+
+(defgeneric process-xinclude (obj))
+
+(defmethod process-xinclude ((node node))
+  (%xmlXincludeProcessTree (pointer node)))
+
+(defmethod process-xinclude ((doc document))
+  (process-xinclude (root doc)))
+
+;;; FOR var IN-... WITH ()
 
 (defun node-filter (&key type local-name ns filter)
   (if (or type local-name)
@@ -119,6 +129,9 @@
             (find-node (next-sibling first) filter))
         first)))
 
+
+;;; FOR var IN-CHILD-NODES node WITH ()
+
 (defmacro-driver (for var in-child-nodes node &optional with filter)
   (let ((kwd (if generate 'generate 'for)))
   `(progn
@@ -126,7 +139,42 @@
      (,kwd ,var first (find-node (first-child ,node) filter-fun) then (find-node (next-sibling ,var) filter-fun))
      (while ,var))))
 
-;;; process-xinclude
 
-(defun process-xinclude (node)
-  (%xmlXincludeProcessTree node))
+;;; FOR var IN-NEXT-SIBLINGS node WITH ()
+
+(defmacro-driver (for var in-next-siblings node &optional with filter)
+  (let ((kwd (if generate 'generate 'for)))
+  `(progn
+     (with filter-fun = (node-filter ,@filter))
+     (,kwd ,var first (find-node (next-sibling ,node) filter-fun) then (find-node (next-sibling ,var) filter-fun))
+     (while ,var))))
+
+;;; FOR var IN-NEXT-SIBLINGS-FROM node WITH ()
+
+(defmacro-driver (for var in-next-siblings-from node &optional with filter)
+  (let ((kwd (if generate 'generate 'for)))
+  `(progn
+     (with filter-fun = (node-filter ,@filter))
+     (,kwd ,var first (find-node ,node filter-fun) then (find-node (next-sibling ,var) filter-fun))
+     (while ,var))))
+
+;;; FOR var IN-PREV-SIBLING node WITH ()
+
+(defmacro-driver (for var in-prev-siblings node &optional with filter)
+  (let ((kwd (if generate 'generate 'for)))
+  `(progn
+     (with filter-fun = (node-filter ,@filter))
+     (,kwd ,var first (find-node (prev-sibling ,node) filter-fun) then (find-node (prev-sibling ,var) filter-fun))
+     (while ,var))))
+
+;;; FOR var IN-PREV-SIBLING-FROM node WITH ()
+
+(defmacro-driver (for var in-prev-siblings-from node &optional with filter)
+  (let ((kwd (if generate 'generate 'for)))
+  `(progn
+     (with filter-fun = (node-filter ,@filter))
+     (,kwd ,var first (find-node ,node filter-fun) then (find-node (prev-sibling ,var) filter-fun))
+     (while ,var))))
+
+
+
