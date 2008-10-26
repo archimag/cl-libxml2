@@ -35,10 +35,11 @@
   (args :pointer))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defclass stylesheet ()
-  ((pointer :initarg :pointer :reader pointer)))
+(defclass stylesheet (libxml2.tree::libxml2-cffi-object-wrapper) ())
+;;  ((pointer :initarg :pointer :reader pointer)))
 
-(defmethod release ((style stylesheet))
+
+(defmethod release/impl ((style stylesheet))
   (%xsltFreeStylesheet  (pointer style)))
 
 

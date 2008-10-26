@@ -13,6 +13,7 @@
    :%xmlNodePtr
    :%xmlNsPtr
    :defwrapper
+   :wrapper-slot-value
    ))
 
 (defpackage :libxml2.tree

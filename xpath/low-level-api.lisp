@@ -194,3 +194,6 @@
 
 (defcfun ("xmlXPathFreeContext" %xmlXPathFreeContext) :void
   (ctxt %xmlXPathContextPtr))
+
+(defcfun ("xmlXPathFreeObject" %xmlXPathFreeObject) :void
+  (obj %xmlXPathObjectPtr))

@@ -6,8 +6,10 @@
   ((pointer :initarg :pointer :reader pointer)))
 
 (defgeneric wrapper-slot-value (obj slot))
+(defgeneric set-wrapper-slot-value (obj slot value))
 
 (defgeneric release (obj) )
+(defgeneric release/impl (obj))
 (defgeneric copy (obj))
 
 
@@ -15,7 +17,11 @@
   `(progn
      (defclass ,wrapper-name (libxml2-cffi-object-wrapper) ())
      (defmethod wrapper-slot-value ((obj ,wrapper-name) slot)
-       (cffi:foreign-slot-value (pointer obj) (quote ,cffi-type) slot))))
+       (cffi:foreign-slot-value (pointer obj) (quote ,cffi-type) slot))
+     (defmethod set-wrapper-slot-value ((obj ,wrapper-name) slot value)
+       (setf (cffi:foreign-slot-value (pointer obj) (quote ,cffi-type) slot) value))))
+
+(defsetf wrapper-slot-value set-wrapper-slot-value)
 
 (defmacro with-libxml2-object ((var value) &rest body)
   `(let ((,var ,value))
@@ -23,13 +29,17 @@
           (progn ,@body)
        (release ,var))))
 
+(defmethod release ((obj libxml2-cffi-object-wrapper))
+  (release/impl obj)
+  (setf (slot-value obj 'pointer) nil))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; node
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defwrapper node %xmlNode)
 
-(defmethod release ((node node))
+(defmethod release/impl ((node node))
   (%xmlFreeNode (pointer node)))
 
 (defmethod copy ((node node))
@@ -82,7 +92,7 @@
 
 (defwrapper document %xmlDoc)
 
-(defmethod release ((doc document))
+(defmethod release/impl ((doc document))
   (%xmlFreeDoc (pointer doc)))
 
 (defmethod copy ((doc document))
