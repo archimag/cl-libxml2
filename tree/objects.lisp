@@ -24,10 +24,10 @@
 (defsetf wrapper-slot-value set-wrapper-slot-value)
 
 (defmacro with-libxml2-object ((var value) &rest body)
-  `(let ((,var ,value))
-     (unwind-protect
-          (progn ,@body)
-       (release ,var))))
+  `(unwind-protect
+        (let ((,var ,value))
+          ,@body)
+     (if ,value (release ,value))))
 
 (defmethod release ((obj libxml2-cffi-object-wrapper))
   (release/impl obj)
@@ -99,28 +99,11 @@
   (make-instance 'document
                  :pointer (%xmlCopyDoc (pointer doc) 1)))
 
-;; (defun make-document (name &optional href prefix)
-;;   (let* ((%doc (%xmlNewDoc (null-pointer)))
-;;          (%node (with-foreign-string (%name name)
-;;                   (%xmlNewNode (null-pointer) %name)))
-;;          (%ns (if href
-;;                   (if prefix
-;;                       (with-foreign-strings ((%href href) (%prefix prefix))
-;;                         (%xmlNewNs %node %href %prefix))
-;;                       (with-foreign-string (%href href)
-;;                         (%xmlNewNs %node %href (null-pointer))))
-;;                   (null-pointer))))
-;;     (setf (foreign-slot-value %node '%xmlNode '%ns) %ns)
-;;     (%xmlDocSetRootElement %doc %node)
-;;     (make-instance 'document
-;;                    :pointer %doc)))
-
 (defun make-document (document-element)
   (let ((%doc (%xmlNewDoc (null-pointer))))
     (%xmlDocSetRootElement %doc (pointer document-element))
     (make-instance 'document
                    :pointer %doc)))
-
 
 (defmacro with-parse-document ((var src) &rest body)
   `(with-libxml2-object (,var (parse ,src)) ,@body))
@@ -165,7 +148,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun make-libxml2-cffi-object-wrapper/impl (%ptr wrapper-type)
+  (unless (null-pointer-p %ptr)
+    (make-instance wrapper-type :pointer %ptr)))
+
 (defun wrapper-slot-wrapper (obj slot wrapper-type)
-  (let ((ptr (wrapper-slot-value obj slot)))
-    (unless (null-pointer-p ptr)
-      (make-instance wrapper-type :pointer ptr))))
+  (make-libxml2-cffi-object-wrapper/impl (wrapper-slot-value obj slot) wrapper-type))

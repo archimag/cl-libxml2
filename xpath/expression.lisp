@@ -8,7 +8,7 @@
 
 (defclass compiled-expression (libxml2.tree::libxml2-cffi-object-wrapper) ())
 
-(defmethod release ((expr compiled-expression))
+(defmethod libxml2.tree::release/impl ((expr compiled-expression))
   (%xmlXPathFreeCompExpr (pointer expr)))
 
 (defun compile-expression (str)
@@ -68,15 +68,20 @@
     (:xpath-nodeset (libxml2.tree::wrapper-slot-wrapper res '%nodesetval 'node-set))
     (otherwise nil)))
 
-(defun xpath-result-node-count (res)
-  (if (eql (xpath-result-type res) :xpath-nodeset)
-      (foreign-slot-value (wrapper-slot-value res '%nodesetval)
-                          '%xmlNodeSet
-                          '%nodeNr)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; eval-xpath-epression
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro with-%context ((var node) &rest body)
+  `(let ((,var (%xmlXPathNewContext (pointer (document ,node)))))
+     (unwind-protect
+          (progn
+            (setf (foreign-slot-value %ctxt
+                                     '%xmlXPathContext
+                                     '%node)
+                  (pointer node))
+            ,@body)
+       (%xmlXPathFreeContext %ctxt))))
 
 (defgeneric eval-xpath-expression (node expr))
 
@@ -84,33 +89,16 @@
   (eval-xpath-expression (root doc) expr))
 
 (defmethod eval-xpath-expression ((node node) (expr string))
-  (let ((%ctxt (%xmlXPathNewContext (pointer (document node)))))
-    (unwind-protect
-         (progn 
-           (setf (foreign-slot-value %ctxt
-                                     '%xmlXPathContext
-                                     '%node)
-                 (pointer node))
-           (let ((%object (with-foreign-string (%expr expr)
-                            (%xmlXPathEvalExpression %expr %ctxt))))
-             (unless (null-pointer-p %object)
-               (make-instance 'xpath-result
-                                     :pointer %object))))
-      (%xmlXPathFreeContext %ctxt))))
+  (with-%context (%ctxt node)
+    (libxml2.tree::make-libxml2-cffi-object-wrapper/impl (with-foreign-string (%expr expr)
+                                                           (%xmlXPathEvalExpression %expr %ctxt))
+                                                         'xpath-result)))
 
 (defmethod eval-xpath-expression ((node node) (expr compiled-expression))
-  (let ((%ctxt (%xmlXPathNewContext (pointer (document node)))))
-    (unwind-protect
-         (setf (foreign-slot-value (pointer node)
-                                   '%xmlXPathContext
-                                   '%node)
-               (pointer node))
-         (let ((%object (%xmlXPathCompiledEval (pointer expr)
-                                               %ctxt)))
-           (unless (null-pointer-p %object)
-             (make-instance 'xpath-resul
-                            :pointer %object)))
-      (%xmlXPathFreeContext %ctxt))))
+  (with-%context (%ctxt node)
+    (libxml2.tree::make-libxml2-cffi-object-wrapper/impl (%xmlXPathCompiledEval (pointer expr)
+                                                                                %ctxt)
+                                                         'xpath-result)))
 
 (defmacro with-xpath-result ((res (obj expr)) &rest body)
   `(with-libxml2-object (,res (eval-xpath-expression ,obj ,expr)) ,@body))
