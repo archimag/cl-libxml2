@@ -159,9 +159,10 @@
 (defun eval-expression-as-number (obj expr &key (ns-map *default-ns-map*))
   (let ((val (with-xpath-result (res (obj expr ns-map))
                (if res (%xmlXPathCastToNumber (pointer res))))))
-    (if (and val
-             (not (sb-ext:float-nan-p val)))
-      val)))
+    #+sbcl(if (and val
+                   (not (sb-ext:float-nan-p val)))
+              val)
+    #-sbcl val))
         
 
 (defun eval-expression-as-boolean (obj expr &key (ns-map *default-ns-map*))
