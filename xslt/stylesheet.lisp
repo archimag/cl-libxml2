@@ -35,13 +35,27 @@
   (args :pointer))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defclass stylesheet (libxml2.tree::libxml2-cffi-object-wrapper) ())
-;;  ((pointer :initarg :pointer :reader pointer)))
+(defclass stylesheet (libxml2.tree::libxml2-cffi-object-wrapper)
+  ((params :initform nil)))
 
+(defun stylesheet-set-param (style name value &optional (isstring t))
+  (unless (slot-value style 'params)
+    (setf (slot-value style 'params) (make-hash-table :test 'equal)))
+  (setf (gethash name (slot-value style 'params))
+        (if isstring
+            (format nil "\"~A\"" value)
+            value)))
 
-(defmethod release/impl ((style stylesheet))
+(defun stylesheet-remove-param (style name)
+  (let ((params (slot-value style 'params)))
+    (if params
+        (remhash name params))))
+
+(defun stylesheet-clear-params (style)
+  (setf (slot-value style 'params) nil))
+
+(defmethod libxml2.tree::release/impl ((style stylesheet))
   (%xsltFreeStylesheet  (pointer style)))
-
 
 ;;; parse-stylesheet
 
@@ -70,12 +84,30 @@
 
 ;;; transform
 
-(defun transform (style doc &rest args)
-  (declare (ignore args))
-  (make-instance 'document
-                 :pointer (%xsltApplyStylesheet (pointer style)
-                                                (pointer doc)
-                                                (null-pointer))))
+(defun transform (style doc)
+  (let ((params (slot-value style 'params)))
+    (if params
+        (let ((array-length (1+ (* 2 (hash-table-count params)))))
+          (with-foreign-object (%array :pointer array-length)
+            (iter (for (name value) in-hashtable params)
+                  (for i upfrom 0 by 2)
+                  (setf (mem-aref %array :pointer i)
+                        (foreign-string-alloc name))
+                  (setf (mem-aref %array :pointer (1+ i))
+                        (foreign-string-alloc value)))
+            (setf (mem-aref %array :pointer (1- array-length))
+                  (null-pointer))
+            (unwind-protect
+                 (libxml2.tree::make-libxml2-cffi-object-wrapper/impl (%xsltApplyStylesheet (pointer style)
+                                                                                            (pointer doc)
+                                                                                            %array)
+                                                                      'document)
+              (iter (for i from 0 below (1- array-length))
+                    (foreign-string-free (mem-aref %array :pointer i))))))
+        (libxml2.tree::make-libxml2-cffi-object-wrapper/impl (%xsltApplyStylesheet (pointer style)
+                                                                                   (pointer doc)
+                                                                                   (null-pointer))
+                                                             'document))))
 
 (defmacro with-transfom-result ((res (style doc)) &rest body)
   `(let ((,res (transform ,style ,doc)))

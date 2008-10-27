@@ -4,16 +4,16 @@
 * Base API (imitate cxml-stp)
 
 ** Parseing and Serializing
-** TODO parse (obj source)
-*** DONE (path pathname)
-*** DONE (uri puri)
-*** TODO (stream stream)
-*** DONE (str string)
-** TODO serialize (node target)
-*** DONE (path pathname)
-*** TODO (stream stream)
-*** DONE (:to-string)
-    
+*** TODO parse (obj source)
+**** DONE (path pathname)
+**** DONE (uri puri)
+**** TODO (stream stream)
+**** DONE (str string)
+*** TODO serialize (node target)
+**** DONE (path pathname)
+**** TODO (stream stream)
+**** DONE (:to-string)
+     
 ** Names and Namespaces URIs
 *** DONE local-name (node)
 *** DONE namespace-uri (node)
@@ -74,12 +74,22 @@
 
 
 * XPath API
-** TODO xpath-functor 
-** TODO iter (FOR item IN-XPATH query ON node &optional WITH-NS-MAP (((prefix1 ns1) (prefix2 ns2) ...) *default-ns-map*))
+** DONE with-compiled-expression 
+** DONE eval-expression
+** DONE eval-expression-as-string
+** DONE eval-expression-as-number
+** DONE eval-expression-as-boolean
+** DONE iter (FOR item IN-XPATH query ON node &optional WITH-NS-MAP (((prefix1 ns1) (prefix2 ns2) ...) *default-ns-map*))
 ** TODO getpath (node)
-
+   
 * XSLT API
-** TODO transform
+** DONE parse-stylesheet
+** DONE with-stylesheet
+** DONE stylesheet-set-param
+** DONE stylesheet-remove-param
+** DONE stylesheet-clear-params
+** DONE transform
+** DONE with-transform-result
 
 * Extending
 ** Document loading and URL resolving

@@ -1,7 +1,7 @@
 ;; test.lisp
 
 (defpackage :libxml2.test
-  (:use :cl :iter :libxml2.tree :lift :libxml2.xpath)
+  (:use :cl :iter :libxml2.tree :lift :libxml2.xpath :libxml2.xslt)
   (:export
    #:run-libxml2-tests))
 
@@ -12,7 +12,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deftestsuite libxml2-test () ())
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; tree-test
@@ -212,12 +211,15 @@
 
 (deftestsuite xpath-test (libxml2-test) ())
 
+;;; xpath-result-type
+
 (addtest (xpath-test)
   xpath-result-type-1
   (ensure-same :xpath-nodeset
                (with-parse-document (doc "<root><a /><b /><c /></root>")
                  (with-xpath-result (res (doc "//node()"))
                    (xpath-result-type res)))))
+
 
 (addtest (xpath-test)
   xpath-result-type-2
@@ -229,9 +231,87 @@
 (addtest (xpath-test)
   xpath-result-type-3
   (ensure-same :xpath-string
-               (with-parse-document (doc "<root attr=\"Test\">")
-                 (with-xpath-result (res (doc "/root/@attr"))
+               (with-parse-document (doc "<root attr=\"Test\" />")
+                 (with-xpath-result (res (doc "string(/root/@attr)"))
                    (xpath-result-type res)))))
+
+;;; eval-expression-as-string
+
+(addtest (xpath-test)
+  eval-expression-as-string-1
+  (ensure-same "a"
+               (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (eval-expression-as-string doc "local-name(/root/node())"))))
+
+(addtest (xpath-test)
+  eval-expression-as-string-2
+  (ensure-same "test value"
+               (with-parse-document (doc "<root attr=\"test value\"/>")
+                 (eval-expression-as-string doc "/root/@attr"))))
+
+(addtest (xpath-test)
+  eval-expression-as-string-3
+  (ensure-same "value1"
+               (with-parse-document (doc "<root attr1=\"value1\" attr2=\"value2\" />")
+                 (eval-expression-as-string doc "/root/@*"))))
+
+(addtest (xpath-test)
+  eval-expression-as-string-4
+  (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (eval-expression-as-string doc "/root/node()"))))
+
+(addtest (xpath-test)
+  eval-expression-as-string-5
+  (ensure-same "value"
+               (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"value\" />")
+                 (eval-expression-as-string doc "/root/@my:attr" :ns-map '(("my" "www.sample.org"))))))
+
+(addtest (xpath-test)
+  eval-expression-as-string-6
+  (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"value\" />")
+                 (eval-expression-as-string doc "/root/@my:attr"))))
+
+(addtest (xpath-test)
+  eval-expression-as-string-7
+  (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"value\" />")
+                 (eval-expression-as-string doc "/root/@attr"))))
+
+;;; eval-expressiong-as-number
+
+(addtest (xpath-test)
+  eval-expression-as-number-1
+  (ensure-same 3.0d0
+               (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (eval-expression-as-number doc "count(/root/node())"))))
+
+(addtest (xpath-test)
+  eval-expression-as-number-2
+  (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (eval-expression-as-number doc "/root/node()"))))
+
+;;; eval-expressiong-as-boolean
+
+(addtest (xpath-test)
+  eval-expression-as-boolean-1
+  (ensure (with-parse-document (doc "<root attr=\"\" />")
+            (eval-expression-as-boolean doc "/root/@*"))))
+
+(addtest (xpath-test)
+  eval-expression-as-boolean-2
+  (ensure (with-parse-document (doc "<root><a /><b /><c /></root>")
+            (eval-expression-as-boolean doc "/root/node()"))))
+
+(addtest (xpath-test)
+  eval-expression-as-boolean-3
+  (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (eval-expression-as-boolean doc "/root/text()"))))
+
+(addtest (xpath-test)
+  eval-expression-as-boolean-4
+  (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (eval-expression-as-boolean doc "/root/@*"))))
+
+;;; in-nodeset
 
 (addtest (xpath-test)
   in-nodeset-1
@@ -241,6 +321,67 @@
                    (iter (for node in-nodeset (xpath-result-value res))
                          (collect (local-name node)))))))
 
+(addtest (xpath-test)
+  in-nodeset-2
+  (ensure-same '("a" "b" "c")
+               (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (with-xpath-result (res ((root doc) "node()"))
+                   (iter (for node in-nodeset (xpath-result-value res))
+                         (collect (local-name node)))))))
+
+(addtest (xpath-test)
+  in-nodeset-3
+  (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (with-xpath-result (res ((root doc) "text()"))
+                   (iter (for node in-nodeset (xpath-result-value res))
+                         (collect (local-name node)))))))
+
+;;; in-xpath-result
+
+(addtest (xpath-test)
+  in-xpath-result-1
+  (ensure-same '("a" "b" "c")
+               (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (iter (for node in-xpath-result "node()" on (root doc))
+                       (collect (local-name node))))))
+
+(addtest (xpath-test)
+  in-xpath-result-2
+  (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (iter (for node in-xpath-result "node()" on doc)
+                       (collect (local-name node))))))
+
+(addtest (xpath-test)
+  in-xpath-result-3
+  (ensure-same '("box")
+               (with-parse-document (doc "<root xmlns:xul=\"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul\"><a /><xul:box /><b /><c /></root>")
+                 (iter (for node in-xpath-result "//xul:box" on doc)
+                       (collect (local-name node))))))
+
+(addtest (xpath-test)
+  in-xpath-result-4
+  (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\"><a /><my:box /><b /><c /></root>")
+                 (iter (for node in-xpath-result "//box" on doc)
+                       (collect (local-name node))))))
+
+(addtest (xpath-test)
+  in-xpath-result-5
+  (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\"><a /><my:box /><b /><c /></root>")
+                 (iter (for node in-xpath-result "//my:box" on doc)
+                       (collect (local-name node))))))
+
+;; compiled-expression
+
+(addtest (xpath-test)
+  compiled-expression-1
+  (ensure-same '("a" "b" "c")
+               (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (with-compiled-expression (expr "node()")
+                   (iter (for node in-xpath-result expr on (root doc))
+                       (collect (local-name node)))))))
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; xslt-test
@@ -249,7 +390,58 @@
 (deftestsuite xslt-test (libxml2-test) ())
 
 (addtest (xslt-test)
-  (ensure-same 1 1))
+  xslt-test-1
+  (ensure-same '("result" "Hello world")
+               (with-stylesheet (style "<?xml version=\"1.0\"?>
+<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">
+    <xsl:template match=\"/\">
+        <result>
+            <xsl:value-of select=\".\" />
+        </result>
+    </xsl:template>
+</xsl:stylesheet>")
+                 (with-parse-document (doc "<root>Hello world</root>")
+                   (with-transfom-result (res (style doc))
+                     (list (local-name (root res))
+                           (eval-expression-as-string (root res) "text()")))))))
+
+(addtest (xslt-test)
+  xslt-test-2
+  (ensure-same '("result" "Hello world")
+               (with-stylesheet (style "<?xml version=\"1.0\"?>
+<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">
+    <xsl:param name=\"arg1\" />
+    <xsl:template match=\"/\">
+        <result>
+            <xsl:value-of select=\"$arg1\" />
+        </result>
+    </xsl:template>
+</xsl:stylesheet>")
+                 (stylesheet-set-param style "arg1" "Hello world")
+                 (with-parse-document (doc "<root />")
+                   (with-transfom-result (res (style doc))
+                     (list (local-name (root res))
+                           (eval-expression-as-string (root res) "text()")))))))
+
+(addtest (xslt-test)
+  xslt-test-3
+  (ensure-same '("result" "Hello world")
+               (with-stylesheet (style "<?xml version=\"1.0\"?>
+<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">
+    <xsl:param name=\"arg1\" />
+    <xsl:template match=\"/\">
+        <result>
+            <xsl:value-of select=\"concat($arg1, ' ', $arg2)\" />
+        </result>
+    </xsl:template>
+</xsl:stylesheet>")
+                 (stylesheet-set-param style "arg1" "Hello")
+                 (stylesheet-set-param style "arg2" "world")
+                 (with-parse-document (doc "<root />")
+                   (with-transfom-result (res (style doc))
+                     (list (local-name (root res))
+                           (eval-expression-as-string (root res) "text()")))))))
+                          
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run-libxml2-test

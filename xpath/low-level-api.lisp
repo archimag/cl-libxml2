@@ -197,3 +197,22 @@
 
 (defcfun ("xmlXPathFreeObject" %xmlXPathFreeObject) :void
   (obj %xmlXPathObjectPtr))
+
+;;; converts
+
+(defcfun ("xmlXPathCastToString" %xmlXPathCastToString) %xmlCharPtr
+  (val %xmlXPathObjectPtr))
+
+(defcfun ("xmlXPathCastToBoolean" %xmlXPathCastToBoolean) :int
+    (val %xmlXPathObjectPtr))
+
+(defcfun ("xmlXPathCastToNumber" %xmlXPathCastToNumber) :double
+  (val %xmlXPathObjectPtr))
+
+
+;; xmlXPathRegisterNs
+
+(defcfun ("xmlXPathRegisterNs" %xmlXPathRegisterNs) :int
+  (ctxt %xmlXPathContextPtr ctxt)
+  (prefix %xmlCharPtr)
+  (ns_uri %xmlCharPtr))

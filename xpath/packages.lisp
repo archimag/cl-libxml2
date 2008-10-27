@@ -5,12 +5,17 @@
   (:export
    :compiled-expression
    :compile-expression
+   :with-compiled-expression
    :node-set
    :node-set-length
    :node-set-at
    :xpath-result
    :xpath-result-type
    :xpath-result-value
-   :eval-xpath-expression
+   :eval-expression
+   :eval-expression-as-string
+   :eval-expression-as-number
+   :eval-expression-as-boolean
    :with-xpath-result
+   :*default-ns-map*
    ))
