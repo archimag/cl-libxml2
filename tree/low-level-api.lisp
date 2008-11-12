@@ -128,6 +128,14 @@
   (encoding %xmlCharPtr)
   (options :int))
 
+(defcfun ("xmlReadIO" %xmlReadIO) %xmlDocPtr
+  (ioread :pointer)
+  (ioclose :pointer)
+  (ioctx :pointer)
+  (url %xmlCharPtr)
+  (encoding %xmlCharPtr)
+  (options :int))
+
 ;; (defcfun ("xmlReadMemory" %xmlReadMemory) %xmlDocPtr
 ;;   (buffer %xmlCharPtr)
 ;;   (size :int)

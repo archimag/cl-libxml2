@@ -100,7 +100,87 @@
                        (namespace-prefix (root doc))
                        (attribute-value (root doc) "attr")))))
 
+;;; parse (stream string-stream)
 
+(addtest (tree-test)
+  parse-string-stream-1
+  (ensure-same 1000
+               (with-input-from-string (in (concatenate 'string
+                                                        (iter (repeat 1000)
+                                                              (reducing "<tag />"
+                                                                        by (lambda (sum val) (concatenate 'string sum val))
+                                                                        initial-value "<root>"))
+                                                        "</root>"))
+                 (with-parse-document (doc in)
+                   (iter (for node in-child-nodes (root doc) with (:type :xml-element-node :local-name "tag"))
+                         (counting node))))))
+
+(addtest (tree-test)
+  parse-string-stream-2
+  (ensure-same 1000
+               (with-input-from-string (in (concatenate 'string
+                                                        (iter (repeat 1000)
+                                                              (reducing "<тэг/>"
+                                                                        by (lambda (sum val) (concatenate 'string sum val))
+                                                                        initial-value "<корень>"))
+                                                        "</корень>"))
+                 (with-parse-document (doc in)
+                   (iter (for node in-child-nodes (root doc) with (:type :xml-element-node :local-name "тэг"))
+                         (counting node))))))
+                                           
+;;; parse (stream stream)
+
+(addtest (tree-test)
+  parse-stream-1
+  (ensure-same 1000
+               (flexi-streams:with-input-from-sequence
+                   (in (flexi-streams:string-to-octets 
+                        (concatenate 'string
+                                     (iter (repeat 1000)
+                                           (reducing "<tag />"
+                                                     by (lambda (sum val) (concatenate 'string sum val))
+                                                     initial-value "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<root>"))
+                                     "</root>")
+                        :external-format :utf-8))
+                 (with-parse-document (doc in)
+                   (iter (for node in-child-nodes (root doc) with (:type :xml-element-node :local-name "tag"))
+                         (counting node))))))
+
+(addtest (tree-test)
+  parse-stream-2
+  (ensure-same 1000
+               (flexi-streams:with-input-from-sequence
+                   (in (flexi-streams:string-to-octets 
+                        (concatenate 'string
+                                     (iter (repeat 1000)
+                                           (reducing "<тэг />"
+                                                     by (lambda (sum val) (concatenate 'string sum val))
+                                                     initial-value "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<корень>"))
+                                     "</корень>")
+                        :external-format :utf-8))
+                 (with-parse-document (doc in)
+                   (iter (for node in-child-nodes (root doc) with (:type :xml-element-node :local-name "тэг"))
+                         (counting node))))))
+
+(addtest (tree-test)
+  parse-stream-3
+  (ensure-same 1000
+               (flexi-streams:with-input-from-sequence
+                   (in (flexi-streams:string-to-octets 
+                        (concatenate 'string
+                                     (iter (repeat 1000)
+                                           (reducing "<тэг />"
+                                                     by (lambda (sum val) (concatenate 'string sum val))
+                                                     initial-value "<?xml version=\"1.0\" encoding=\"windows-1251\"?>
+<корень>"))
+                                     "</корень>")
+                        :external-format :windows-1251))
+                 (with-parse-document (doc in)
+                   (iter (for node in-child-nodes (root doc) with (:type :xml-element-node :local-name "тэг"))
+                         (counting node))))))
+                 
 ;;; attribute-value
 
 (addtest (tree-test)
