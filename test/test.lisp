@@ -238,6 +238,27 @@
                  (remove-attribute (root doc) "attr" "www.sample.org")
                  (attribute-value (root doc) "attr" "www.sample.org"))))
 
+;;; with-attributes
+
+(addtest (tree-test)
+  with-attributes-1
+  (ensure-same '("val1" "val2" "val3")
+               (with-parse-document (doc "<root attr1=\"val1\" attr2=\"val2\" attr3=\"val3\" />")
+                 (with-attributes ((attr1 "attr1")
+                                   (attr2 "attr2")
+                                   (attr3 "attr3")) (root doc)
+                   (list attr1 attr2 attr3)))))
+
+(addtest (tree-test)
+  with-attributes-2
+  (ensure-same '("val1" "val2" "val3")
+               (with-parse-document (doc "<root xmlns:my1=\"www.sample1.org\" xmlns:my2=\"www.sample2.org\" attr1=\"val1\" my1:attr2=\"val2\" my2:attr3=\"val3\" />")
+                 (with-attributes ((attr1 "attr1")
+                                   (attr2 "attr2" "www.sample1.org")
+                                   (attr3 "attr3" "www.sample2.org")) (root doc)
+                   (list attr1 attr2 attr3)))))
+                     
+
 
 ;;; ITERM (FOR child IN-CHILD-NODES node WITH ())
 

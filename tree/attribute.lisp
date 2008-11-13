@@ -35,6 +35,18 @@
     (unless (null-pointer-p %attr)
       (= 0 (%xmlRemoveProp %attr)))))
 
+;;; with-attributes
+
+(defmacro with-attributes ((&rest entries) element &body body)
+  (alexandria:once-only (element)
+    `(symbol-macrolet
+	 ,(mapcar (lambda (entry)
+		    (destructuring-bind (var name &optional uri)
+			entry
+		      `(,var (attribute-value ,element ,name ,uri))))
+		  entries)
+       ,@body)))
+
 ;;; iter (FOR (value name href)  IN-NODE-ATTRIBUTES node )
 
 (defmacro-driver (for attr in-attributes node)

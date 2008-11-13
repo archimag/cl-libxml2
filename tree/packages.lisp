@@ -63,4 +63,5 @@
 
    :attribute-value
    :remove-attribute
+   :with-attributes
    ))
