@@ -37,37 +37,22 @@
 
 (defcallback %read-binary-stream :int ((context :pointer) (buffer :pointer) (len :int))
   (declare (ignore context))
-  (if *stream-for-xml-parse*
-      (let ((arr (make-array len :initial-element nil))
-            (length nil))
-        (read-sequence arr *stream-for-xml-parse*)
-        (setq length (or (position nil arr) len))
-        (iter (for pos from 0 below length)
-              (setf (cffi:mem-ref buffer :uchar pos)
-                    (aref arr pos)))
-        length)
+  (if (and *stream-for-xml-parse*
+           (input-stream-p *stream-for-xml-parse*))
+      (iter (for pos from 0 below len)
+            (for byte next (read-byte *stream-for-xml-parse* nil))
+            (while byte)
+            (setf (cffi:mem-ref buffer :uchar pos) byte)
+            (finally (return pos)))
       -1))
 
-
-(defmethod parse ((stream stream))
-  (let ((*stream-for-xml-parse* stream))
-    (make-instance 'document
-                   :pointer (%xmlReadIO (cffi:callback %read-binary-stream)
-                                        (cffi:null-pointer)
-                                        (cffi:null-pointer)
-                                        (cffi:null-pointer)
-                                        (cffi:null-pointer)
-                                        0))))
-                                        
 (defcallback %read-string-stream :int ((context :pointer) (buffer :pointer) (len :int))
   (declare (ignore context))
   (if *stream-for-xml-parse*
       (let ((curpos 0))
-        (iter (for ch next (handler-case
-                               (read-char *stream-for-xml-parse*)
-                             (end-of-file nil)))
+        (iter (for ch next (read-char *stream-for-xml-parse* nil))
               (while ch)
-              (for octets = (flexi-streams:string-to-octets (make-array 1 :initial-element ch) :external-format :utf-8))
+              (for octets = (flex:string-to-octets (make-array 1 :initial-element ch) :external-format :utf-8))
               (if (< (+ (length octets)
                         curpos)
                      len)
@@ -79,14 +64,28 @@
                     (finish))))
         curpos)
       -1))
-
-(defmethod parse ((stream string-stream))
+          
+(defmethod parse ((stream stream))
   (let ((*stream-for-xml-parse* stream))
     (make-instance 'document
-                   :pointer (%xmlReadIO (cffi:callback %read-string-stream)
+                   :pointer (%xmlReadIO (if (subtypep (stream-element-type *stream-for-xml-parse*)
+                                                      'character)
+                                            (cffi:callback %read-string-stream)
+                                            (cffi:callback %read-binary-stream))
                                         (cffi:null-pointer)
                                         (cffi:null-pointer)
                                         (cffi:null-pointer)
                                         (cffi:null-pointer)
                                         0))))
+                                        
+
+;; (defmethod parse ((stream string-stream))
+;;   (let ((*stream-for-xml-parse* stream))
+;;     (make-instance 'document
+;;                    :pointer (%xmlReadIO (cffi:callback %read-stream)
+;;                                         (cffi:null-pointer)
+;;                                         (cffi:null-pointer)
+;;                                         (cffi:null-pointer)
+;;                                         (cffi:null-pointer)
+;;                                         0))))
     

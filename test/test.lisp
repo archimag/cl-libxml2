@@ -412,6 +412,25 @@
   (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
                  (eval-expression-as-boolean doc "/root/@*"))))
 
+;; eval-expression-as-node
+
+(addtest (xpath-test)
+  eval-expression-as-node-1
+  (ensure-same "b"
+               (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (local-name (eval-expression-as-node (root doc) "b")))))
+
+(addtest (xpath-test)
+  eval-expression-as-node-2
+  (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (eval-expression-as-node (root doc) "test"))))
+
+(addtest (xpath-test)
+  eval-expression-as-node-3
+  (ensure-same "val"
+               (with-parse-document (doc "<root><a attr=\"val\"/><b /><c /></root>")
+                 (attribute-node-value (eval-expression-as-node (root doc) "a/@attr")))))
+
 ;;; in-nodeset
 
 (addtest (xpath-test)

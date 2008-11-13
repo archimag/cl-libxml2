@@ -91,7 +91,7 @@
 (defun document (node)
   (wrapper-slot-wrapper node '%doc 'document))
 
-;;; test-contetn
+;;; text-content
 
 (defun text-content (node)
   (cffi:foreign-string-to-lisp

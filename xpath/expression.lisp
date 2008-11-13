@@ -166,3 +166,9 @@
 (defun eval-expression-as-boolean (obj expr &key (ns-map *default-ns-map*))
   (with-xpath-result (res (obj expr ns-map))
     (if res (not (= 0 (%xmlXPathCastToBoolean (pointer res)))))))
+
+(defun eval-expression-as-node (obj expr &key (ns-map *default-ns-map*))
+  (with-xpath-result (res (obj expr ns-map))
+    (if (and (eql (xpath-result-type res) :xpath-nodeset)
+             (> (node-set-length (xpath-result-value res)) 0))
+        (node-set-at (xpath-result-value res) 0))))

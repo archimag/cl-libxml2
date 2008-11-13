@@ -16,6 +16,7 @@
    :eval-expression-as-string
    :eval-expression-as-number
    :eval-expression-as-boolean
+   :eval-expression-as-node
    :with-xpath-result
    :*default-ns-map*
    ))
