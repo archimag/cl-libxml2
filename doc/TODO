@@ -10,6 +10,7 @@
 **** DONE (stream stream)
 **** DONE (stream string-stream)
 **** DONE (str string)
+**** DONE (octets array)
 *** TODO serialize (node target)
 **** DONE (path pathname)
 **** TODO (stream stream)

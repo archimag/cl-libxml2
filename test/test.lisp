@@ -180,6 +180,19 @@
                  (with-parse-document (doc in)
                    (iter (for node in-child-nodes (root doc) with (:type :xml-element-node :local-name "тэг"))
                          (counting node))))))
+
+;;; parse (octets stream)
+
+(addtest (tree-test)
+  parse-array-1
+  (ensure-same '("root" "www.sample.org" "my" "test attibute")
+               (with-parse-document (doc (flexi-streams:string-to-octets "<my:root xmlns:my=\"www.sample.org\" attr=\"test attibute\" />"))
+                 (list (local-name (root doc))
+                       (namespace-uri (root doc))
+                       (namespace-prefix (root doc))
+                       (attribute-value (root doc) "attr")))))
+
+         
                  
 ;;; attribute-value
 
