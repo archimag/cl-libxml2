@@ -19,4 +19,5 @@
    :eval-expression-as-node
    :with-xpath-result
    :*default-ns-map*
+   :getpath
    ))

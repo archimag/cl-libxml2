@@ -216,3 +216,8 @@
   (ctxt %xmlXPathContextPtr ctxt)
   (prefix %xmlCharPtr)
   (ns_uri %xmlCharPtr))
+
+;; xmlGetNodePath
+
+(defcfun ("xmlGetNodePath" %xmlGetNodePath) :pointer
+  (node %xmlNodePtr))

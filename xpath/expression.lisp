@@ -172,3 +172,12 @@
     (if (and (eql (xpath-result-type res) :xpath-nodeset)
              (> (node-set-length (xpath-result-value res)) 0))
         (node-set-at (xpath-result-value res) 0))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; getpath
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun getpath (node)
+  (gp:with-garbage-pool ()
+    (cffi:foreign-string-to-lisp (gp:cleanup-register (%xmlGetNodePath (pointer node)) 'libxml2.tree::%xmlFree))))

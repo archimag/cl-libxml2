@@ -2,7 +2,7 @@
 
 (defsystem :cl-libxml2
   :version "0.0.1"
-  :depends-on (#:cffi #:iterate #:puri #:flexi-streams #:alexandria)
+  :depends-on (#:cffi #:iterate #:puri #:flexi-streams #:alexandria #:garbage-pools)
   :components
   ((:module :tree
             :components

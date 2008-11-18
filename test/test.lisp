@@ -513,7 +513,21 @@
                    (iter (for node in-xpath-result expr on (root doc))
                        (collect (local-name node)))))))
 
+;; getpath
 
+(addtest (xpath-test)
+  getpath-1
+  (ensure-same "/root/foo/bar"
+               (with-parse-document (doc "<root><foo><bar /></foo></root>")
+                 (getpath (first-child (first-child (root doc)))))))
+
+(addtest (xpath-test)
+  getpath-2
+  (ensure-same '("/root/@a" "/root/child/@a" "/root/child/@b" "/root/child/@c")
+               (with-parse-document (doc "<root a=\"\" ><child a=\"\" b=\"\" c=\"\" /></root>")
+                 (iter (for node in-xpath-result "//@*" on doc)
+                       (collect (getpath node))))))
+         
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -83,7 +83,7 @@
 ** DONE eval-expression-as-number
 ** DONE eval-expression-as-boolean
 ** DONE iter (FOR item IN-XPATH query ON node &optional WITH-NS-MAP (((prefix1 ns1) (prefix2 ns2) ...) *default-ns-map*))
-** TODO getpath (node)
+** DONE getpath (node)
    
 * XSLT API
 ** DONE parse-stylesheet
