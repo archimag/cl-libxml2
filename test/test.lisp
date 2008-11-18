@@ -349,100 +349,100 @@
                  (with-xpath-result (res (doc "string(/root/@attr)"))
                    (xpath-result-type res)))))
 
-;;; eval-expression-as-string
+;;; find-string
 
 (addtest (xpath-test)
-  eval-expression-as-string-1
+  find-string-1
   (ensure-same "a"
                (with-parse-document (doc "<root><a /><b /><c /></root>")
-                 (eval-expression-as-string doc "local-name(/root/node())"))))
+                 (find-string doc "local-name(/root/node())"))))
 
 (addtest (xpath-test)
-  eval-expression-as-string-2
+  find-string-2
   (ensure-same "test value"
                (with-parse-document (doc "<root attr=\"test value\"/>")
-                 (eval-expression-as-string doc "/root/@attr"))))
+                 (find-string doc "/root/@attr"))))
 
 (addtest (xpath-test)
-  eval-expression-as-string-3
+  find-string-3
   (ensure-same "value1"
                (with-parse-document (doc "<root attr1=\"value1\" attr2=\"value2\" />")
-                 (eval-expression-as-string doc "/root/@*"))))
+                 (find-string doc "/root/@*"))))
 
 (addtest (xpath-test)
-  eval-expression-as-string-4
+  find-string-4
   (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
-                 (eval-expression-as-string doc "/root/node()"))))
+                 (find-string doc "/root/node()"))))
 
 (addtest (xpath-test)
-  eval-expression-as-string-5
+  find-string-5
   (ensure-same "value"
                (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"value\" />")
-                 (eval-expression-as-string doc "/root/@my:attr" :ns-map '(("my" "www.sample.org"))))))
+                 (find-string doc "/root/@my:attr" :ns-map '(("my" "www.sample.org"))))))
 
 (addtest (xpath-test)
-  eval-expression-as-string-6
+  find-string-6
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"value\" />")
-                 (eval-expression-as-string doc "/root/@my:attr"))))
+                 (find-string doc "/root/@my:attr"))))
 
 (addtest (xpath-test)
-  eval-expression-as-string-7
+  find-string-7
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"value\" />")
-                 (eval-expression-as-string doc "/root/@attr"))))
+                 (find-string doc "/root/@attr"))))
 
 ;;; eval-expressiong-as-number
 
 (addtest (xpath-test)
-  eval-expression-as-number-1
+  find-number-1
   (ensure-same 3.0d0
                (with-parse-document (doc "<root><a /><b /><c /></root>")
-                 (eval-expression-as-number doc "count(/root/node())"))))
+                 (find-number doc "count(/root/node())"))))
 
 (addtest (xpath-test)
-  eval-expression-as-number-2
+  find-number-2
   (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
-                 (eval-expression-as-number doc "/root/node()"))))
+                 (find-number doc "/root/node()"))))
 
 ;;; eval-expressiong-as-boolean
 
 (addtest (xpath-test)
-  eval-expression-as-boolean-1
+  find-boolean-1
   (ensure (with-parse-document (doc "<root attr=\"\" />")
-            (eval-expression-as-boolean doc "/root/@*"))))
+            (find-boolean doc "/root/@*"))))
 
 (addtest (xpath-test)
-  eval-expression-as-boolean-2
+  find-boolean-2
   (ensure (with-parse-document (doc "<root><a /><b /><c /></root>")
-            (eval-expression-as-boolean doc "/root/node()"))))
+            (find-boolean doc "/root/node()"))))
 
 (addtest (xpath-test)
-  eval-expression-as-boolean-3
+  find-boolean-3
   (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
-                 (eval-expression-as-boolean doc "/root/text()"))))
+                 (find-boolean doc "/root/text()"))))
 
 (addtest (xpath-test)
-  eval-expression-as-boolean-4
+  find-boolean-4
   (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
-                 (eval-expression-as-boolean doc "/root/@*"))))
+                 (find-boolean doc "/root/@*"))))
 
-;; eval-expression-as-node
+;; find-single-node
 
 (addtest (xpath-test)
-  eval-expression-as-node-1
+  find-single-node-1
   (ensure-same "b"
                (with-parse-document (doc "<root><a /><b /><c /></root>")
-                 (local-name (eval-expression-as-node (root doc) "b")))))
+                 (local-name (find-single-node (root doc) "b")))))
 
 (addtest (xpath-test)
-  eval-expression-as-node-2
+  find-single-node-2
   (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
-                 (eval-expression-as-node (root doc) "test"))))
+                 (find-single-node (root doc) "test"))))
 
 (addtest (xpath-test)
-  eval-expression-as-node-3
+  find-single-node-3
   (ensure-same "val"
                (with-parse-document (doc "<root><a attr=\"val\"/><b /><c /></root>")
-                 (attribute-node-value (eval-expression-as-node (root doc) "a/@attr")))))
+                 (attribute-node-value (find-single-node (root doc) "a/@attr")))))
 
 ;;; in-nodeset
 
@@ -550,7 +550,7 @@
                  (with-parse-document (doc "<root>Hello world</root>")
                    (with-transfom-result (res (style doc))
                      (list (local-name (root res))
-                           (eval-expression-as-string (root res) "text()")))))))
+                           (find-string (root res) "text()")))))))
 
 (addtest (xslt-test)
   xslt-test-2
@@ -568,7 +568,7 @@
                  (with-parse-document (doc "<root />")
                    (with-transfom-result (res (style doc))
                      (list (local-name (root res))
-                           (eval-expression-as-string (root res) "text()")))))))
+                           (find-string (root res) "text()")))))))
 
 (addtest (xslt-test)
   xslt-test-3
@@ -587,7 +587,7 @@
                  (with-parse-document (doc "<root />")
                    (with-transfom-result (res (style doc))
                      (list (local-name (root res))
-                           (eval-expression-as-string (root res) "text()")))))))
+                           (find-string (root res) "text()")))))))
                           
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

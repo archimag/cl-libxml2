@@ -13,10 +13,11 @@
    :xpath-result-type
    :xpath-result-value
    :eval-expression
-   :eval-expression-as-string
-   :eval-expression-as-number
-   :eval-expression-as-boolean
-   :eval-expression-as-node
+
+   :find-string
+   :find-number
+   :find-boolean
+   :find-single-node
    :with-xpath-result
    :*default-ns-map*
    :getpath

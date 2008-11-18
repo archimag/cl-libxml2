@@ -146,7 +146,8 @@
 ;; eval-expression-as-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun eval-expression-as-string (obj expr &key (ns-map *default-ns-map*))
+;;(defun eval-expression-as-string (obj expr &key (ns-map *default-ns-map*))
+(defun find-string (obj expr &key (ns-map *default-ns-map*))
   (flet ((nil-is-empty (str)
            (unless (string= str "") str)))
     (let ((%str (with-xpath-result (res (obj expr ns-map))
@@ -156,18 +157,18 @@
                (nil-is-empty (foreign-string-to-lisp %str))
             (libxml2.tree::%xmlFree %str))))))
 
-(defun eval-expression-as-number (obj expr &key (ns-map *default-ns-map*))
+(defun find-number (obj expr &key (ns-map *default-ns-map*))
   (let ((val (with-xpath-result (res (obj expr ns-map))
                (if res (%xmlXPathCastToNumber (pointer res))))))
     #+:IEEE-FLOATING-POINT(if (and val (not (float-nan-p val))) val)
      #-:IEEE-FLOATING-POINT val))
         
 
-(defun eval-expression-as-boolean (obj expr &key (ns-map *default-ns-map*))
+(defun find-boolean (obj expr &key (ns-map *default-ns-map*))
   (with-xpath-result (res (obj expr ns-map))
     (if res (not (= 0 (%xmlXPathCastToBoolean (pointer res)))))))
 
-(defun eval-expression-as-node (obj expr &key (ns-map *default-ns-map*))
+(defun find-single-node (obj expr &key (ns-map *default-ns-map*))
   (with-xpath-result (res (obj expr ns-map))
     (if (and (eql (xpath-result-type res) :xpath-nodeset)
              (> (node-set-length (xpath-result-value res)) 0))
