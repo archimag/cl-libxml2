@@ -29,6 +29,8 @@
           ,@body)
      (if ,value (release ,value))))
 
+(gp:defcleanup libxml2-cffi-object-wrapper #'release)
+
 (defmethod release ((obj libxml2-cffi-object-wrapper))
   (release/impl obj)
   (setf (slot-value obj 'pointer) nil))
@@ -54,19 +56,15 @@
                  (%xmlNewNode (null-pointer) 
                               %name))))
     (if href
-        (let ((%ns (if prefix
-                       (with-foreign-strings ((%href href) (%prefix prefix))
-                         (%xmlNewNs %node
-                                    %href
-                                    %prefix))
-                       (with-foreign-string (%href href)
-                         (%xmlNewNs %node
-                                    %href
-                                    (null-pointer))))))
-          (setf (foreign-slot-value %node
-                                    '%xmlNode
-                                    '%ns)
-                %ns)))
+        (setf (foreign-slot-value %node
+                                  '%xmlNode
+                                  '%ns)
+              (gp:with-garbage-pool ()
+                (%xmlNewNs %node
+                           (gp:cleanup-register (foreign-string-alloc href) #'foreign-string-free)
+                           (if prefix
+                               (gp:cleanup-register (foreign-string-alloc prefix)  #'foreign-string-free)
+                               (null-pointer))))))
     (make-instance 'node
                    :pointer %node)))
                 

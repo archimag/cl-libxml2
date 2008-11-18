@@ -146,7 +146,6 @@
 ;; eval-expression-as-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;(defun eval-expression-as-string (obj expr &key (ns-map *default-ns-map*))
 (defun find-string (obj expr &key (ns-map *default-ns-map*))
   (flet ((nil-is-empty (str)
            (unless (string= str "") str)))
