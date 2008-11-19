@@ -101,5 +101,6 @@
 *** DONE resolve-string
 *** DONE resolve-stream
 ** XPath extension functions
+*** TODO with-xpath-functions
 ** XSLT extension elements
 
