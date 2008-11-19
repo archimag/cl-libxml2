@@ -88,11 +88,24 @@
 ;; eval-expression
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defvar *lisp-xpath-functions*)
+
 (defmacro with-%context ((var doc node ns-map) &rest body)  
   `(let ((,var (%xmlXPathNewContext (pointer ,doc))))
      #+sbcl(declare (sb-ext:muffle-conditions sb-ext:code-deletion-note))
      (unwind-protect
           (progn
+            (if (boundp 'libxml2.xpath::*lisp-xpath-functions*)
+                (gp:with-garbage-pool ()
+                  (iter (for (name func &key ns) in *lisp-xpath-functions*)
+                        (%xmlXPathRegisterFuncNS ,var
+                                                 (gp:cleanup-register (foreign-string-alloc name)
+                                                                      #'foreign-string-free)
+                                                 (if ns
+                                                     (gp:cleanup-register (foreign-string-alloc ns)
+                                                                          #'foreign-string-free)
+                                                     (null-pointer))
+                                                 (get-callback func)))))
             (if ,node
                 (setf (foreign-slot-value %ctxt
                                           '%xmlXPathContext

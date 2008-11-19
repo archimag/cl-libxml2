@@ -449,3 +449,6 @@
   (ctxt %xmlParserCtxPtr)
   (input %xmlParserInputBufferPtr)
   (enc %xmlCharEncoding))
+
+(defcfun ("xmlFreeParserInputBuffer" %xmlFreeParserInputBuffer) :void
+  (in %xmlParserInputBufferPtr))

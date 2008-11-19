@@ -2,7 +2,7 @@
 
 (defsystem :cl-libxml2
   :version "0.0.1"
-  :depends-on (#:cffi #:iterate #:puri #:flexi-streams #:alexandria #:garbage-pools)
+  :depends-on (#:cffi #:iterate #:puri #:flexi-streams #:alexandria #:garbage-pools #:metabang-bind)
   :components
   ((:module :tree
             :components
@@ -16,6 +16,7 @@
    (:module :xpath
             :components
             ((:file "packages")
-             (:file "low-level-api" :depends-on ("packages"))
-             (:file "expression" :depends-on ("low-level-api")))
+             (:file "low-level-api" :depends-on ("packages"))             
+             (:file "expression" :depends-on ("low-level-api"))
+             (:file "context" :depends-on ("expression")))
             :depends-on ("tree"))))

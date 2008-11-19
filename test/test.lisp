@@ -673,8 +673,25 @@
                              (find-string (root res) "/result/node/text()"))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; custom xpath functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(deftestsuite custom-xpath-func-test (libxml2-test) ())
+
+(defxpathfun hello () "Hello world")
+
+(addtest (custom-xpath-func-test)
+  custom-xpath-func-1
+  (ensure-same "Hello world"
+               (with-xpath-functions ('("hello" hello))
+                 (with-parse-document (doc "<root />")
+                   (find-string doc "hello()")))))
+    
+  
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run-libxml2-test
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun run-libxml2-tests ()
-  (run-tests :suite 'libxml2-test))
+  (run-tests :suite 'libxml2-test :report-pathname nil))

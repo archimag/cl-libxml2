@@ -137,8 +137,8 @@
   (setq *stream-for-xml-parse* stream)
   (%xmlNewIOInputStream %ctxt
                         (%xmlParserInputBufferCreateIO (%stream-reader-callback stream)
-                                                       (null-pointer)
-                                                       (null-pointer)
-                                                       :xml-char-encoding-none)
+                                                                            (null-pointer)
+                                                                            (null-pointer)
+                                                                            :xml-char-encoding-none)
                         :xml-char-encoding-none))
   

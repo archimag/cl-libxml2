@@ -221,3 +221,69 @@
 
 (defcfun ("xmlGetNodePath" %xmlGetNodePath) :pointer
   (node %xmlNodePtr))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; custom xpath functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcstruct %xmlXPathParserContext
+  ;; const xmlChar *	cur	: the current char being parsed
+  (%cur %xmlCharPtr)
+  ;; const xmlChar *	base	: the full expression
+  (%base %xmlCharPtr)
+  ;; int	error	: error code
+  (%error :int)
+  ;; xmlXPathContextPtr	context	: the evaluation context
+  (%context %xmlXPathContextPtr)
+  ;; xmlXPathObjectPtr	value	: the current value
+  (%value %xmlXPathObjectPtr)
+  ;; int	valueNr	: number of values stacked
+  (%valueNr :int)
+  ;; int	valueMax	: max number of values stacked
+  (%valueMax :int)
+  ;; xmlXPathObjectPtr *	valueTab	: stack of values
+  (%valueTab %xmlXPathObjectPtr)
+  ;; xmlXPathCompExprPtr	comp	: the precompiled expression
+  (%comp %xmlXPathCompExprPtr)
+  ;; int	xptr	: it this an XPointer expression
+  (%xptr :int)
+  ;; xmlNodePtr	ancestor	: used for walking preceding axis
+  (%ancestor %xmlNodePtr))
+
+(defctype %xmlXPathParserContextPtr :pointer)
+
+;; (defcfun ("xmlXPathRegisterFunc" %xmlXPathRegisterFunc) :int
+;;   (ctxt %xmlXPathContextPtr ctxt)
+;;   (name %xmlCharPtr)
+;;   (xpath-function :pointer))
+
+(defcfun ("xmlXPathRegisterFuncNS" %xmlXPathRegisterFuncNS) :int
+  (ctxt %xmlXPathContextPtr)
+  (name %xmlCharPtr)
+  (ns-uri %xmlCharPtr)
+  (xpath-function :pointer))
+
+(defcfun ("valuePop" %valuePop) %xmlXPathObjectPtr
+  (ctxt %xmlXPathContextPtr))
+
+(defcfun ("valuePush" %valuePush) :int
+  (ctxt %xmlXPathContextPtr)
+  (value %xmlXPathObjectPtr))
+
+(defcfun ("xmlXPathNewBoolean" %xmlXPathNewBoolean) %xmlXPathObjectPtr
+  (val :int))
+
+(defcfun ("xmlXPathNewString" %xmlXPathNewString) %xmlXPathObjectPtr
+  (val %xmlCharPtr))
+
+(defcfun ("xmlXPathNewFloat" %xmlXPathNewFloat) %xmlXPathObjectPtr
+  (val :double))
+
+(defcfun ("xmlXPathNewNodeSet" %xmlXPathNewNodeSet) %xmlXPathObjectPtr
+  (val %xmlNodePtr))
+
+(defcfun ("xmlXPathNewNodeSetList" %xmlXPathNewNodeSetList) %xmlXPathObjectPtr
+  (val %xmlNodeSetPtr))
+
+
+

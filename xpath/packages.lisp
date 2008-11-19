@@ -1,7 +1,7 @@
 ;; packages.lisp
 
 (defpackage :libxml2.xpath
-  (:use :cl :cffi :iter :libxml2.private :libxml2.tree #+sbcl :sb-ext)
+  (:use :cl :cffi :iter :libxml2.private :libxml2.tree #+sbcl :sb-ext :metabang.bind)
   (:export
    :compiled-expression
    :compile-expression
@@ -21,4 +21,8 @@
    :with-xpath-result
    :*default-ns-map*
    :getpath
+
+   :xpath-parser-context
+   :with-xpath-functions
+   :defxpathfun
    ))
