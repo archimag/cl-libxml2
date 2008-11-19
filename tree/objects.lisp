@@ -13,6 +13,9 @@
 (defgeneric copy (obj))
 
 
+(defmethod pointer ((obj (eql nil)))
+  (null-pointer))
+
 (defmacro defwrapper (wrapper-name cffi-type)
   `(progn
      (defclass ,wrapper-name (libxml2-cffi-object-wrapper) ())

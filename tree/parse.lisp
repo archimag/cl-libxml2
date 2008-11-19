@@ -3,19 +3,24 @@
 (in-package #:libxml2.tree)
 
 
-(defgeneric parse (obj)
+(defvar *default-resolvers* nil)
+
+(defgeneric parse (obj &key)
   (:documentation "parse xml"))
+
+
+;;(defmethod parse :before (obj &key (resolvers *default-resolvers*)))
 
 ;;; parse ((path pathname))
 
-(defmethod parse ((path pathname))
+(defmethod parse ((path pathname) &key)
   (with-foreign-string (_path (format nil "~A" path))
     (make-instance 'document
                    :pointer (%xmlReadFile _path (cffi:null-pointer) 0))))
 
 ;;; parse ((str string))
 
-(defmethod parse ((str string))
+(defmethod parse ((str string)  &key)
   (with-foreign-string (%str str)
     (make-instance 'document
                    :pointer (%xmlReadDoc %str
@@ -25,7 +30,7 @@
 
 ;;; parse ((uri puri))
 
-(defmethod parse ((uri puri:uri))
+(defmethod parse ((uri puri:uri)  &key)
   (with-foreign-string (_path (format nil "~A" uri))
     (make-instance 'document
                    :pointer (%xmlReadFile _path (cffi:null-pointer) 0))))
@@ -35,7 +40,7 @@
 
 ;;; parse ((octets (array unsigned-byte)))
 
-(defmethod parse ((octets array))
+(defmethod parse ((octets array) &key)
   (flexi-streams:with-input-from-sequence (in octets)
     (parse in)))
 
@@ -70,17 +75,70 @@
                     (finish))))
         curpos)
       -1))
+
+(defun %stream-reader-callback (stream)
+  (if (subtypep (stream-element-type stream)
+                'character)
+      (cffi:callback %read-string-stream)
+      (cffi:callback %read-binary-stream)))
           
-(defmethod parse ((stream stream))
+(defmethod parse ((stream stream) &key)
   (let ((*stream-for-xml-parse* stream))
     (make-instance 'document
-                   :pointer (%xmlReadIO (if (subtypep (stream-element-type *stream-for-xml-parse*)
-                                                      'character)
-                                            (cffi:callback %read-string-stream)
-                                            (cffi:callback %read-binary-stream))
+                   :pointer (%xmlReadIO (%stream-reader-callback *stream-for-xml-parse*)
                                         (cffi:null-pointer)
                                         (cffi:null-pointer)
                                         (cffi:null-pointer)
                                         (cffi:null-pointer)
                                         0))))
-                                            
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; custor resolver support
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar *resolvers* nil)
+
+(defparameter *default-external-resolver* (%xmlGetExternalEntityLoader))
+
+
+(defcallback %custom-external-resolver :pointer ((%url :pointer) (%id :pointer) (%context :pointer))
+  (or (and (or *resolvers*
+               *default-resolvers*)
+           (let ((url (unless (null-pointer-p %url) (puri:parse-uri (foreign-string-to-lisp %url))))
+                 (id  (unless (null-pointer-p %id) (foreign-string-to-lisp %id))))
+             (iter (for resolver in *resolvers*)
+                   (for res = (funcall resolver url id %context))
+                   (finding res such-that res))))
+      (foreign-funcall-pointer *default-external-resolver*
+                               ()
+                               :pointer %url
+                               :pointer %id
+                               :pointer %context
+                               :pointer)))
+
+(%xmlSetExternalEntityLoader (callback %custom-external-resolver))
+
+(defmacro with-custom-resolvers ((&rest resolvers) &body body)
+  `(let ((*resolvers* (list ,@resolvers))
+         (*stream-for-xml-parse*))
+     (gp:with-garbage-pool () ,@body)))
+
+
+(defun resolve-file/url (filename %ctxt)
+  (with-foreign-string (%filename filename)
+    (%xmlNewInputFromFile %ctxt
+                          %filename)))
+
+(defun resolve-string (str %ctxt)
+  (%xmlNewStringInputStream %ctxt
+                            (gp:cleanup-register (foreign-string-alloc str) #'foreign-string-free)))
+
+(defun resolve-stream (stream %ctxt)
+  (setq *stream-for-xml-parse* stream)
+  (%xmlNewIOInputStream %ctxt
+                        (%xmlParserInputBufferCreateIO (%stream-reader-callback stream)
+                                                       (null-pointer)
+                                                       (null-pointer)
+                                                       :xml-char-encoding-none)
+                        :xml-char-encoding-none))
+  

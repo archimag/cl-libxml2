@@ -32,6 +32,10 @@
    :copy
    
    :parse
+   :with-custom-resolvers
+   :resolve-string
+   :resolve-file/uri
+   :resolve-stream
    :serialize
    :release
 

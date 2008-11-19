@@ -96,6 +96,10 @@
 
 * Extending
 ** Document loading and URL resolving
+*** DONE with-custom-resolvers
+*** DONE resolve-file/url
+*** DONE resolve-string
+*** DONE resolve-stream
 ** XPath extension functions
 ** XSLT extension elements
 

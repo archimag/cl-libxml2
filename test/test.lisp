@@ -588,7 +588,70 @@
                    (with-transfom-result (res (style doc))
                      (list (local-name (root res))
                            (find-string (root res) "text()")))))))
-                          
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; custom-resolve-tests
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(deftestsuite custom-resolve-test (libxml2-test) ())
+
+(addtest (custom-resolve-test)
+  with-custom-resolve-string-1
+  (ensure-same "node"
+               (with-custom-resolvers ((lambda (url id ctxt) (resolve-string "<node />" ctxt)))
+                 (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/XInclude\"><xi:include href=\"/tmp/blank.xml\" /></root>")
+                   (process-xinclude doc)
+                   (local-name (find-single-node doc "/root/node()"))))))
+
+(addtest (custom-resolve-test)
+  with-custom-resolve-string-2
+  (ensure-same '("node1" "node2" "include")
+               (with-custom-resolvers ((lambda (url id ctxt)
+                                         (if (eql (puri:uri-scheme url) :my1)
+                                             (resolve-string "<node1 />" ctxt)))
+                                       (lambda (url id ctxt)
+                                         (if (eql (puri:uri-scheme url) :my2)
+                                             (resolve-string "<node2 />" ctxt))))
+                 (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/XInclude\">
+<xi:include href=\"my1:doc\" />
+<xi:include href=\"my2:doc\" />
+<xi:include href=\"my3:doc\" />
+</root>")
+                   (process-xinclude doc)
+                   (iter (for node in-child-nodes (root doc) with (:type :xml-element-node))
+                         (collect (local-name node)))))))
+                   
+
+(addtest (custom-resolve-test)
+  with-custom-resolve-stream-1
+  (ensure-same "node"
+               (with-input-from-string (in "<node />")
+                 (with-custom-resolvers ((lambda (url id ctxt) (resolve-stream in ctxt)))
+                   (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/XInclude\">
+<xi:include href=\"/tmp/blank.xml\" />
+</root>")
+                     (process-xinclude doc)
+                     (iter (for node in-child-nodes (root doc) with (:type :xml-element-node))
+                           (finding (local-name node) such-that node)))))))
+
+(addtest (custom-resolve-test)
+  with-custom-resolve-stream-2
+  (ensure-same "/root/foo/bar"
+               (with-input-from-string (in1 "<foo><xi:include xmlns:xi=\"http://www.w3.org/2001/XInclude\" href=\"my2:data\" /></foo>")
+                 (with-input-from-string (in2 "<bar />")
+                   (with-custom-resolvers ((lambda (url id ctxt)
+                                             (if (eql (puri:uri-scheme url) :my1)
+                                                 (resolve-stream in1 ctxt)))
+                                           (lambda (url id ctxt)
+                                             (resolve-stream in2 ctxt)))
+                     (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/XInclude\">
+<xi:include href=\"my1:data\" />
+</root>")
+                       (process-xinclude doc)
+                       (getpath (find-single-node doc "//bar"))
+                       ))))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run-libxml2-test
