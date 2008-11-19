@@ -653,6 +653,25 @@
                        ))))))
 
 
+(addtest (custom-resolve-test)
+  with-custom-resolvers-xsl-1
+  (ensure-same '("result" "Hello world")
+               (with-custom-resolvers ((lambda (url id ctxt)
+                                         (declare (ignore url id))
+                                         (resolve-string "<node>Hello world</node>" ctxt)))
+                 (with-stylesheet (style "<?xml version=\"1.0\"?>
+<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">
+    <xsl:template match=\"/\">
+        <result>
+            <xsl:copy-of select=\"document('data')\" />
+        </result>
+    </xsl:template>
+</xsl:stylesheet>")
+                   (with-parse-document (doc "<root/>")
+                     (with-transfom-result (res (style doc))
+                       (list (local-name (root res))
+                             (find-string (root res) "/result/node/text()"))))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run-libxml2-test
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
