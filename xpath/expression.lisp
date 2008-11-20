@@ -50,10 +50,10 @@
                 (gp:with-garbage-pool ()
                   (iter (for (name func &key ns) in *lisp-xpath-functions*)
                         (%xmlXPathRegisterFuncNS ,var
-                                                 (gp:cleanup-register (foreign-string-alloc name)
+                                                 (gp:cleanup-register (foreign-string-alloc (eval name))
                                                                       #'foreign-string-free)
                                                  (if ns
-                                                     (gp:cleanup-register (foreign-string-alloc ns)
+                                                     (gp:cleanup-register (foreign-string-alloc (eval ns))
                                                                           #'foreign-string-free)
                                                      (null-pointer))
                                                  (get-callback func)))))

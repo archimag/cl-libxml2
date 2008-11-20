@@ -12,7 +12,7 @@
 ;;; with-register-xpath-funtions
 
 (defmacro with-xpath-functions ((&rest funcs) &body body)
-  `(let ((*lisp-xpath-functions* (list ,@funcs)))
+  `(let ((*lisp-xpath-functions* ',funcs))
      ,@body))
 
 ;;; defxpathfun
@@ -24,18 +24,25 @@
   (%valuePush ctxt
               (make-xpath-object val)))
 
-;; (defmethod value-push ((val boolean) &optional (ctxt *parser-context*))
-;;   (%valuePush ctxt
-;;               (%xmlXPathNewBoolean (if val 1 0))))
+(defun value-pop (&optional (ctxt *parser-context*))
+  (xpath-object-value (gp:object-register (make-instance 'xpath-object
+                                                         :pointer (%valuePop ctxt)))))
 
                          
 (defmacro defxpathfun (name (&rest args) &body body)
-  (declare (ignore args))
+  (let ((bindings (if args
+                      (list (list args '(reverse (iter (for i from 0 below %nargs)
+                                                      (collect (value-pop %ctxt))))))))
+        (ignore-nargs (unless args '(declare (ignore %nargs))))
+        )
   `(defcallback ,name :void ((%ctxt %xmlXPathParserContextPtr) (%nargs :int))
-     (declare (ignore %nargs))
-     (value-push (let ((*parser-context* (make-instance 'xpath-parser-context
-                                                        :pointer %ctxt)))
-                   ,@body)
-                 %ctxt)))
+     ,ignore-nargs
+     (gp:with-garbage-pool ()
+         (bind ,bindings
+           (value-push (let ((*parser-context* (make-instance 'xpath-parser-context
+                                                              :pointer %ctxt)))
+                         ,@body)
+                       %ctxt))))))
+
 
 

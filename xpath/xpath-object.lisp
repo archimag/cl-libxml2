@@ -12,7 +12,7 @@
 (defun xpath-object-type (res)
   (wrapper-slot-value res '%type))
 
-(defun xpath-object-value (res)
+(defun xpath-object-value (res)  
   (case (xpath-object-type res)
     (:xpath-undefined nil)
     (:xpath-boolean (> (wrapper-slot-value res '%boolval) 0))
@@ -34,7 +34,7 @@
 (defgeneric make-xpath-object (obj))
 
 (defmethod make-xpath-object ((val number))
-  (%xmlXPathNewFloat val))
+  (%xmlXPathNewFloat (coerce val 'double-float)))
 
 (defmethod make-xpath-object ((val string))
   (with-foreign-string (%str val)

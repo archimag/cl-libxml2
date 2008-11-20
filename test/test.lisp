@@ -678,16 +678,82 @@
 
 (deftestsuite custom-xpath-func-test (libxml2-test) ())
 
-(defxpathfun hello () "Hello world")
+(defxpathfun test-hello ()
+  "Hello world")
 
 (addtest (custom-xpath-func-test)
   custom-xpath-func-1
   (ensure-same "Hello world"
-               (with-xpath-functions ('("hello" hello))
+               (with-xpath-functions (("test-hello" test-hello))
                  (with-parse-document (doc "<root />")
-                   (find-string doc "hello()")))))
+                   (find-string doc "test-hello()")))))
+
+(defxpathfun test-echo (msg)
+  msg)
+
+(addtest (custom-xpath-func-test)
+  custom-xpath-func-2
+  (ensure-same '("Hello world" "Buy!")
+               (with-xpath-functions (("test-echo" test-echo))
+                 (with-parse-document (doc "<root />")
+                   (list (find-string doc "test-echo('Hello world')")
+                         (find-string doc "test-echo('Buy!')"))))))
     
+(defxpathfun test-local-name (nodes)
+  (local-name (node-set-at nodes 0)))
   
+(addtest (custom-xpath-func-test)
+  custom-xpath-func-3
+  (ensure-same '("root" "test-node")
+               (with-xpath-functions (("test-local-name" test-local-name))
+                 (with-parse-document (doc "<root><test-node /></root>")
+                   (list (find-string doc "test-local-name(/root)")
+                         (find-string doc "test-local-name(/root/test-node)"))))))
+
+(defxpathfun test-node-count (nodes)
+  (node-set-length nodes))
+
+(addtest (custom-xpath-func-test)
+  custom-xpath-func-4
+  (ensure-same '(3.0d0 0.0d0)
+               (with-xpath-functions (("test-node-count" test-node-count))
+                 (with-parse-document (doc "<root><a /><b /><c /></root>")
+                   (list (find-number doc "test-node-count(/root/node())")
+                         (find-number doc "test-node-count(/root/text())"))))))
+
+
+(defxpathfun test-concate (&rest strs)
+  (apply 'concatenate 'string strs))
+
+(addtest (custom-xpath-func-test)
+  custom-xpath-func-5
+  (ensure-same '("hello world!" "hello" nil)
+               (with-xpath-functions (("test-concate" test-concate))
+                 (with-parse-document (doc "<root />")
+                   (list (find-string doc "test-concate('hello', ' ', 'world', '!')")
+                         (find-string doc "test-concate('hello')")
+                         (find-string doc "test-concate()"))))))
+
+
+(addtest (custom-xpath-func-test)
+  custom-xpath-func-6
+  (ensure-same "Hello world"
+               (with-xpath-functions (("test-hello" test-hello)
+                                      ("test-echo" test-echo))
+                 (with-parse-document (doc "<root />")
+                   (find-string doc "test-echo(test-hello())")))))
+
+(defxpathfun test-node-name-concat (nodes)
+  (iter (for node in-nodeset nodes)
+        (reducing (local-name node)
+                  by (lambda (s x) (concatenate 'string s x)))))
+
+(addtest (custom-xpath-func-test)
+  custom-xpath-func-7
+  (ensure-same "abc"
+               (with-xpath-functions (("test-node-name-concat" test-node-name-concat))
+                 (with-parse-document (doc "<root><a /><b /><c /></root>")
+                   (find-string doc "test-node-name-concat(/root/node())")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run-libxml2-test
