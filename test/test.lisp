@@ -683,10 +683,13 @@
 
 (addtest (custom-xpath-func-test)
   custom-xpath-func-1
-  (ensure-same "Hello world"
-               (with-xpath-functions (("test-hello" test-hello))
+  (ensure-same '("Hello world" nil "Hello world")
+               (with-xpath-functions (("test-hello" test-hello)
+                                      ("test-hello" test-hello :ns "www.sample.org"))
                  (with-parse-document (doc "<root />")
-                   (find-string doc "test-hello()")))))
+                   (list (find-string doc "test-hello()")
+                         (find-string doc "my:test-hello()" :ns-map '(("my" "www.other-sample.org")))
+                         (find-string doc "my:test-hello()" :ns-map '(("my" "www.sample.org"))))))))
 
 (defxpathfun test-echo (msg)
   msg)
@@ -754,6 +757,7 @@
                (with-xpath-functions (("test-node-name-concat" test-node-name-concat))
                  (with-parse-document (doc "<root><a /><b /><c /></root>")
                    (find-string doc "test-node-name-concat(/root/node())")))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run-libxml2-test
