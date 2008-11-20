@@ -589,6 +589,24 @@
                      (list (local-name (root res))
                            (find-string (root res) "text()")))))))
 
+;;xmlns:str="http://exslt.org/strings"
+
+
+(addtest (xslt-test)
+  exslt-test-1
+  (ensure-same '("result" "abc")
+               (with-stylesheet (style "<?xml version=\"1.0\"?>
+<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:str=\"http://exslt.org/strings\" version=\"1.0\">
+    <xsl:template match=\"/\">
+        <result>
+            <xsl:value-of select=\"str:concat(/root/node())\" />
+        </result>
+    </xsl:template>
+</xsl:stylesheet>")
+                 (with-parse-document (doc "<root><node>a</node><node>b</node><node>c</node></root>")
+                   (with-transfom-result (res (style doc))
+                     (list (local-name (root res))
+                           (find-string (root res) "text()")))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom-resolve-tests
@@ -758,6 +776,24 @@
                  (with-parse-document (doc "<root><a /><b /><c /></root>")
                    (find-string doc "test-node-name-concat(/root/node())")))))
 
+
+(addtest (custom-xpath-func-test)
+  custom-xpath-func-in-xsl-1
+  (ensure-same '("Hello world" "Buy!")
+               (with-xpath-functions (("test-echo" test-echo :ns "www.sample.org"))
+                 (with-stylesheet (style "<?xml version=\"1.0\"?>
+<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:my=\"www.sample.org\"  version=\"1.0\">
+    <xsl:template match=\"/\">
+        <result>
+            <node><xsl:value-of select=\"my:test-echo('Hello world')\" /></node>
+            <node><xsl:value-of select=\"my:test-echo('Buy!')\" /></node>
+        </result>
+    </xsl:template>
+</xsl:stylesheet>")
+                   (with-parse-document (doc "<root/>")
+                     (with-transfom-result (res (style doc))
+                       (iter (for node in-child-nodes (root res) with (:type :xml-element-node))
+                             (collect (find-string node "text()")))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run-libxml2-test
