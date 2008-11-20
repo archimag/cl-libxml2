@@ -19,24 +19,6 @@
 
 (defvar *parser-context*)
 
-(defgeneric make-xpath-object (obj))
-
-(defmethod make-xpath-object ((val number))
-  (%xmlXPathNewFloat val))
-
-(defmethod make-xpath-object ((val string))
-  (with-foreign-string (%str val)
-    (%xmlXPathNewString %str)))
-
-(defmethod make-xpath-object ((val node))
-  (%xmlXPathNewNodeSet (pointer val)))
-
-(defmethod make-xpath-object ((val node-set))
-  (%xmlXPathNewNodeSetList (pointer val)))
-
-(defmethod make-xpath-object (val)
-  (%xmlXPathNewBoolean (if val 1 0)))
-
 
 (defun value-push (val &optional (ctxt *parser-context*))
   (%valuePush ctxt

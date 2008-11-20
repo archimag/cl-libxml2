@@ -9,16 +9,19 @@
    :node-set
    :node-set-length
    :node-set-at
-   :xpath-result
-   :xpath-result-type
-   :xpath-result-value
+   
+   :xpath-object
+   :xpath-object-type
+   :xpath-object-value
+   :with-xpath-object
+
    :eval-expression
 
    :find-string
    :find-number
    :find-boolean
    :find-single-node
-   :with-xpath-result
+
    :*default-ns-map*
    :getpath
 

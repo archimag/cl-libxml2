@@ -22,56 +22,7 @@
   `(with-libxml2-object (,var (compile-expression ,expr)) ,@body))
      
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; node-set
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defwrapper node-set %xmlNodeSet)
-
-;;; node-set-length
-
-(defun node-set-length (nodeset)
-  (foreign-slot-value (pointer nodeset)
-                      '%xmlNodeSet
-                      '%nodeNr))
-
-;;; node-set-at
-
-(defun node-set-at (nodeset index)
-  (make-instance 'node
-                 :pointer (mem-aref (wrapper-slot-value nodeset '%nodeTab)
-                                    :pointer index)))
-
-;;; ITER (FOR node IN-NODESET nodeset
-
-(defmacro-driver (for var in-nodeset nodeset)
-  (let ((kwd (if generate 'generate 'for)))
-    `(progn
-       (,kwd index from 0 to (if ,nodeset
-                                 (1- (node-set-length ,nodeset))
-                                 -1))
-       (for ,var = (if ,nodeset (node-set-at ,nodeset index))))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; xpath-result
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defwrapper xpath-result %xmlXPathObject)
-
-(defmethod libxml2.tree::release/impl ((result xpath-result))
-  (%xmlXPathFreeObject (pointer result)))
-
-(defun xpath-result-type (res)
-  (wrapper-slot-value res '%type))
-
-(defun xpath-result-value (res)
-  (case (xpath-result-type res)
-    (:xpath-undefined nil)
-    (:xpath-boolean (> (wrapper-slot-value res '%boolval) 0))
-    (:xpath-number  (wrapper-slot-value res '%floatval))
-    (:xpath-string (foreign-string-to-lisp (wrapper-slot-value res '%stringval)))
-    (:xpath-nodeset (libxml2.tree::wrapper-slot-wrapper res '%nodesetval 'node-set))
-    (otherwise nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; *default-ns-map*
@@ -126,43 +77,35 @@
   (with-%context (%ctxt doc nil ns-map)    
     (libxml2.tree::make-libxml2-cffi-object-wrapper/impl (with-foreign-string (%expr expr)
                                                            (%xmlXPathEvalExpression %expr %ctxt))
-                                                         'xpath-result)))
+                                                         'xpath-object)))
 
 (defmethod eval-expression ((node node) (expr string) &key (ns-map *default-ns-map*))
   (with-%context (%ctxt (document node) node ns-map)
     (libxml2.tree::make-libxml2-cffi-object-wrapper/impl (with-foreign-string (%expr expr)
                                                            (%xmlXPathEvalExpression %expr %ctxt))
-                                                         'xpath-result)))
+                                                         'xpath-object)))
 
 (defmethod eval-expression ((node node) (expr compiled-expression) &key (ns-map *default-ns-map*))
   (with-%context (%ctxt (document node) node ns-map)
     (libxml2.tree::make-libxml2-cffi-object-wrapper/impl (%xmlXPathCompiledEval (pointer expr)
                                                                                 %ctxt)
-                                                         'xpath-result)))
+                                                         'xpath-object)))
 
-;;; with-xpath-result
-(defmacro with-xpath-result ((res (obj expr &optional (ns-map '*default-ns-map*))) &rest body)
-  `(let ((,res (eval-expression ,obj ,expr :ns-map ,ns-map)))
-     (unwind-protect
-          (progn ,@body)
-       (if ,res (release ,res)))))
-
-
-(defmacro-driver (for var in-xpath-result expr on node &optional with-ns-map (ns-map '*default-ns-map*))
+(defmacro-driver (for var in-xpath-object expr on node &optional with-ns-map (ns-map '*default-ns-map*))
   (let ((kwd (if generate 'generate 'for)))
     `(progn
        (with res = (eval-expression ,node ,expr :ns-map ,ns-map))
-       (,kwd ,var in-nodeset (if res (xpath-result-value res)))
+       (,kwd ,var in-nodeset (if res (xpath-object-value res)))
        (finally-protected (if res (release res))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; eval-expression-as-
+;; find-...
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun find-string (obj expr &key (ns-map *default-ns-map*))
   (flet ((nil-is-empty (str)
            (unless (string= str "") str)))
-    (let ((%str (with-xpath-result (res (obj expr ns-map))
+    (let ((%str (with-xpath-object (res (obj expr ns-map))
                   (if res (%xmlXPathCastToString (pointer res))))))
       (if %str
           (unwind-protect
@@ -170,21 +113,21 @@
             (libxml2.tree::%xmlFree %str))))))
 
 (defun find-number (obj expr &key (ns-map *default-ns-map*))
-  (let ((val (with-xpath-result (res (obj expr ns-map))
+  (let ((val (with-xpath-object (res (obj expr ns-map))
                (if res (%xmlXPathCastToNumber (pointer res))))))
     #+:IEEE-FLOATING-POINT(if (and val (not (float-nan-p val))) val)
      #-:IEEE-FLOATING-POINT val))
         
 
 (defun find-boolean (obj expr &key (ns-map *default-ns-map*))
-  (with-xpath-result (res (obj expr ns-map))
+  (with-xpath-object (res (obj expr ns-map))
     (if res (not (= 0 (%xmlXPathCastToBoolean (pointer res)))))))
 
 (defun find-single-node (obj expr &key (ns-map *default-ns-map*))
-  (with-xpath-result (res (obj expr ns-map))
-    (if (and (eql (xpath-result-type res) :xpath-nodeset)
-             (> (node-set-length (xpath-result-value res)) 0))
-        (node-set-at (xpath-result-value res) 0))))
+  (with-xpath-object (res (obj expr ns-map))
+    (if (and (eql (xpath-object-type res) :xpath-nodeset)
+             (> (node-set-length (xpath-object-value res)) 0))
+        (node-set-at (xpath-object-value res) 0))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

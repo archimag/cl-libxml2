@@ -16,7 +16,9 @@
    (:module :xpath
             :components
             ((:file "packages")
-             (:file "low-level-api" :depends-on ("packages"))             
-             (:file "expression" :depends-on ("low-level-api"))
+             (:file "low-level-api" :depends-on ("packages"))
+             (:file "node-set" :depends-on ("low-level-api"))
+             (:file "xpath-object" :depends-on ("node-set"))
+             (:file "expression" :depends-on ("xpath-object"))
              (:file "context" :depends-on ("expression")))
             :depends-on ("tree"))))
