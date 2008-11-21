@@ -1,3 +1,28 @@
+2008-11-21 13:19  archimag
+
+	* test/test.lisp, tree/packages.lisp: add more tests
+
+2008-11-21 12:43  archimag
+
+	* test/test.lisp, xpath/expression.lisp: rename in-xpath-object to
+	  in-xpath-result
+
+2008-11-21 12:36  archimag
+
+	* test/test.lisp: add test for custom xslt element
+
+2008-11-21 12:27  archimag
+
+	* xslt/extensions.lisp: fix bug in define-xslt-element
+
+2008-11-21 11:53  archimag
+
+	* ChangeLog, cl-libxml2-xslt.asd, cl-libxml2.asd, test/test.lisp,
+	  tree/add-remove.lisp, xpath/context.lisp, xpath/expression.lisp,
+	  xpath/packages.lisp, xslt/extensions.lisp, xslt/packages.lisp,
+	  xslt/stylesheet.lisp, xslt/xslt.lisp: initial support for custom
+	  xslt elements
+
 2008-11-20 15:24  archimag
 
 	* test/test.lisp, xslt/stylesheet.lisp: implement custom xpath
