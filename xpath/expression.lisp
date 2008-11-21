@@ -91,7 +91,7 @@
                                                                                 %ctxt)
                                                          'xpath-object)))
 
-(defmacro-driver (for var in-xpath-object expr on node &optional with-ns-map (ns-map '*default-ns-map*))
+(defmacro-driver (for var in-xpath-result expr on node &optional with-ns-map (ns-map '*default-ns-map*))
   (let ((kwd (if generate 'generate 'for)))
     `(progn
        (with res = (eval-expression ,node ,expr :ns-map ,ns-map))

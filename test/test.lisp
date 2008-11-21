@@ -470,38 +470,38 @@
                    (iter (for node in-nodeset (xpath-object-value res))
                          (collect (local-name node)))))))
 
-;;; in-xpath-object
+;;; in-xpath-result
 
 (addtest (xpath-test)
-  in-xpath-object-1
+  in-xpath-result-1
   (ensure-same '("a" "b" "c")
                (with-parse-document (doc "<root><a /><b /><c /></root>")
-                 (iter (for node in-xpath-object "node()" on (root doc))
+                 (iter (for node in-xpath-result "node()" on (root doc))
                        (collect (local-name node))))))
 
 (addtest (xpath-test)
-  in-xpath-object-2
+  in-xpath-result-2
   (ensure-null (with-parse-document (doc "<root><a /><b /><c /></root>")
-                 (iter (for node in-xpath-object "node()" on doc)
+                 (iter (for node in-xpath-result "node()" on doc)
                        (collect (local-name node))))))
 
 (addtest (xpath-test)
-  in-xpath-object-3
+  in-xpath-result-3
   (ensure-same '("box")
                (with-parse-document (doc "<root xmlns:xul=\"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul\"><a /><xul:box /><b /><c /></root>")
-                 (iter (for node in-xpath-object "//xul:box" on doc)
+                 (iter (for node in-xpath-result "//xul:box" on doc)
                        (collect (local-name node))))))
 
 (addtest (xpath-test)
-  in-xpath-object-4
+  in-xpath-result-4
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\"><a /><my:box /><b /><c /></root>")
-                 (iter (for node in-xpath-object "//box" on doc)
+                 (iter (for node in-xpath-result "//box" on doc)
                        (collect (local-name node))))))
 
 (addtest (xpath-test)
-  in-xpath-object-5
+  in-xpath-result-5
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\"><a /><my:box /><b /><c /></root>")
-                 (iter (for node in-xpath-object "//my:box" on doc)
+                 (iter (for node in-xpath-result "//my:box" on doc)
                        (collect (local-name node))))))
 
 ;; compiled-expression
@@ -511,7 +511,7 @@
   (ensure-same '("a" "b" "c")
                (with-parse-document (doc "<root><a /><b /><c /></root>")
                  (with-compiled-expression (expr "node()")
-                   (iter (for node in-xpath-object expr on (root doc))
+                   (iter (for node in-xpath-result expr on (root doc))
                        (collect (local-name node)))))))
 
 ;; getpath
@@ -526,7 +526,7 @@
   getpath-2
   (ensure-same '("/root/@a" "/root/child/@a" "/root/child/@b" "/root/child/@c")
                (with-parse-document (doc "<root a=\"\" ><child a=\"\" b=\"\" c=\"\" /></root>")
-                 (iter (for node in-xpath-object "//@*" on doc)
+                 (iter (for node in-xpath-result "//@*" on doc)
                        (collect (getpath node))))))
          
 
@@ -823,7 +823,7 @@
                        (find-string res "/result/text()")))))))
 
 (define-xslt-element my-copy-of (self input output)
-   (iter (for node in-xpath-object (attribute-value self "select")  on input)
+   (iter (for node in-xpath-result (attribute-value self "select")  on input)
          (append-child output (copy node))))
 
 ;;; custom-xslt-element-2
