@@ -7,6 +7,8 @@
 
 (in-package #:libxml2.test)
 
+(register-exslt-extensions)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; libxml2-test
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -29,7 +31,6 @@
                        (local-name el)
                        (namespace-uri el)
                        (namespace-prefix el)))))
-               
 
 (addtest (tree-test)
   make-element-2
@@ -696,60 +697,60 @@
 
 (deftestsuite custom-xpath-func-test (libxml2-test) ())
 
-(defxpathfun test-hello ()
+(define-xpath-function test-hello ()
   "Hello world")
 
 (addtest (custom-xpath-func-test)
   custom-xpath-func-1
   (ensure-same '("Hello world" nil "Hello world")
-               (with-xpath-functions (("test-hello" test-hello)
-                                      ("test-hello" test-hello :ns "www.sample.org"))
+               (with-xpath-functions ((test-hello "test-hello")
+                                      (test-hello "test-hello" "www.sample.org"))
                  (with-parse-document (doc "<root />")
                    (list (find-string doc "test-hello()")
                          (find-string doc "my:test-hello()" :ns-map '(("my" "www.other-sample.org")))
                          (find-string doc "my:test-hello()" :ns-map '(("my" "www.sample.org"))))))))
 
-(defxpathfun test-echo (msg)
+(define-xpath-function test-echo (msg)
   msg)
 
 (addtest (custom-xpath-func-test)
   custom-xpath-func-2
   (ensure-same '("Hello world" "Buy!")
-               (with-xpath-functions (("test-echo" test-echo))
+               (with-xpath-functions ((test-echo "test-echo"))
                  (with-parse-document (doc "<root />")
                    (list (find-string doc "test-echo('Hello world')")
                          (find-string doc "test-echo('Buy!')"))))))
     
-(defxpathfun test-local-name (nodes)
+(define-xpath-function test-local-name (nodes)
   (local-name (node-set-at nodes 0)))
   
 (addtest (custom-xpath-func-test)
   custom-xpath-func-3
   (ensure-same '("root" "test-node")
-               (with-xpath-functions (("test-local-name" test-local-name))
+               (with-xpath-functions ((test-local-name "test-local-name"))
                  (with-parse-document (doc "<root><test-node /></root>")
                    (list (find-string doc "test-local-name(/root)")
                          (find-string doc "test-local-name(/root/test-node)"))))))
 
-(defxpathfun test-node-count (nodes)
+(define-xpath-function test-node-count (nodes)
   (node-set-length nodes))
 
 (addtest (custom-xpath-func-test)
   custom-xpath-func-4
   (ensure-same '(3.0d0 0.0d0)
-               (with-xpath-functions (("test-node-count" test-node-count))
+               (with-xpath-functions ((test-node-count "test-node-count"))
                  (with-parse-document (doc "<root><a /><b /><c /></root>")
                    (list (find-number doc "test-node-count(/root/node())")
                          (find-number doc "test-node-count(/root/text())"))))))
 
 
-(defxpathfun test-concate (&rest strs)
+(define-xpath-function test-concate (&rest strs)
   (apply 'concatenate 'string strs))
 
 (addtest (custom-xpath-func-test)
   custom-xpath-func-5
   (ensure-same '("hello world!" "hello" nil)
-               (with-xpath-functions (("test-concate" test-concate))
+               (with-xpath-functions ((test-concate "test-concate"))
                  (with-parse-document (doc "<root />")
                    (list (find-string doc "test-concate('hello', ' ', 'world', '!')")
                          (find-string doc "test-concate('hello')")
@@ -759,12 +760,12 @@
 (addtest (custom-xpath-func-test)
   custom-xpath-func-6
   (ensure-same "Hello world"
-               (with-xpath-functions (("test-hello" test-hello)
-                                      ("test-echo" test-echo))
+               (with-xpath-functions ((test-hello "test-hello")
+                                      (test-echo "test-echo"))
                  (with-parse-document (doc "<root />")
                    (find-string doc "test-echo(test-hello())")))))
 
-(defxpathfun test-node-name-concat (nodes)
+(define-xpath-function test-node-name-concat (nodes)
   (iter (for node in-nodeset nodes)
         (reducing (local-name node)
                   by (lambda (s x) (concatenate 'string s x)))))
@@ -772,7 +773,7 @@
 (addtest (custom-xpath-func-test)
   custom-xpath-func-7
   (ensure-same "abc"
-               (with-xpath-functions (("test-node-name-concat" test-node-name-concat))
+               (with-xpath-functions ((test-node-name-concat "test-node-name-concat"))
                  (with-parse-document (doc "<root><a /><b /><c /></root>")
                    (find-string doc "test-node-name-concat(/root/node())")))))
 
@@ -780,7 +781,7 @@
 (addtest (custom-xpath-func-test)
   custom-xpath-func-in-xsl-1
   (ensure-same '("Hello world" "Buy!")
-               (with-xpath-functions (("test-echo" test-echo :ns "www.sample.org"))
+               (with-xpath-functions ((test-echo "test-echo" "www.sample.org"))
                  (with-stylesheet (style "<?xml version=\"1.0\"?>
 <xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:my=\"www.sample.org\"  version=\"1.0\">
     <xsl:template match=\"/\">
@@ -794,6 +795,30 @@
                      (with-transfom-result (res (style doc))
                        (iter (for node in-child-nodes (root res) with (:type :xml-element-node))
                              (collect (find-string node "text()")))))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; custom xslt elements
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(deftestsuite custom-xslt-elements-test (libxml2-test) ())
+
+(define-xslt-element hello-element (self input output)
+  (declare (ignore self input))
+  (append-child output (make-text "Hello world!")))
+
+(addtest (custom-xslt-elements-test)
+  custom-xslt-element-1
+  (ensure-same "Hello world!"
+               (with-xslt-elements ((hello-element "hello" "www.sample.org"))
+                 (with-stylesheet (style "<?xml version=\"1.0\"?>
+<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:my=\"www.sample.org\"  extension-element-prefixes=\"my\" version=\"1.0\">
+    <xsl:template match=\"/\">
+        <result><my:hello /></result>
+    </xsl:template>
+</xsl:stylesheet>")
+                   (with-parse-document (doc "<root/>")
+                     (with-transfom-result (res (style doc))
+                       (find-string res "/result/text()")))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run-libxml2-test

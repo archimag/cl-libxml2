@@ -1,0 +1,223 @@
+2008-11-20 15:24  archimag
+
+	* test/test.lisp, xslt/stylesheet.lisp: implement custom xpath
+	  functions for xslt transformations
+
+2008-11-20 12:46  archimag
+
+	* test/test.lisp: add test for xpath extension functions with
+	  namespace use
+
+2008-11-20 12:33  archimag
+
+	* test/test.lisp, xpath/context.lisp, xpath/expression.lisp,
+	  xpath/xpath-object.lisp: xpath extension functions is implement
+
+2008-11-20 08:44  archimag
+
+	* cl-libxml2.asd, test/test.lisp, xpath/context.lisp,
+	  xpath/expression.lisp, xpath/node-set.lisp, xpath/packages.lisp,
+	  xpath/xpath-object.lisp: rename xpath-result to xpath-object and
+	  functions xpath-result-xxx to xpath-object-xxx
+	  change code placement, add node-set.lisp and xpath-object.lisp
+
+2008-11-19 16:49  archimag
+
+	* doc/TODO, xpath/context.lisp: initial support custom xpath
+	  functions (Step 2)
+
+2008-11-19 16:48  archimag
+
+	* cl-libxml2.asd, test/test.lisp, tree/low-level-api.lisp,
+	  tree/parse.lisp, xpath/expression.lisp, xpath/low-level-api.lisp,
+	  xpath/packages.lisp: initial support custom xpath functions
+
+2008-11-19 13:18  archimag
+
+	* test/test.lisp: add test for check custom URL resolving with use
+	  xslt document()
+
+2008-11-19 12:56  archimag
+
+	* doc/TODO, test/test.lisp, tree/low-level-api.lisp,
+	  tree/objects.lisp, tree/packages.lisp, tree/parse.lisp: implement
+	  custom URL resolvers
+
+2008-11-18 13:26  archimag
+
+	* tree/objects.lisp, xpath/expression.lisp, xslt/stylesheet.lisp:
+	  refactoring: reimplement part of the resouce management with
+	  garbage-pools
+	  add (gp:defcleanup libxml2-cffi-object-wrapper #'release)
+
+2008-11-18 12:56  archimag
+
+	* test/test.lisp, xpath/expression.lisp, xpath/packages.lisp:
+	  rename functions:
+	  eval-expression-as-string -> find-string
+	  eval-expression-as-number -> find-number
+	  eval-expression-as-boolean -> find-boolean
+	  eval-expression-as-node -> find-single
+
+2008-11-18 12:41  archimag
+
+	* cl-libxml2.asd, doc/TODO, test/test.lisp, xpath/expression.lisp,
+	  xpath/low-level-api.lisp, xpath/packages.lisp: add depend from
+	  garbage-pools
+	  implement getpath
+
+2008-11-17 12:11  archimag
+
+	* doc/TODO, test/test.lisp, tree/parse.lisp: add parse from array
+	  with octets
+
+2008-11-13 14:23  archimag
+
+	* test/test.lisp, tree/attribute.lisp, tree/childs.lisp,
+	  tree/packages.lisp, tree/parse.lisp, xpath/expression.lisp,
+	  xpath/packages.lisp: add attribute-node-value,
+	  eval-expression-as-node
+	  bugfix parse from streams
+
+2008-11-13 08:44  archimag
+
+	* cl-libxml2.asd: add depends from alexandria
+
+2008-11-13 08:35  archimag
+
+	* doc/TODO, test/test.lisp, tree/attribute.lisp,
+	  tree/packages.lisp: add with-attributes macro
+
+2008-11-12 08:02  archimag
+
+	* cl-libxml2.asd, doc/lisplogo_fancy_256.png, test/test.lisp,
+	  tree/low-level-api.lisp, tree/parse.lisp, xpath/expression.lisp,
+	  xpath/packages.lisp: Implemented parse from string and binary
+	  stream.
+
+2008-10-27 16:07  archimag
+
+	* xpath/expression.lisp: update
+
+2008-10-27 15:56  archimag
+
+	* cl-libxml2-test.asd, doc/TODO, test/test.lisp,
+	  xpath/expression.lisp, xpath/low-level-api.lisp,
+	  xpath/packages.lisp, xslt/packages.lisp, xslt/stylesheet.lisp:
+	  update
+
+2008-10-26 20:26  archimag
+
+	* test/test.lisp, tree/objects.lisp, xpath/expression.lisp,
+	  xpath/packages.lisp: update
+
+2008-10-26 14:28  archimag
+
+	* tree/low-level-api.lisp, tree/objects.lisp, tree/packages.lisp,
+	  xpath/expression.lisp, xpath/low-level-api.lisp,
+	  xpath/packages.lisp, xslt/stylesheet.lisp: update
+
+2008-10-24 15:36  archimag
+
+	* test/test.lisp, tree/packages.lisp, xpath/expression.lisp: update
+
+2008-10-24 14:42  archimag
+
+	* cl-libxml2.asd, doc/TODO, test/test.lisp, tree/attribute.lisp,
+	  tree/childs.lisp, tree/objects.lisp, xpath/low-level-api.lisp:
+
+2008-10-23 14:35  archimag
+
+	* cl-libxml2-xpath.asd, cl-libxml2.asd, doc/TODO, tree/childs.lisp,
+	  tree/low-level-api.lisp, tree/objects.lisp, tree/package.lisp,
+	  tree/packages.lisp: update
+
+2008-10-22 21:18  archimag
+
+	* cl-libxml2-xslt.asd, cl-libxml2.asd, tree/package.lisp,
+	  tree/stylesheet.lisp, xslt/packages.lisp, xslt/stylesheet.lisp:
+	  update
+
+2008-10-22 21:07  archimag
+
+	* cl-libxml2-xpath.asd, cl-libxml2.asd, tree/low-level-api.lisp,
+	  tree/package.lisp, xpath, xpath/low-level-api.lisp,
+	  xpath/packages.lisp, xslt: update
+
+2008-10-22 15:24  archimag
+
+	* cl-libxml2.asd, tree/low-level-api.lisp, tree/package.lisp,
+	  tree/stylesheet.lisp: initial support xslt
+
+2008-10-21 18:45  archimag
+
+	* doc/BUGS, test/data, test/test.lisp, tree/serialize.lisp: update
+
+2008-10-17 15:12  archimag
+
+	* cl-libxml2.asd, doc/BUGS, doc/TODO, tree/low-level-api.lisp,
+	  tree/parse.lisp, tree/serialize.lisp: update
+
+2008-10-17 12:00  archimag
+
+	* doc/TODO, tree/attribute.lisp, tree/childs.lisp,
+	  tree/low-level-api.lisp: update
+
+2008-10-17 09:34  archimag
+
+	* doc/TODO, test/test.lisp, tree/add-remove.lisp, tree/childs.lisp,
+	  tree/low-level-api.lisp, tree/objects.lisp, tree/package.lisp:
+	  update
+
+2008-10-17 06:24  archimag
+
+	* cl-libxml2.asd, core, tree: update
+
+2008-10-16 20:51  archimag
+
+	* cl-libxml2-test.asd, cl-libxml2.asd, core/attribute.lisp,
+	  core/childs.lisp, core/low-level-api.lisp, core/objects.lisp,
+	  core/package.lisp, core/parse.lisp, core/serialize.lisp,
+	  test/package.lisp, test/test.lisp: update
+
+2008-10-16 15:02  archimag
+
+	* cl-libxml2.asd, core/attribute.lisp, core/childs.lisp,
+	  core/core.lisp, core/low-level-api.lisp, core/objects.lisp,
+	  core/package.lisp, core/parse.lisp, core/serialize.lisp,
+	  doc/TODO, test/test.lisp: update
+
+2008-10-16 06:17  archimag
+
+	* core/core.lisp, core/low-level-api.lisp, doc/TODO: update
+
+2008-10-14 14:37  archimag
+
+	* doc, doc/TODO: add doc/TODO
+
+2008-10-13 23:14  archimag
+
+	* core/core.lisp, core/low-level-api.lisp, core/package.lisp:
+	  update
+
+2008-10-13 15:25  archimag
+
+	* core/core.lisp, core/low-level-api.lisp, core/package.lisp,
+	  test/test.lisp: rename functions name in according with cxml-stp
+	  added attribute-value
+
+2008-10-13 12:33  archimag
+
+	* cl-libxml2-test.asd, core/core.lisp, core/package.lisp, test,
+	  test/data, test/data/1.xml, test/package.lisp, test/test.lisp:
+	  first test added
+
+2008-10-13 09:23  archimag
+
+	* cl-libxml2.asd, core, core/core.lisp, core/low-level-api.lisp,
+	  core/package.lisp: First commit!
+
+2008-10-13 07:12  
+
+	* .: Initial directory structure.
+

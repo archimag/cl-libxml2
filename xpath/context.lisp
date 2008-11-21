@@ -29,7 +29,7 @@
                                                          :pointer (%valuePop ctxt)))))
 
                          
-(defmacro defxpathfun (name (&rest args) &body body)
+(defmacro define-xpath-function (name (&rest args) &body body)
   (let ((bindings (if args
                       (list (list args '(reverse (iter (for i from 0 below %nargs)
                                                       (collect (value-pop %ctxt))))))))

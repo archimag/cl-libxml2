@@ -3,36 +3,7 @@
 (in-package #:libxml2.xslt)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Define and load libxslt
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define-foreign-library libxslt
-  (:unix (:or "libxslt.so"))
-  (t (:default "libxslt")))
-
-(define-foreign-library libexslt
-  (:unix (:or "libexslt.so"))
-  (t (:default "libexslt")))
-
-
-(with-simple-restart (skip "Skip loading foreign library libxslt.")
-  (use-foreign-library libxslt)
-  (use-foreign-library libexslt))
-
-(defcfun ("xsltInit" %xsltInit) :void)
-(defcfun ("exsltRegisterAll" %exsltRegisterAll) :void)
-
-(%xsltInit)
-(%exsltRegisterAll)
-  
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-(defctype %xsltStylesheetPtr :pointer)
-(defctype %xsltTransformContextPtr :pointer)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defcfun ("xsltParseStylesheetDoc" %xsltParseStylesheetDoc) %xsltStylesheetPtr
   (doc libxml2.tree::%xmlDocPtr))
@@ -43,18 +14,6 @@
 (defcfun ("xsltFreeStylesheet" %xsltFreeStylesheet) :void
   (style %xsltStylesheetPtr))
 
-(defcfun ("xsltApplyStylesheet" %xsltApplyStylesheet) libxml2.tree::%xmlDocPtr
-  (style %xsltStylesheetPtr)
-  (doc libxml2.tree::%xmlDocPtr)
-  (args :pointer))
-
-(defcfun ("xsltNewTransformContext" %xsltNewTransformContext) %xsltTransformContextPtr
-  (style %xsltStylesheetPtr)
-  (doc libxml2.tree::%xmlDocPtr))
-
-(defcfun ("xsltFreeTransformContext" %xsltFreeTransformContext) :void
-  (ctxt %xsltTransformContextPtr))
-
 (defcfun ("xsltApplyStylesheetUser" %xsltApplyStylesheetUser) libxml2.tree::%xmlDocPtr
   (style %xsltStylesheetPtr)
   (doc libxml2.tree::%xmlDocPtr)
@@ -62,12 +21,6 @@
   (output :pointer)
   (profile :pointer)
   (userCtxt %xsltTransformContextPtr))
-
-(defcfun ("xsltRegisterExtFunction" %xsltRegisterExtFunction) :int
-  (ctxt %xsltTransformContextPtr)
-  (name %xmlCharPtr)
-  (URI %xmlCharPtr)
-  (function :pointer))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -120,47 +73,36 @@
 
 ;;; transform
 
+(defun prepare-xsl-params (params)
+  (if params
+      (let* ((array-length (1+ (* 2 (hash-table-count params))))
+             (%array (gp:cleanup-register (foreign-alloc :pointer
+                                                         :count array-length
+                                                         :initial-element (null-pointer))
+                                          #'foreign-free)))
+        (iter (for (name value) in-hashtable params)
+              (for i upfrom 0 by 2)
+              (setf (mem-aref %array :pointer i)
+                    (gp:cleanup-register (foreign-string-alloc name) #'foreign-string-free))
+              (setf (mem-aref %array :pointer (1+ i))
+                    (gp:cleanup-register (foreign-string-alloc value) #'foreign-string-free)))
+        %array)
+      (null-pointer)))
+  
+    
+
 (defun transform (style doc)
   (gp:with-garbage-pool ()  
-    (let* ((params (slot-value style 'params))
-           (array-length)
-           (%array (null-pointer))
-           (%ctxt (null-pointer)))
-      (if params          
-          (progn
-            (setq array-length
-                  (1+ (* 2 (hash-table-count params))))
-            (setq %array
-                  (gp:cleanup-register (foreign-alloc :pointer :count array-length) #'foreign-free))
-            (iter (for (name value) in-hashtable params)
-                  (for i upfrom 0 by 2)
-                  (setf (mem-aref %array :pointer i)
-                        (gp:cleanup-register (foreign-string-alloc name) #'foreign-string-free))
-                  (setf (mem-aref %array :pointer (1+ i))
-                        (gp:cleanup-register (foreign-string-alloc value) #'foreign-string-free)))
-            (setf (mem-aref %array :pointer (1- array-length))
-                  (null-pointer))))
-      (if (boundp 'libxml2.xpath::*lisp-xpath-functions*)
-          (progn
-            (setq %ctxt
-                  (%xsltNewTransformContext (pointer style)
-                                            (pointer doc)))
-            (iter (for (name func &key ns) in libxml2.xpath::*lisp-xpath-functions*)
-                  (%xsltRegisterExtFunction %ctxt
-                                            (gp:cleanup-register (foreign-string-alloc (eval name))
-                                                                 #'foreign-string-free)
-                                            (if ns
-                                                (gp:cleanup-register (foreign-string-alloc (eval ns))
-                                                                     #'foreign-string-free)
-                                                (null-pointer))
-                                            (get-callback func)))))
+    (with-transform-context (%ctxt (style doc))
       (libxml2.tree::make-libxml2-cffi-object-wrapper/impl (%xsltApplyStylesheetUser (pointer style)
                                                                                      (pointer doc)
-                                                                                     %array
+                                                                                     (prepare-xsl-params (slot-value style 'params))
                                                                                      (null-pointer)
                                                                                      (null-pointer)
                                                                                      %ctxt)
                                                            'document))))
+
+;;; with-tranform-result
 
 (defmacro with-transfom-result ((res (style doc)) &rest body)
   `(let ((,res (transform ,style ,doc)))

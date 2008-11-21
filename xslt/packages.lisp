@@ -10,4 +10,7 @@
    :stylesheet-remove-param
    :stylesheet-clear-params
    :transform
-   :with-transfom-result))
+   :with-transfom-result
+   :register-exslt-extensions
+   :define-xslt-element
+   :with-xslt-elements))

@@ -16,7 +16,7 @@
 
 ;;; insert-child-after
 
-(defun insert-child-after (new-child ref-child))
+(defun insert-child-after (new-child ref-child)
   (pointer-to-node (%xmlAddNextSibling (pointer ref-child)
                                        (pointer new-child))))
 

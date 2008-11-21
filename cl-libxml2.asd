@@ -12,7 +12,8 @@
              (:file "childs" :depends-on ("objects"))
              (:file "attribute" :depends-on ("objects"))
              (:file "parse" :depends-on ("objects"))
-             (:file "serialize" :depends-on ("objects"))))
+             (:file "serialize" :depends-on ("objects"))
+             (:file "add-remove" :depends-on ("objects"))))
    (:module :xpath
             :components
             ((:file "packages")

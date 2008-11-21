@@ -48,7 +48,7 @@
           (progn
             (if (boundp 'libxml2.xpath::*lisp-xpath-functions*)
                 (gp:with-garbage-pool ()
-                  (iter (for (name func &key ns) in *lisp-xpath-functions*)
+                  (iter (for (func name ns) in *lisp-xpath-functions*)
                         (%xmlXPathRegisterFuncNS ,var
                                                  (gp:cleanup-register (foreign-string-alloc (eval name))
                                                                       #'foreign-string-free)

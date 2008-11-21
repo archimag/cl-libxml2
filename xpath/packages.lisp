@@ -27,5 +27,5 @@
 
    :xpath-parser-context
    :with-xpath-functions
-   :defxpathfun
+   :define-xpath-function
    ))
