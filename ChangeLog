@@ -1,3 +1,12 @@
+2008-11-21 13:55  archimag
+
+	* examples, examples/resolve.lisp, examples/xpath.lisp,
+	  examples/xslt.lisp: add examples folder
+
+2008-11-21 13:20  archimag
+
+	* ChangeLog: update ChangeLog
+
 2008-11-21 13:19  archimag
 
 	* test/test.lisp, tree/packages.lisp: add more tests
