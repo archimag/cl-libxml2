@@ -49,6 +49,11 @@
    :insert-child-before
    :insert-child-after
    :append-child
+   :prepend-child
+
+   :remove-child
+   :replace-child
+   :detach
 
    :node-type
    :root

@@ -1,7 +1,7 @@
 ;; test.lisp
 
 (defpackage :libxml2.test
-  (:use :cl :iter :libxml2.tree :lift :libxml2.xpath :libxml2.xslt)
+  (:use :cl :iter :libxml2.tree :lift :libxml2.xpath :libxml2.xslt :metabang.bind)
   (:export
    #:run-libxml2-tests))
 
@@ -193,7 +193,94 @@
                        (namespace-prefix (root doc))
                        (attribute-value (root doc) "attr")))))
 
-         
+;;; insert-child-before
+
+(addtest (tree-test)
+  insert-child-before-1
+  (ensure-same '("a" "node" "b" "c")
+               (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (insert-child-before (make-element "node")
+                                      (iter (for node in-child-nodes (root doc))
+                                            (finding node such-that (string= "b" (local-name node)))))
+                 (iter (for node in-child-nodes (root doc))
+                       (collect (local-name node))))))
+
+;;; insert-child-after
+
+(addtest (tree-test)
+  insert-child-after-1
+  (ensure-same '("a" "b" "node" "c")
+               (with-parse-document (doc "<root><a /><b /><c /></root>")
+                 (insert-child-after (make-element "node")
+                                      (iter (for node in-child-nodes (root doc))
+                                            (finding node such-that (string= "b" (local-name node)))))
+                 (iter (for node in-child-nodes (root doc))
+                       (collect (local-name node))))))
+
+;;; append-child
+
+(addtest (tree-test)
+  append-child-1
+  (ensure-same '("a" "b" "c")
+               (with-parse-document (doc "<root />")
+                 (append-child (root doc) (make-element "a"))
+                 (append-child (root doc) (make-element "b"))
+                 (append-child (root doc) (make-element "c"))
+                 (iter (for node in-child-nodes (root doc) with (:type :xml-element-node))
+                       (collect (local-name node))))))
+
+;;; prepend-child
+
+(addtest (tree-test)
+  prepend-child-1
+  (ensure-same '("c" "b" "a")
+               (with-parse-document (doc "<root />")
+                 (prepend-child (root doc) (make-element "a"))
+                 (prepend-child (root doc) (make-element "b"))
+                 (prepend-child (root doc) (make-element "c"))
+                 (iter (for node in-child-nodes (root doc) with (:type :xml-element-node))
+                       (collect (local-name node))))))
+
+;;; remove-child
+
+(addtest (tree-test)
+  remove-child-1
+  (ensure-same '("a" "b" "c")
+               (with-parse-document (doc "<root><a /><node /><b /><node /><c /><node /></root>")
+                 (iter (for node in (iter (for node in-child-nodes (root doc)
+                                                with (:type :xml-element-node :local-name "node"))
+                                          (collect node)))
+                       (remove-child node))
+                 (iter (for node in-child-nodes (root doc))
+                       (collect (local-name node))))))
+                       
+;;; replace-child
+
+(addtest (tree-test)
+  replace-child-1
+  (ensure-same '("a1" "b1")
+               (with-parse-document (doc "<root><a0 /><b0 /></root>")
+                 (bind (((node1 node2) (iter (for node in-child-nodes (root doc))
+                                             (collect node))))
+                   (replace-child node1 (make-element "a1"))
+                   (replace-child node2 (make-element "b1")))
+                 (iter (for node in-child-nodes (root doc))
+                       (collect (local-name node))))))
+                                              
+;;; detach
+
+(addtest (tree-test)
+   detach-1
+   (ensure-same '(("a" "c") ("a" "c" "b"))
+                (with-parse-document (doc "<root><a /><b /><c /></root>")
+                  (let ((b-node (iter (for node in-child-nodes (root doc))
+                                      (finding node such-that (string= "b" (local-name node))))))
+                    (detach b-node)
+                    (list (iter (for node in-child-nodes (root doc))
+                                (collect (local-name node)))
+                          (progn (append-child (root doc) b-node)
+                                 (iter (for node in-child-nodes (root doc))
+                                       (collect (local-name node)))))))))
                  
 ;;; attribute-value
 
