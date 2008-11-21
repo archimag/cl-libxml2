@@ -802,6 +802,8 @@
 
 (deftestsuite custom-xslt-elements-test (libxml2-test) ())
 
+;;; custom-xslt-element-1
+
 (define-xslt-element hello-element (self input output)
   (declare (ignore self input))
   (append-child output (make-text "Hello world!")))
@@ -819,6 +821,28 @@
                    (with-parse-document (doc "<root/>")
                      (with-transfom-result (res (style doc))
                        (find-string res "/result/text()")))))))
+
+(define-xslt-element my-copy-of (self input output)
+   (iter (for node in-xpath-object (attribute-value self "select")  on input)
+         (append-child output (copy node))))
+
+;;; custom-xslt-element-2
+
+(addtest (custom-xslt-elements-test)
+  custom-xslt-element-2
+  (ensure-same '("a" "c")
+               (with-xslt-elements ((my-copy-of "copy-of" "www.sample.org"))
+                 (with-stylesheet (style "<?xml version=\"1.0\"?>
+<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:my=\"www.sample.org\"  extension-element-prefixes=\"my\" version=\"1.0\">
+    <xsl:template match=\"/root\">
+        <result><my:copy-of select=\"node()[@attr]\" /></result>
+    </xsl:template>
+</xsl:stylesheet>")
+                   (with-parse-document (doc "<root><a attr=\"1\"/><b /><c attr=\"2\"/><d /></root>")
+                     (with-transfom-result (res (style doc))
+                       (iter (for node in-child-nodes (root res) with (:type :xml-element-node))
+                             (collect (local-name node)))))))))
+                       ;;(find-string res "/result/text()")))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run-libxml2-test
