@@ -177,11 +177,11 @@
   (URI %xmlCharPtr)
   (function :pointer))
 
-(defmacro define-xslt-element (name (self-node input-node output-parent) &body body)
+(defmacro define-xslt-element (name (style-node input-node output-parent) &body body)
   `(defcallback ,name :void ((%ctxt %xsltTransformContextPtr) (%node %xmlNodePtr) (%inst %xmlNodePtr) (comp :pointer))
      (declare (ignore comp))
-     (let ((,self-node (make-instance 'node :pointer %node))
-           (,input-node (make-instance 'node :pointer %inst))
+     (let ((,style-node (make-instance 'node :pointer %inst))
+           (,input-node (make-instance 'node :pointer %node))
            (,output-parent (make-instance 'node
                                           :pointer (foreign-slot-value %ctxt '%xsltTransformContext '%insert))))
        ,@body)))
