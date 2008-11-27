@@ -297,6 +297,13 @@
   (doc %xmlDocPtr)
   (cur %xmlNodePtr))
 
+(defcfun ("xmlNodeGetContent" %xmlNodeGetContent) %xmlCharPtr
+  (cur %xmlNodePtr))
+
+(defcfun ("xmlNodeSetContent" %xmlNodeSetContent) :void
+  (cur %xmlNodePtr)
+  (content %xmlCharPtr))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; xmlNs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

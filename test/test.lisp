@@ -54,8 +54,8 @@
 
 (addtest (tree-test)
   make-comment-1
-  (ensure-same '(:xml-comment-node "Test comment")
-               (with-libxml2-object (comm (make-comment "Test comment"))
+  (ensure-same '(:xml-comment-node "test comment")
+               (with-libxml2-object (comm (make-comment "test comment"))
                  (list (node-type comm)
                        (text-content comm)))))
 
@@ -63,8 +63,8 @@
 
 (addtest (tree-test)
   make-process-instruction-1
-  (ensure-same '(:xml-pi-node "my-pi" "Test PI content")
-               (with-libxml2-object (p-i (make-process-instruction "my-pi" "Test PI content"))
+  (ensure-same '(:xml-pi-node "my-pi" "test pi content")
+               (with-libxml2-object (p-i (make-process-instruction "my-pi" "test pi content"))
                  (list (node-type p-i)
                        (local-name p-i)
                        (text-content p-i)))))
@@ -73,8 +73,8 @@
 
 (addtest (tree-test)
   make-text-1
-  (ensure-same '(:xml-text-node "Test text data")
-               (with-libxml2-object (text (make-text "Test text data"))
+  (ensure-same '(:xml-text-node "test text data")
+               (with-libxml2-object (text (make-text "test text data"))
                  (list (node-type text)
                        (text-content text)))))
 
@@ -193,6 +193,17 @@
                        (namespace-prefix (root doc))
                        (attribute-value (root doc) "attr")))))
 
+;;; setf text-content
+
+(addtest (tree-test)
+  setf-text-content-1
+  (ensure-same '((:xml-text-node) "Hello world")
+               (with-parse-document (doc "<root><a /></root>")
+                 (setf (text-content (root doc)) "Hello world")
+                 (list (iter (for node in-child-nodes (root doc))
+                             (collect (node-type node)))
+                       (text-content (root doc))))))
+
 ;;; insert-child-before
 
 (addtest (tree-test)
@@ -286,14 +297,14 @@
 
 (addtest (tree-test)
   attribute-value-1
-  (ensure-same "Test attribute value"
-               (with-parse-document (doc "<root attr=\"Test attribute value\" />")
+  (ensure-same "test attribute value"
+               (with-parse-document (doc "<root attr=\"test attribute value\" />")
                  (attribute-value (root doc) "attr"))))
 
 (addtest (tree-test)
   attribute-value-2
-  (ensure-same "Test attribute value"
-               (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"Test attribute value\" />")
+  (ensure-same "test attribute value"
+               (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"test attribute value\" />")
                  (attribute-value (root doc) "attr" "www.sample.org"))))
 
 

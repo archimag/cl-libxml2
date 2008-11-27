@@ -94,8 +94,16 @@
 ;;; text-content
 
 (defun text-content (node)
-  (cffi:foreign-string-to-lisp
-   (wrapper-slot-value node '%content)))
+  (let ((%content (%xmlNodeGetContent (pointer node))))
+    (unless (null-pointer-p %content)
+      (unwind-protect
+           (foreign-string-to-lisp %content)
+        (%xmlFree %content)))))
+
+(defun (setf text-content) (content node)
+  (with-foreign-string (%content content)
+    (%xmlNodeSetContent (pointer node)
+                        %content)))
 
 ;;; process-xinclude
 
