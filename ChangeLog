@@ -1,3 +1,37 @@
+2008-11-27 13:47  archimag
+
+	* tree/low-level-api.lisp, tree/parse.lisp, tree/serialize.lisp:
+	  implemented serialize to stream
+
+2008-11-27 12:47  archimag
+
+	* test/test.lisp, tree/childs.lisp, tree/low-level-api.lisp: change
+	  implementation text-content
+	  add (setf text-content)
+
+2008-11-27 09:35  archimag
+
+	* tree/attribute.lisp, tree/packages.lisp, xpath/packages.lisp,
+	  xslt/packages.lisp: update
+
+2008-11-27 08:20  archimag
+
+	* doc/TODO, tree/serialize.lisp: implement serialize ((el node)
+	  target) for elements
+
+2008-11-27 08:16  archimag
+
+	* tree/objects.lisp, tree/packages.lisp: Add predicates:
+	  element-p
+	  attribute-p
+	  text-p
+	  comment-p
+	  process-instruction-p
+
+2008-11-21 13:56  archimag
+
+	* ChangeLog: cl-libxml2-0.2 released!
+
 2008-11-21 13:55  archimag
 
 	* examples, examples/resolve.lisp, examples/xpath.lisp,
