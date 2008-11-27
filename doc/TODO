@@ -11,10 +11,11 @@
 **** DONE (stream string-stream)
 **** DONE (str string)
 **** DONE (octets array)
-*** TODO serialize (node target)
-**** DONE (path pathname)
-**** TODO (stream stream)
-**** DONE (:to-string)
+*** TODO serialize (obj target)
+**** DONE (doc document) (path pathname)
+**** TODO (doc document) (stream stream)
+**** DONE (doc document) (:to-string)
+**** DONE (el node) target
      
 ** Names and Namespaces URIs
 *** DONE local-name (node)
@@ -31,7 +32,12 @@
 *** DONE make-text (data)
 *** DONE copy (node)
     Copies a node recursively.
-
+** Check node type
+*** DONE element-p (node &key throw-error)
+*** DONE attribute-p (node &key throw-error)
+*** DONE text-p (node &key throw-error)
+*** DONE comment-p (node &key throw-error)
+*** DONE process-instruction-p (node &key throw-error)
 ** Listing Child Nodes
 *** DONE parent (node)
 *** DONE document (node)
@@ -79,9 +85,10 @@
 * XPath API
 ** DONE with-compiled-expression 
 ** DONE eval-expression
-** DONE eval-expression-as-string
-** DONE eval-expression-as-number
-** DONE eval-expression-as-boolean
+** DONE find-string
+** DONE find-number
+** DONE find-boolean
+** DONE find-single-node
 ** DONE iter (FOR item IN-XPATH query ON node &optional WITH-NS-MAP (((prefix1 ns1) (prefix2 ns2) ...) *default-ns-map*))
 ** DONE getpath (node)
    
@@ -101,6 +108,9 @@
 *** DONE resolve-string
 *** DONE resolve-stream
 ** XPath extension functions
-*** TODO with-xpath-functions
+*** DONE define-xpath-function
+*** DONE with-xpath-functions
 ** XSLT extension elements
+*** DONE define-xslt-element
+*** DONE with-xslt-elements
 

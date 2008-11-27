@@ -25,3 +25,21 @@
           (unwind-protect 
                (foreign-string-to-lisp %ptr)
             (%xmlFree %ptr)))))))
+
+
+;;; serialize ((el node) target)
+
+(defmethod serialize ((el node) target)
+  (element-p el :throw-error t)
+  (let ((%doc (%xmlNewDoc (null-pointer))))
+    (unwind-protect
+         (progn 
+           (setf (foreign-slot-value %doc '%xmlDoc '%children) (pointer el))
+           (setf (foreign-slot-value %doc '%xmlDoc '%last) (pointer el))
+           (serialize (make-instance 'document
+                                     :pointer %doc)
+                      target))
+      (progn
+        (setf (foreign-slot-value %doc '%xmlDoc '%children) (null-pointer))
+        (setf (foreign-slot-value %doc '%xmlDoc '%last) (null-pointer))
+        (%xmlFreeDoc %doc)))))
