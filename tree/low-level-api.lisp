@@ -26,6 +26,7 @@
 (defctype %xmlDictPtr :pointer)
 (defctype %xmlHashTablePtr :pointer)
 (defctype %charPtr :pointer)
+(defctype %xmlOutputBufferPtr :pointer)
 
 
 (defcenum %xmlCharEncoding
@@ -186,6 +187,17 @@
   (doc_txt_ptr :pointer)
   (doc_txt_len :pointer)
   (format :int))
+
+(defcfun ("xmlSaveFileTo" %xmlSaveFileTo) :int
+  (buf %xmlOutputBufferPtr)
+  (cur %xmlDocPtr)
+  (encoding %xmlCharPtr))
+
+(defcfun ("xmlOutputBufferCreateIO" %xmlOutputBufferCreateIO) %xmlOutputBufferPtr
+  (iowrite :pointer)
+  (ioclose :pointer)
+  (ioctx :pointer)
+  (encoder :pointer))
 
 
 (defcfun ("xmlFreeDoc" %xmlFreeDoc) :void

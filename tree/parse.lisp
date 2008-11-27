@@ -35,16 +35,15 @@
     (make-instance 'document
                    :pointer (%xmlReadFile _path (cffi:null-pointer) 0))))
 
-
-(defvar *stream-for-xml-parse*)
-
 ;;; parse ((octets (array unsigned-byte)))
 
 (defmethod parse ((octets array) &key)
   (flexi-streams:with-input-from-sequence (in octets)
     (parse in)))
 
-;;; parse ((stream stream))
+;;; parse ((stream stream)
+
+(defvar *stream-for-xml-parse*)
 
 (defcallback %read-binary-stream :int ((context :pointer) (buffer :pointer) (len :int))
   (declare (ignore context))

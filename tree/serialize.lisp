@@ -26,6 +26,37 @@
                (foreign-string-to-lisp %ptr)
             (%xmlFree %ptr)))))))
 
+;;; serialize ((doc document) (stream stream))
+
+(defvar *stream-for-xml-serialize*)
+
+(defcallback %write-binary-stream :int ((context :pointer) (buffer :pointer) (len :int))
+  (declare (ignore context))
+  (iter (for pos from 0 below len)
+        (write-byte (mem-aref buffer :uchar pos) *stream-for-xml-serialize*))
+  len)
+
+(defcallback %write-string-stream :int ((context :pointer) (buffer :pointer) (len :int))
+  (declare (ignore context))
+  (write (foreign-string-to-lisp buffer :count len) :stream *stream-for-xml-serialize*)
+  len)
+
+(defun %stream-writer-callback (stream)
+  (if (subtypep (stream-element-type stream)
+                'character)
+      (cffi:callback %write-string-stream)
+      (cffi:callback %write-binary-stream)))
+
+
+(defmethod serialize ((doc document) (stream stream))
+  (with-foreign-string (%utf-8 "utf-8")
+    (let ((*stream-for-xml-serialize* stream))
+      (%xmlSaveFileTo (%xmlOutputBufferCreateIO (%stream-writer-callback stream)
+                                                (null-pointer)
+                                                (null-pointer)
+                                                (null-pointer))
+                      (pointer doc)
+                      %utf-8))))
 
 ;;; serialize ((el node) target)
 
