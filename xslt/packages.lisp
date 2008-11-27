@@ -2,6 +2,7 @@
 
 (defpackage :libxml2.xslt
   (:use :cl :cffi :libxml2.private :libxml2.tree :iter)
+  (:nicknames :xslt)
   (:export
    :stylesheet
    :parse-stylesheet

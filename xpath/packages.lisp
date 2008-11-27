@@ -2,6 +2,7 @@
 
 (defpackage :libxml2.xpath
   (:use :cl :cffi :iter :libxml2.private :libxml2.tree #+sbcl :sb-ext :metabang.bind)
+  (:nicknames :xpath)
   (:export
    :compiled-expression
    :compile-expression

@@ -13,18 +13,15 @@
          (%xmlGetNsProp (pointer element) %name (null-pointer))))))
 
 
-(defun set-attribute-value (element name &optional uri value)
-  (with-foreign-strings ((%name name) (%value (or value uri)))
-    (if value
+(defun (setf attribute-value) (value element name &optional uri)
+  (with-foreign-strings ((%name name) (%value value))
+    (if uri
         (let ((ns (or (search-ns-by-href element uri)
                       (make-ns element uri))))
           (%xmlSetNsProp (pointer element) (pointer ns) %name %value))
-        (%xmlSetNsProp (pointer element) (null-pointer) %name %value)))
-  (or value uri))
+      (%xmlSetNsProp (pointer element) (null-pointer) %name %value)))
+  value)
 
-(defsetf attribute-value set-attribute-value)
-
-;;; attribute-node-value
 
 (defun attribute-node-value (attr)
   (text-content (first-child attr)))
@@ -51,6 +48,7 @@
 		      `(,var (attribute-value ,element ,name ,uri))))
 		  entries)
        ,@body)))
+
 
 ;;; iter (FOR (value name href)  IN-NODE-ATTRIBUTES node )
 
