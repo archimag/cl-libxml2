@@ -30,6 +30,12 @@
    :make-comment
    :make-process-instruction
    :copy
+
+   :element-p
+   :attribute-p
+   :text-p
+   :comment-p
+   :process-instruction-p
    
    :parse
    :with-custom-resolvers

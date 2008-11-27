@@ -87,6 +87,19 @@
                  :pointer (with-foreign-strings ((%name name) (%content content))
                             (%xmlNewPI %name %content))))
 
+(defmacro def-node-p (name node-type)
+  `(defun ,name (node &key throw-error)
+     (if (eql (node-type node) ,node-type)
+         t
+         (if throw-error
+             (error (format nil "node is not ~A" ,node-type))))))
+
+(def-node-p element-p :xml-element-node)
+(def-node-p attribute-p :xml-attribute-node)
+(def-node-p text-p :xml-element-text)
+(def-node-p comment-p :xml-comment-node)
+(def-node-p process-instruction-p :xml-pi-node)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; document
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
