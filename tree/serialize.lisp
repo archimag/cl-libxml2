@@ -2,15 +2,42 @@
 
 (in-package #:libxml2.tree)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; cffi declarations
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defcfun ("xmlDocDumpFormatMemory" %xmlDocDumpFormatMemory) :void
+  (doc %xmlDocPtr)
+  (doc_txt_ptr :pointer)
+  (doc_txt_len :pointer)
+  (format :int))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defgeneric serialize (obj target))
 
 ;;; serialize ((doc document) (filename pathname))
+
+(defcfun ("xmlSaveFile" %xmlSaveFile) :int
+  (filename :pointer)
+  (doc %xmlDocPtr))
 
 (defmethod serialize ((doc document) (filename pathname))
   (with-foreign-string (%path (format nil "~A" filename))
     (%xmlSaveFile %path (pointer doc))))
 
 ;;; serialize ((doc document) (s (eql :to-string)))
+
+(defcfun ("xmlDocDumpFormatMemoryEnc" %xmlDocDumpFormatMemoryEnc) :void
+  (doc %xmlDocPtr)
+  (doc_txt_ptr :pointer)
+  (doc_txt_len :pointer)
+  (txt_encoding :pointer)
+  (format :int))
 
 (defmethod serialize ((doc document) (s (eql :to-string)))
   (with-foreign-string (%utf-8 "utf-8")
@@ -47,6 +74,16 @@
       (cffi:callback %write-string-stream)
       (cffi:callback %write-binary-stream)))
 
+(defcfun ("xmlSaveFileTo" %xmlSaveFileTo) :int
+  (buf %xmlOutputBufferPtr)
+  (cur %xmlDocPtr)
+  (encoding %xmlCharPtr))
+
+(defcfun ("xmlOutputBufferCreateIO" %xmlOutputBufferCreateIO) %xmlOutputBufferPtr
+  (iowrite :pointer)
+  (ioclose :pointer)
+  (ioctx :pointer)
+  (encoder :pointer))
 
 (defmethod serialize ((doc document) (stream stream))
   (with-foreign-string (%utf-8 "utf-8")

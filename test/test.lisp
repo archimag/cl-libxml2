@@ -541,7 +541,7 @@
   find-single-node-3
   (ensure-same "val"
                (with-parse-document (doc "<root><a attr=\"val\"/><b /><c /></root>")
-                 (attribute-node-value (find-single-node (root doc) "a/@attr")))))
+                 (text-content (find-single-node (root doc) "a/@attr")))))
 
 ;;; in-nodeset
 

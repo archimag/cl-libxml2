@@ -144,62 +144,6 @@
   ;; int	properties	: set of xmlDocProperties for this docume
   (%properties :int))
 
-
-(defcfun ("xmlReadFile" %xmlReadFile)  %xmlDocPtr
-  (filename :pointer)
-  (encoding :pointer)
-  (options :int))
-
-(defcfun ("xmlReadDoc" %xmlReadDoc) %xmlDocPtr
-  (cur %xmlCharPtr)
-  (base-url %xmlCharPtr)
-  (encoding %xmlCharPtr)
-  (options :int))
-
-(defcfun ("xmlReadIO" %xmlReadIO) %xmlDocPtr
-  (ioread :pointer)
-  (ioclose :pointer)
-  (ioctx :pointer)
-  (url %xmlCharPtr)
-  (encoding %xmlCharPtr)
-  (options :int))
-
-;; (defcfun ("xmlReadMemory" %xmlReadMemory) %xmlDocPtr
-;;   (buffer %xmlCharPtr)
-;;   (size :int)
-;;   (uri %xmlCharPtr)
-;;   (encoding %xmlCharPtr)
-;;   (options :int))
-
-(defcfun ("xmlSaveFile" %xmlSaveFile) :int
-  (filename :pointer)
-  (doc %xmlDocPtr))
-
-(defcfun ("xmlDocDumpFormatMemoryEnc" %xmlDocDumpFormatMemoryEnc) :void
-  (doc %xmlDocPtr)
-  (doc_txt_ptr :pointer)
-  (doc_txt_len :pointer)
-  (txt_encoding :pointer)
-  (format :int))
-
-(defcfun ("xmlDocDumpFormatMemory" %xmlDocDumpFormatMemory) :void
-  (doc %xmlDocPtr)
-  (doc_txt_ptr :pointer)
-  (doc_txt_len :pointer)
-  (format :int))
-
-(defcfun ("xmlSaveFileTo" %xmlSaveFileTo) :int
-  (buf %xmlOutputBufferPtr)
-  (cur %xmlDocPtr)
-  (encoding %xmlCharPtr))
-
-(defcfun ("xmlOutputBufferCreateIO" %xmlOutputBufferCreateIO) %xmlOutputBufferPtr
-  (iowrite :pointer)
-  (ioclose :pointer)
-  (ioctx :pointer)
-  (encoder :pointer))
-
-
 (defcfun ("xmlFreeDoc" %xmlFreeDoc) :void
   (doc %xmlDocPtr))
 
@@ -428,46 +372,4 @@
   (node %xmlNodePtr)
   (name %xmlCharPtr)
   (href %xmlCharPtr))
-
-  
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; custom resolve support
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defctype %xmlExternalEntityLoader :pointer)
-(defctype %xmlParseInputPtr :pointer)
-(defctype %xmlParserCtxPtr :pointer)
-(defctype %xmlParserInputBufferPtr	:pointer)
-
-(defcfun ("xmlGetExternalEntityLoader" %xmlGetExternalEntityLoader) %xmlExternalEntityLoader)
-
-(defcfun ("xmlSetExternalEntityLoader" %xmlSetExternalEntityLoader) :void
-  (loader %xmlExternalEntityLoader))
-
-(defcfun ("xmlNewInputStream" %xmlNewInputStream) %xmlParseInputPtr
-  (ctxt %xmlParserCtxPtr))
-
-(defcfun ("xmlNewInputFromFile" %xmlNewInputFromFile) %xmlParseInputPtr
-  (ctxt %xmlParserCtxPtr)
-  (filename %xmlCharPtr))
-
-(defcfun ("xmlNewStringInputStream" %xmlNewStringInputStream) %xmlParseInputPtr
-  (ctxt %xmlParserCtxPtr)
-  (buffer %xmlCharPtr))
-
-
-(defcfun ("xmlParserInputBufferCreateIO" %xmlParserInputBufferCreateIO) %xmlParserInputBufferPtr
-  (ioread :pointer)
-  (ioclose :pointer)
-  (ioctx :pointer)
-  (enc %xmlCharEncoding))
-
-
-(defcfun ("xmlNewIOInputStream" %xmlNewIOInputStream) %xmlParseInputPtr
-  (ctxt %xmlParserCtxPtr)
-  (input %xmlParserInputBufferPtr)
-  (enc %xmlCharEncoding))
-
-(defcfun ("xmlFreeParserInputBuffer" %xmlFreeParserInputBuffer) :void
-  (in %xmlParserInputBufferPtr))
+ 

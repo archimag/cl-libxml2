@@ -2,16 +2,36 @@
 
 (in-package #:libxml2.tree)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; cfii declarations
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar *default-resolvers* nil)
+(defcfun ("xmlReadFile" %xmlReadFile)  %xmlDocPtr
+  (filename :pointer)
+  (encoding :pointer)
+  (options :int))
+
+(defcfun ("xmlReadDoc" %xmlReadDoc) %xmlDocPtr
+  (cur %xmlCharPtr)
+  (base-url %xmlCharPtr)
+  (encoding %xmlCharPtr)
+  (options :int))
+
+(defcfun ("xmlReadIO" %xmlReadIO) %xmlDocPtr
+  (ioread :pointer)
+  (ioclose :pointer)
+  (ioctx :pointer)
+  (url %xmlCharPtr)
+  (encoding %xmlCharPtr)
+  (options :int))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; parse
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defgeneric parse (obj &key)
   (:documentation "parse xml"))
-
-
-;;(defmethod parse :before (obj &key (resolvers *default-resolvers*)))
-
-;;; parse ((path pathname))
 
 (defmethod parse ((path pathname) &key)
   (with-foreign-string (_path (format nil "~A" path))
@@ -91,53 +111,3 @@
                                         (cffi:null-pointer)
                                         0))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; custor resolver support
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defvar *resolvers* nil)
-
-(defparameter *default-external-resolver* (%xmlGetExternalEntityLoader))
-
-
-(defcallback %custom-external-resolver :pointer ((%url :pointer) (%id :pointer) (%context :pointer))
-  (or (and (or *resolvers*
-               *default-resolvers*)
-           (let ((url (unless (null-pointer-p %url) (puri:parse-uri (foreign-string-to-lisp %url))))
-                 (id  (unless (null-pointer-p %id) (foreign-string-to-lisp %id))))
-             (iter (for resolver in *resolvers*)
-                   (for res = (funcall resolver url id %context))
-                   (finding res such-that res))))
-      (foreign-funcall-pointer *default-external-resolver*
-                               ()
-                               :pointer %url
-                               :pointer %id
-                               :pointer %context
-                               :pointer)))
-
-(%xmlSetExternalEntityLoader (callback %custom-external-resolver))
-
-(defmacro with-custom-resolvers ((&rest resolvers) &body body)
-  `(let ((*resolvers* (list ,@resolvers))
-         (*stream-for-xml-parse*))
-     (gp:with-garbage-pool () ,@body)))
-
-
-(defun resolve-file/url (filename %ctxt)
-  (with-foreign-string (%filename filename)
-    (%xmlNewInputFromFile %ctxt
-                          %filename)))
-
-(defun resolve-string (str %ctxt)
-  (%xmlNewStringInputStream %ctxt
-                            (gp:cleanup-register (foreign-string-alloc str) #'foreign-string-free)))
-
-(defun resolve-stream (stream %ctxt)
-  (setq *stream-for-xml-parse* stream)
-  (%xmlNewIOInputStream %ctxt
-                        (%xmlParserInputBufferCreateIO (%stream-reader-callback stream)
-                                                                            (null-pointer)
-                                                                            (null-pointer)
-                                                                            :xml-char-encoding-none)
-                        :xml-char-encoding-none))
-  
