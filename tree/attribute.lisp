@@ -2,7 +2,61 @@
 
 (in-package #:libxml2.tree)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; attribute
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcenum %xmlAttributeType
+  (:xml-attribute-cdata  1)
+  (:xml-attribute-id  2)
+  (:xml-attribute-idref  3)
+  (:xml-attribute-idrefs  4)
+  (:xml-attribute-entity  5)
+  (:xml-attribute-entities  6)
+  (:xml-attribute-nmtoken  7)
+  (:xml-attribute-nmtokens  8)
+  (:xml-attribute-enumeration  9)
+  (:xml-attribute-notation  10))
+
+
+;; struct _xmlAttr
+(defcstruct %xmlAttr
+  ;; void *	_private	: application data
+  (%_private :pointer)
+  ;; xmlElementType	type	: XML_ATTRIBUTE_NODE, must be second !
+  (%type %xmlElementType)
+  ;; const xmlChar *	name	: the name of the property
+  (%name %xmlCharPtr)
+  ;; struct _xmlNode *	children	: the value of the property
+  (%children %xmlNodePtr)
+  ;; struct _xmlNode *	last	: NULL
+  (%last %xmlNodePtr)
+  ;; struct _xmlNode *	parent	: child->parent link
+  (%parent %xmlNodePtr)
+  ;; struct _xmlAttr *	next	: next sibling link
+  (%next %xmlAttrPtr)
+  ;; struct _xmlAttr *	prev	: previous sibling link
+  (%prev %xmlAttrPtr)
+  ;; struct _xmlDoc *	doc	: the containing document
+  (%doc %xmlDocPtr)
+  ;; xmlNs *	ns	: pointer to the associated namespace
+  (%ns %xmlNsPtr)
+  ;; xmlAttributeType	atype	: the attribute type if validating
+  (%atype %xmlAttributeType)
+  ;; void *	psvi	: for type/PSVI informations
+  (%psvi :pointer))
+
+
+(defwrapper attribute %xmlAttr)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; attribute-value
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlGetNsProp" %xmlGetNsProp) %xmlCharPtr
+  (node %xmlNodePtr)
+  (name %xmlCharPtr)
+  (uri %xmlCharPtr))
 
 (defun attribute-value (element name &optional uri)
   (foreign-string-to-lisp 
@@ -11,6 +65,12 @@
          (with-foreign-string (%uri uri)
            (%xmlGetNsProp (pointer element) %name %uri))
          (%xmlGetNsProp (pointer element) %name (null-pointer))))))
+
+(defcfun ("xmlSetNsProp" %xmlSetNsProp) %xmlAttrPtr
+  (node %xmlNodePtr)
+  (ns %xmlNsPtr)
+  (name %xmlCharPtr)
+  (value %xmlCharPtr))
 
 
 (defun (setf attribute-value) (value element name &optional uri)
@@ -22,7 +82,17 @@
       (%xmlSetNsProp (pointer element) (null-pointer) %name %value)))
   value)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; remove-attribute
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlHasNsProp" %xmlHasNsProp) %xmlAttrPtr
+  (node %xmlNodePtr)
+  (name %xmlCharPtr)
+  (href %xmlCharPtr))
+
+(defcfun ("xmlRemoveProp" %xmlRemoveProp) :int
+  (attr %xmlAttrPtr))
 
 (defun remove-attribute (element name &optional uri)
   (let ((%attr (with-foreign-string (%name name)
@@ -33,7 +103,9 @@
     (unless (null-pointer-p %attr)
       (= 0 (%xmlRemoveProp %attr)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; with-attributes
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro with-attributes ((&rest entries) element &body body)
   (alexandria:once-only (element)
@@ -45,8 +117,9 @@
 		  entries)
        ,@body)))
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; iter (FOR (value name href)  IN-NODE-ATTRIBUTES node )
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro-driver (for attr in-attributes node)
   (let ((kwd (if generate 'generate 'for)))
@@ -66,7 +139,9 @@
                                                                           '%xmlNs
                                                                           '%href)))))))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; add-extra-namespace (element prefix uri)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun add-extra-namespace (element href prefix)
   (with-foreign-strings ((%href href) (%prefix prefix))

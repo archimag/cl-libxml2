@@ -15,7 +15,9 @@
              (:file "serialize" :depends-on ("document"))
              (:file "add-remove" :depends-on ("objects"))
              (:file "resolve" :depends-on ("parse"))
-             (:file "document" :depends-on ("objects"))))
+             (:file "namespace" :depends-on ("objects"))
+             (:file "node" :depends-on ("namespace"))
+             (:file "document" :depends-on ("node"))))   
    (:module :xpath
             :components
             ((:file "packages")

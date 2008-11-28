@@ -18,7 +18,7 @@
 
 (defpackage :libxml2.tree
   (:use :cl :iter :cffi :libxml2.private)
-  (:nicknames :tree)
+  (:nicknames :tree :xtree)
   (:export
    :node
    :document
