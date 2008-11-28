@@ -7,17 +7,14 @@
   ((:module :tree
             :components
             ((:file "packages")
-             (:file "low-level-api" :depends-on ("packages" ))
-             (:file "objects" :depends-on ("low-level-api"))
-             (:file "childs" :depends-on ("document"))
+             (:file "objects" :depends-on ("packages"))
+             (:file "namespace" :depends-on ("objects"))
              (:file "attribute" :depends-on ("objects"))
+             (:file "node" :depends-on ("namespace"))
+             (:file "document" :depends-on ("node"))
              (:file "parse" :depends-on ("document"))
              (:file "serialize" :depends-on ("document"))
-             (:file "add-remove" :depends-on ("objects"))
-             (:file "resolve" :depends-on ("parse"))
-             (:file "namespace" :depends-on ("objects"))
-             (:file "node" :depends-on ("namespace"))
-             (:file "document" :depends-on ("node"))))   
+             (:file "resolve" :depends-on ("parse"))))
    (:module :xpath
             :components
             ((:file "packages")

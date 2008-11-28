@@ -151,5 +151,258 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; local-name
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun local-name (node)
+  (cffi:foreign-string-to-lisp
+   (wrapper-slot-value node '%name)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; node-type
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun node-type (node)
+  (wrapper-slot-value node '%type))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; next-sibling
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun next-sibling (node)
+  (wrapper-slot-node node '%next))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; prev-sibling
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun prev-sibling (node)
+  (wrapper-slot-node node '%prev))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; first-child
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun first-child (node)
+  (wrapper-slot-node node '%children))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; last-child
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun last-child (node)
+  (wrapper-slot-node node '%last))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; parent
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun parent (node)
+  (wrapper-slot-node node '%parent))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; text-content
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlNodeGetContent" %xmlNodeGetContent) %xmlCharPtr
+  (cur %xmlNodePtr))
+
+(defun text-content (node)
+  (let ((%content (%xmlNodeGetContent (pointer node))))
+    (unless (null-pointer-p %content)
+      (unwind-protect
+           (foreign-string-to-lisp %content)
+        (%xmlFree %content)))))
+
+(defcfun ("xmlNodeSetContent" %xmlNodeSetContent) :void
+  (cur %xmlNodePtr)
+  (content %xmlCharPtr))
+
+(defun (setf text-content) (content node)
+  (with-foreign-string (%content content)
+    (%xmlNodeSetContent (pointer node)
+                        %content)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; base-url
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlNodeGetBase" %xmlNodeGetBase) %xmlCharPtr
+  (doc %xmlDocPtr)
+  (cur %xmlNodePtr))
+
+(defmethod base-url ((node node))
+  (let ((%str (%xmlNodeGetBase (pointer (document node))
+                               (pointer node))))
+    (unwind-protect
+         (puri:parse-uri (foreign-string-to-lisp %str))
+      (%xmlFree %str))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; process-xinclude
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlXIncludeProcessTree" %xmlXIncludeProcessTree) :int
+  (node %xmlNodePtr))
+
+(defmethod process-xinclude ((node node))
+  (%xmlXincludeProcessTree (pointer node)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; FOR var IN-... WITH ()
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun node-filter (&key type local-name ns filter)
+  (if (or type local-name)
+      (lambda (node)
+        (and (or (not type)
+                 (eql (node-type node) type))
+             (or (not local-name)
+                 (string= (local-name node) local-name))
+             (or (not ns)
+                 (string= (namespace-uri node) ns))
+             (or (not filter)
+                 (funcall filter node))))))
+
+(defun find-node (first filter)
+  (if first
+    (if filter
+        (if (funcall filter first)
+            first
+            (find-node (next-sibling first) filter))
+        first)))
+
+
+;;; FOR var IN-CHILD-NODES node WITH ()
+
+(defmacro-driver (for var in-child-nodes node &optional with filter)
+  (let ((kwd (if generate 'generate 'for)))
+  `(progn
+     (with filter-fun = (node-filter ,@filter))
+     (,kwd ,var first (find-node (first-child ,node) filter-fun) then (find-node (next-sibling ,var) filter-fun))
+     (while ,var))))
+
+
+;;; FOR var IN-NEXT-SIBLINGS node WITH ()
+
+(defmacro-driver (for var in-next-siblings node &optional with filter)
+  (let ((kwd (if generate 'generate 'for)))
+  `(progn
+     (with filter-fun = (node-filter ,@filter))
+     (,kwd ,var first (find-node (next-sibling ,node) filter-fun) then (find-node (next-sibling ,var) filter-fun))
+     (while ,var))))
+
+;;; FOR var IN-NEXT-SIBLINGS-FROM node WITH ()
+
+(defmacro-driver (for var in-next-siblings-from node &optional with filter)
+  (let ((kwd (if generate 'generate 'for)))
+  `(progn
+     (with filter-fun = (node-filter ,@filter))
+     (,kwd ,var first (find-node ,node filter-fun) then (find-node (next-sibling ,var) filter-fun))
+     (while ,var))))
+
+;;; FOR var IN-PREV-SIBLING node WITH ()
+
+(defmacro-driver (for var in-prev-siblings node &optional with filter)
+  (let ((kwd (if generate 'generate 'for)))
+  `(progn
+     (with filter-fun = (node-filter ,@filter))
+     (,kwd ,var first (find-node (prev-sibling ,node) filter-fun) then (find-node (prev-sibling ,var) filter-fun))
+     (while ,var))))
+
+;;; FOR var IN-PREV-SIBLING-FROM node WITH ()
+
+(defmacro-driver (for var in-prev-siblings-from node &optional with filter)
+  (let ((kwd (if generate 'generate 'for)))
+  `(progn
+     (with filter-fun = (node-filter ,@filter))
+     (,kwd ,var first (find-node ,node filter-fun) then (find-node (prev-sibling ,var) filter-fun))
+     (while ,var))))
+
+
+
+
+(defun pointer-to-node (ptr)
+  (unless (null-pointer-p ptr)
+    (make-instance 'node
+                   :pointer ptr)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; insert-child-before
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlAddPrevSibling" %xmlAddPrevSibling) %xmlNodePtr
+  (cur %xmlNodePtr)
+  (elem %xmlNodePtr))
+
+(defun insert-child-before (new-child ref-child)
+  (pointer-to-node (%xmlAddPrevSibling (pointer ref-child)
+                                       (pointer new-child))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; insert-child-after
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlAddNextSibling" %xmlAddNextSibling) %xmlNodePtr
+  (cur %xmlNodePtr)
+  (elem %xmlNodePtr))
+
+(defun insert-child-after (new-child ref-child)
+  (pointer-to-node (%xmlAddNextSibling (pointer ref-child)
+                                       (pointer new-child))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; append-child
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlAddChild" %xmlAddChild) %xmlNodePtr
+  (parent %xmlNodePtr)
+  (child %xmlNodePtr))
+
+(defun append-child (parent node)
+  (pointer-to-node (%xmlAddChild (pointer parent)
+                                 (pointer node))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; prepend-child
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun prepend-child (parent node)
+  (let ((first (first-child parent)))
+    (if first
+        (insert-child-before node first)
+        (append-child parent node))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; detach
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlUnlinkNode" %xmlUnlinkNode) :void
+  (node %xmlNodePtr))
+
+(defun detach (node)
+  (%xmlUnlinkNode (pointer node)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; remove-child
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun remove-child (child)
+  (detach child)
+  (release child))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; replace-child
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlReplaceNode" %xmlReplaceNode) %xmlNodePtr
+  (old %xmlNodePtr)
+  (cur %xmlNodePtr))
+
+(defun replace-child (old-child new-child &key (delete t))
+  (let ((%old (%xmlReplaceNode (pointer old-child)
+                               (pointer new-child))))
+    (if delete
+        (%xmlFreeNode %old)
+        (pointer-to-node %old))))
