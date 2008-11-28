@@ -9,12 +9,13 @@
             ((:file "packages")
              (:file "low-level-api" :depends-on ("packages" ))
              (:file "objects" :depends-on ("low-level-api"))
-             (:file "childs" :depends-on ("objects"))
+             (:file "childs" :depends-on ("document"))
              (:file "attribute" :depends-on ("objects"))
-             (:file "parse" :depends-on ("objects"))
-             (:file "serialize" :depends-on ("objects"))
+             (:file "parse" :depends-on ("document"))
+             (:file "serialize" :depends-on ("document"))
              (:file "add-remove" :depends-on ("objects"))
-             (:file "resolve" :depends-on ("parse"))))
+             (:file "resolve" :depends-on ("parse"))
+             (:file "document" :depends-on ("objects"))))
    (:module :xpath
             :components
             ((:file "packages")

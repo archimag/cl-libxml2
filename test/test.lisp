@@ -739,7 +739,6 @@
                    (iter (for node in-child-nodes (root doc) with (:type :xml-element-node))
                          (collect (local-name node)))))))
                    
-
 (addtest (custom-resolve-test)
   with-custom-resolve-stream-1
   (ensure-same "node"

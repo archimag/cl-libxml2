@@ -45,22 +45,6 @@
       (%xmlFree %str))))
                    
 
-;;; root
-
-(defgeneric root (obj))
-
-(defmethod root ((doc document))
-  (make-instance 'node :pointer (%xmlDocGetRootElement (pointer doc))))
-
-(defmethod root ((node node))
-  (let ((doc (document node)))
-    (if doc
-        (root doc)
-        (let ((parent (parent node)))
-          (if parent
-              (root parent)
-              node)))))
-
 ;;; next-sibling
 
 (defun next-sibling (node)

@@ -8,9 +8,9 @@
 (defgeneric wrapper-slot-value (obj slot))
 (defgeneric set-wrapper-slot-value (obj slot value))
 
-(defgeneric release (obj) )
 (defgeneric release/impl (obj))
 (defgeneric copy (obj))
+(defgeneric (setf wrapper-slot-value) (value obj slot))
 
 
 (defmethod pointer ((obj (eql nil)))
@@ -21,10 +21,9 @@
      (defclass ,wrapper-name (libxml2-cffi-object-wrapper) ())
      (defmethod wrapper-slot-value ((obj ,wrapper-name) slot)
        (cffi:foreign-slot-value (pointer obj) (quote ,cffi-type) slot))
-     (defmethod set-wrapper-slot-value ((obj ,wrapper-name) slot value)
+     (defmethod (setf wrapper-slot-value) (value (obj ,wrapper-name) slot)
        (setf (cffi:foreign-slot-value (pointer obj) (quote ,cffi-type) slot) value))))
 
-(defsetf wrapper-slot-value set-wrapper-slot-value)
 
 (defmacro with-libxml2-object ((var value) &rest body)
   `(unwind-protect
@@ -32,12 +31,11 @@
           ,@body)
      (if ,value (release ,value))))
 
-(gp:defcleanup libxml2-cffi-object-wrapper #'release)
-
-(defmethod release ((obj libxml2-cffi-object-wrapper))
+(defun release (obj)
   (release/impl obj)
   (setf (slot-value obj 'pointer) nil))
 
+(gp:defcleanup libxml2-cffi-object-wrapper #'release)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; node
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -99,28 +97,6 @@
 (def-node-p text-p :xml-element-text)
 (def-node-p comment-p :xml-comment-node)
 (def-node-p process-instruction-p :xml-pi-node)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; document
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defwrapper document %xmlDoc)
-
-(defmethod release/impl ((doc document))
-  (%xmlFreeDoc (pointer doc)))
-
-(defmethod copy ((doc document))
-  (make-instance 'document
-                 :pointer (%xmlCopyDoc (pointer doc) 1)))
-
-(defun make-document (document-element)
-  (let ((%doc (%xmlNewDoc (null-pointer))))
-    (%xmlDocSetRootElement %doc (pointer document-element))
-    (make-instance 'document
-                   :pointer %doc)))
-
-(defmacro with-parse-document ((var src) &rest body)
-  `(with-libxml2-object (,var (parse ,src)) ,@body))
 
 
 

@@ -3,7 +3,14 @@
 (in-package #:libxml2.tree)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; cfii declarations
+;;; parse
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defgeneric parse (obj &key)
+  (:documentation "parse xml"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; parse ((path pathname))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defcfun ("xmlReadFile" %xmlReadFile)  %xmlDocPtr
@@ -11,34 +18,20 @@
   (encoding :pointer)
   (options :int))
 
-(defcfun ("xmlReadDoc" %xmlReadDoc) %xmlDocPtr
-  (cur %xmlCharPtr)
-  (base-url %xmlCharPtr)
-  (encoding %xmlCharPtr)
-  (options :int))
-
-(defcfun ("xmlReadIO" %xmlReadIO) %xmlDocPtr
-  (ioread :pointer)
-  (ioclose :pointer)
-  (ioctx :pointer)
-  (url %xmlCharPtr)
-  (encoding %xmlCharPtr)
-  (options :int))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; parse
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defgeneric parse (obj &key)
-  (:documentation "parse xml"))
-
 (defmethod parse ((path pathname) &key)
   (with-foreign-string (_path (format nil "~A" path))
     (make-instance 'document
                    :pointer (%xmlReadFile _path (cffi:null-pointer) 0))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((str string))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xmlReadDoc" %xmlReadDoc) %xmlDocPtr
+  (cur %xmlCharPtr)
+  (base-url %xmlCharPtr)
+  (encoding %xmlCharPtr)
+  (options :int))
 
 (defmethod parse ((str string)  &key)
   (with-foreign-string (%str str)
@@ -48,20 +41,26 @@
                                          (null-pointer)
                                          0))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((uri puri))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod parse ((uri puri:uri)  &key)
   (with-foreign-string (_path (format nil "~A" uri))
     (make-instance 'document
                    :pointer (%xmlReadFile _path (cffi:null-pointer) 0))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((octets (array unsigned-byte)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod parse ((octets array) &key)
   (flexi-streams:with-input-from-sequence (in octets)
     (parse in)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((stream stream)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar *stream-for-xml-parse*)
 
@@ -101,6 +100,15 @@
       (cffi:callback %read-string-stream)
       (cffi:callback %read-binary-stream)))
           
+
+(defcfun ("xmlReadIO" %xmlReadIO) %xmlDocPtr
+  (ioread :pointer)
+  (ioclose :pointer)
+  (ioctx :pointer)
+  (url %xmlCharPtr)
+  (encoding %xmlCharPtr)
+  (options :int))
+
 (defmethod parse ((stream stream) &key)
   (let ((*stream-for-xml-parse* stream))
     (make-instance 'document
@@ -111,3 +119,9 @@
                                         (cffi:null-pointer)
                                         0))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; with-parse-document
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro with-parse-document ((var src) &rest body)
+  `(with-libxml2-object (,var (parse ,src)) ,@body))
