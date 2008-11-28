@@ -22,10 +22,6 @@
       (%xmlSetNsProp (pointer element) (null-pointer) %name %value)))
   value)
 
-
-(defun attribute-node-value (attr)
-  (text-content (first-child attr)))
-
 ;;; remove-attribute
 
 (defun remove-attribute (element name &optional uri)

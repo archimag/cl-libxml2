@@ -78,7 +78,6 @@
    :find-node
 
    :attribute-value
-   :attribute-node-value
    :remove-attribute
    :with-attributes
    ))
