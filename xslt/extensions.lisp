@@ -2,10 +2,6 @@
 
 (in-package #:libxml2.xslt)
 
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defctype %xsltTemplatePtr :pointer)
 (defctype %xsltStackElemPtr :pointer)
 (defctype %xsltRuntimeExtraPtr :pointer)

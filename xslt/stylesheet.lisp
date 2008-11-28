@@ -3,29 +3,21 @@
 (in-package #:libxml2.xslt)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-(defcfun ("xsltParseStylesheetDoc" %xsltParseStylesheetDoc) %xsltStylesheetPtr
-  (doc libxml2.tree::%xmlDocPtr))
-
-(defcfun ("xsltParseStylesheetFile" %xsltParseStylesheetFile) %xsltStylesheetPtr
-  (filename libxml2.tree::%xmlCharPtr))
-
-(defcfun ("xsltFreeStylesheet" %xsltFreeStylesheet) :void
-  (style %xsltStylesheetPtr))
-
-(defcfun ("xsltApplyStylesheetUser" %xsltApplyStylesheetUser) libxml2.tree::%xmlDocPtr
-  (style %xsltStylesheetPtr)
-  (doc libxml2.tree::%xmlDocPtr)
-  (args :pointer)
-  (output :pointer)
-  (profile :pointer)
-  (userCtxt %xsltTransformContextPtr))
-
+;;; stylesheet
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defclass stylesheet (libxml2.tree::libxml2-cffi-object-wrapper)
   ((params :initform nil)))
+
+(defcfun ("xsltFreeStylesheet" %xsltFreeStylesheet) :void
+  (style %xsltStylesheetPtr))
+
+(defmethod libxml2.tree::release/impl ((style stylesheet))
+  (%xsltFreeStylesheet  (pointer style)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; stylesheet-set-param
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun stylesheet-set-param (style name value &optional (isstring t))
   (unless (slot-value style 'params)
@@ -35,35 +27,57 @@
             (format nil "\"~A\"" value)
             value)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; stylesheet-remove-param
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun stylesheet-remove-param (style name)
   (let ((params (slot-value style 'params)))
     (if params
         (remhash name params))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; stylesheet-clear-params
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun stylesheet-clear-params (style)
   (setf (slot-value style 'params) nil))
 
-(defmethod libxml2.tree::release/impl ((style stylesheet))
-  (%xsltFreeStylesheet  (pointer style)))
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse-stylesheet
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defgeneric parse-stylesheet (obj))
+
+
+;;; parse-stylehseet ((filename pathname))
+
+(defcfun ("xsltParseStylesheetFile" %xsltParseStylesheetFile) %xsltStylesheetPtr
+  (filename libxml2.tree::%xmlCharPtr))
 
 (defmethod parse-stylesheet ((filename pathname))
   (with-foreign-string (%filename (format nil "~A" filename))
     (make-instance 'stylesheet
                    :pointer (%xsltParseStylesheetFile %filename))))
 
+;;; parse-stylesheet ((doc document))
+
+(defcfun ("xsltParseStylesheetDoc" %xsltParseStylesheetDoc) %xsltStylesheetPtr
+  (doc libxml2.tree::%xmlDocPtr))
+
 (defmethod parse-stylesheet ((doc document))
   (make-instance 'stylesheet
                  :pointer (%xsltParseStylesheetDoc (pointer doc))))
+
+;;; parse-stylesheet (obj)
 
 (defmethod parse-stylesheet (obj)
   (with-parse-document (doc obj)
     (parse-stylesheet doc)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; with-stylesheet
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro with-stylesheet ((style obj) &rest body)
   `(let ((,style (parse-stylesheet ,obj)))
@@ -71,7 +85,9 @@
           (progn ,@body)
        (release ,style))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; transform
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun prepare-xsl-params (params)
   (if params
@@ -88,8 +104,14 @@
                     (gp:cleanup-register (foreign-string-alloc value) #'foreign-string-free)))
         %array)
       (null-pointer)))
-  
     
+(defcfun ("xsltApplyStylesheetUser" %xsltApplyStylesheetUser) libxml2.tree::%xmlDocPtr
+  (style %xsltStylesheetPtr)
+  (doc libxml2.tree::%xmlDocPtr)
+  (args :pointer)
+  (output :pointer)
+  (profile :pointer)
+  (userCtxt %xsltTransformContextPtr))
 
 (defun transform (style doc)
   (gp:with-garbage-pool ()  
@@ -101,8 +123,9 @@
                                                                                      (null-pointer)
                                                                                      %ctxt)
                                                            'document))))
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; with-tranform-result
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro with-transfom-result ((res (style doc)) &rest body)
   `(let ((,res (transform ,style ,doc)))
