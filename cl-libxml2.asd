@@ -7,9 +7,9 @@
   ((:module :tree
             :components
             ((:file "packages")
-             (:file "objects" :depends-on ("packages"))
-             (:file "namespace" :depends-on ("objects"))
-             (:file "attribute" :depends-on ("objects"))
+             (:file "xtree" :depends-on ("packages"))
+             (:file "namespace" :depends-on ("xtree"))
+             (:file "attribute" :depends-on ("xtree"))
              (:file "node" :depends-on ("namespace"))
              (:file "document" :depends-on ("node"))
              (:file "parse" :depends-on ("document"))

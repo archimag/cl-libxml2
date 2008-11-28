@@ -1,4 +1,4 @@
-;; objects.lisp
+;; xtree.lisp
 
 (in-package #:libxml2.tree)
 
