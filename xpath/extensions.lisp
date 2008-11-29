@@ -1,4 +1,4 @@
-;; context.lisp
+;; extensions.lisp
 
 (in-package #:libxml2.xpath)
 

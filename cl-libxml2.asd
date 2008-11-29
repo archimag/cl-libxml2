@@ -22,5 +22,5 @@
              (:file "xpath-object" :depends-on ("node-set"))
              (:file "xpath-context" :depends-on ("packages"))
              (:file "expression" :depends-on ("xpath-object" "xpath-context"))
-             (:file "context" :depends-on ("expression")))
+             (:file "extensions" :depends-on ("expression")))
             :depends-on ("tree"))))
