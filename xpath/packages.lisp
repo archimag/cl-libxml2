@@ -15,6 +15,7 @@
    :xpath-object-type
    :xpath-object-value
    :with-xpath-object
+   :xpath-object-cast
 
    :eval-expression
 
