@@ -91,4 +91,6 @@
    :reset-error
    :libxml2-error
    :init-error-handling
+   :reset
+   :with-simple-reset
    ))

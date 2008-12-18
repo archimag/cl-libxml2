@@ -129,12 +129,37 @@
         (restart-case (error 'libxml2-error :xmlerror err)
           (reset () (reset-error err))))))
 
+;; with-simple-reset
+
+(defun reset-libxml2-error (c)
+  (declare (ignore c))
+  (let ((restart (find-restart 'reset)))
+    (when restart (invoke-restart restart))))
+
+(defmacro with-simple-reset (&body body)
+  `(handler-bind ((libxml2-error #'reset-libxml2-error))
+     (progn ,@body)))
+
+;;; init-error-handling
+
 (defcfun ("xmlSetStructuredErrorFunc" %xmlSetStructuredErrorFunc) :void
   (ctx :pointer)
   (handler :pointer))
+
+
 
 (defun init-error-handling ()
   (%xmlSetStructuredErrorFunc (null-pointer)
                               (callback %structured-error-handler)))
 
 (init-error-handling)
+
+
+;; (defun uninit-error-handling ()
+;;   (%xmlSetStructuredErrorFunc (null-pointer)
+;;                               (null-pointer)))
+
+;; (uninit-error-handling)
+
+;;(%xmlSetStructuredErrorFunc (null-pointer)
+;;                              (callback %structured-error-handler))

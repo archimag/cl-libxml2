@@ -482,12 +482,14 @@
 (addtest (xpath-test)
   find-string-6
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"value\" />")
-                 (find-string doc "/root/@my:attr"))))
+                 (with-simple-reset
+                   (find-string doc "/root/@my:attr")))))
 
 (addtest (xpath-test)
   find-string-7
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"value\" />")
-                 (find-string doc "/root/@attr"))))
+                 (with-simple-reset
+                   (find-string doc "/root/@attr")))))
 
 ;;; eval-expressiong-as-number
 
@@ -593,14 +595,16 @@
 (addtest (xpath-test)
   in-xpath-result-4
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\"><a /><my:box /><b /><c /></root>")
-                 (iter (for node in-xpath-result "//box" on doc)
-                       (collect (local-name node))))))
+                 (with-simple-reset
+                   (iter (for node in-xpath-result "//box" on doc)
+                         (collect (local-name node)))))))
 
 (addtest (xpath-test)
   in-xpath-result-5
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\"><a /><my:box /><b /><c /></root>")
-                 (iter (for node in-xpath-result "//my:box" on doc)
-                       (collect (local-name node))))))
+                 (with-simple-reset
+                   (iter (for node in-xpath-result "//my:box" on doc)
+                         (collect (local-name node)))))))
 
 ;; compiled-expression
 
@@ -735,7 +739,8 @@
 <xi:include href=\"my2:doc\" />
 <xi:include href=\"my3:doc\" />
 </root>")
-                   (process-xinclude doc)
+                   (with-simple-reset 
+                     (process-xinclude doc))
                    (iter (for node in-child-nodes (root doc) with (:type :xml-element-node))
                          (collect (local-name node)))))))
                    
@@ -744,7 +749,7 @@
   (ensure-same "node"
                (with-input-from-string (in "<node />")
                  (with-custom-resolvers ((lambda (url id ctxt) (resolve-stream in ctxt)))
-                   (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/XInclude\">
+                   (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/xinclude\">
 <xi:include href=\"/tmp/blank.xml\" />
 </root>")
                      (process-xinclude doc)
@@ -754,14 +759,14 @@
 (addtest (custom-resolve-test)
   with-custom-resolve-stream-2
   (ensure-same "/root/foo/bar"
-               (with-input-from-string (in1 "<foo><xi:include xmlns:xi=\"http://www.w3.org/2001/XInclude\" href=\"my2:data\" /></foo>")
+               (with-input-from-string (in1 "<foo><xi:include xmlns:xi=\"http://www.w3.org/2001/xinclude\" href=\"my2:data\" /></foo>")
                  (with-input-from-string (in2 "<bar />")
                    (with-custom-resolvers ((lambda (url id ctxt)
                                              (if (eql (puri:uri-scheme url) :my1)
                                                  (resolve-stream in1 ctxt)))
                                            (lambda (url id ctxt)
                                              (resolve-stream in2 ctxt)))
-                     (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/XInclude\">
+                     (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/xinclude\">
 <xi:include href=\"my1:data\" />
 </root>")
                        (process-xinclude doc)
@@ -771,12 +776,12 @@
 
 (addtest (custom-resolve-test)
   with-custom-resolvers-xsl-1
-  (ensure-same '("result" "Hello world")
+  (ensure-same '("result" "hello world")
                (with-custom-resolvers ((lambda (url id ctxt)
                                          (declare (ignore url id))
-                                         (resolve-string "<node>Hello world</node>" ctxt)))
+                                         (resolve-string "<node>hello world</node>" ctxt)))
                  (with-stylesheet (style "<?xml version=\"1.0\"?>
-<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">
+<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/xsl/transform\" version=\"1.0\">
     <xsl:template match=\"/\">
         <result>
             <xsl:copy-of select=\"document('data')\" />
@@ -804,7 +809,8 @@
                                       (test-hello "test-hello" "www.sample.org"))
                  (with-parse-document (doc "<root />")
                    (list (find-string doc "test-hello()")
-                         (find-string doc "my:test-hello()" :ns-map '(("my" "www.other-sample.org")))
+                         (with-simple-reset
+                           (find-string doc "my:test-hello()" :ns-map '(("my" "www.other-sample.org"))))
                          (find-string doc "my:test-hello()" :ns-map '(("my" "www.sample.org"))))))))
 
 (define-xpath-function test-echo (msg)

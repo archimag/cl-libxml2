@@ -5,6 +5,7 @@
   :depends-on (#:cffi #:iterate #:puri #:flexi-streams #:alexandria #:garbage-pools #:metabang-bind #:metatilities)
   :components
   ((:module :tree
+            :serial t
             :components
             ((:file "packages")
              (:file "xtree" :depends-on ("packages"))
