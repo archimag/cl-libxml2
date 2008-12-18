@@ -154,12 +154,16 @@
 
 (init-error-handling)
 
+(defcfun ("xmlMemUsed" xml-memory-used) :int)
 
-;; (defun uninit-error-handling ()
-;;   (%xmlSetStructuredErrorFunc (null-pointer)
-;;                               (null-pointer)))
+(defcfun ("xmlMemSetup" %xmlMemSetup) :int
+  (freeFunc :pointer)
+  (mallocFunc :pointer)
+  (reallocFunc :pointer)
+  (strdupFunc :pointer))
 
-;; (uninit-error-handling)
+(%xmlMemSetup (foreign-symbol-pointer "xmlMemFree")
+              (foreign-symbol-pointer "xmlMemMalloc")
+              (foreign-symbol-pointer "xmlMemRealloc")
+              (foreign-symbol-pointer "xmlMemoryStrdup"))
 
-;;(%xmlSetStructuredErrorFunc (null-pointer)
-;;                              (callback %structured-error-handler))
