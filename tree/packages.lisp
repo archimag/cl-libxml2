@@ -80,4 +80,15 @@
    :attribute-value
    :remove-attribute
    :with-attributes
+
+
+   ;; errors
+   :xmlerror
+   :error-message
+   :error-domain
+   :error-level
+   :last-error
+   :reset-error
+   :libxml2-error
+   :init-error-handling
    ))
