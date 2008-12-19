@@ -482,14 +482,12 @@
 (addtest (xpath-test)
   find-string-6
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"value\" />")
-                 (with-simple-reset
-                   (find-string doc "/root/@my:attr")))))
+                 (find-string doc "/root/@my:attr"))))
 
 (addtest (xpath-test)
   find-string-7
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\" my:attr=\"value\" />")
-                 (with-simple-reset
-                   (find-string doc "/root/@attr")))))
+                   (find-string doc "/root/@attr"))))
 
 ;;; eval-expressiong-as-number
 
@@ -595,16 +593,14 @@
 (addtest (xpath-test)
   in-xpath-result-4
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\"><a /><my:box /><b /><c /></root>")
-                 (with-simple-reset
-                   (iter (for node in-xpath-result "//box" on doc)
-                         (collect (local-name node)))))))
+                 (iter (for node in-xpath-result "//box" on doc)
+                       (collect (local-name node))))))
 
 (addtest (xpath-test)
   in-xpath-result-5
   (ensure-null (with-parse-document (doc "<root xmlns:my=\"www.sample.org\"><a /><my:box /><b /><c /></root>")
-                 (with-simple-reset
-                   (iter (for node in-xpath-result "//my:box" on doc)
-                         (collect (local-name node)))))))
+                 (iter (for node in-xpath-result "//my:box" on doc)
+                       (collect (local-name node))))))
 
 ;; compiled-expression
 
@@ -739,8 +735,7 @@
 <xi:include href=\"my2:doc\" />
 <xi:include href=\"my3:doc\" />
 </root>")
-                   (with-simple-reset 
-                     (process-xinclude doc))
+                   (process-xinclude doc)
                    (iter (for node in-child-nodes (root doc) with (:type :xml-element-node))
                          (collect (local-name node)))))))
                    
@@ -809,8 +804,7 @@
                                       (test-hello "test-hello" "www.sample.org"))
                  (with-parse-document (doc "<root />")
                    (list (find-string doc "test-hello()")
-                         (with-simple-reset
-                           (find-string doc "my:test-hello()" :ns-map '(("my" "www.other-sample.org"))))
+                         (find-string doc "my:test-hello()" :ns-map '(("my" "www.other-sample.org")))
                          (find-string doc "my:test-hello()" :ns-map '(("my" "www.sample.org"))))))))
 
 (define-xpath-function test-echo (msg)

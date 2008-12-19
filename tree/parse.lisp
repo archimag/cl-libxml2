@@ -2,59 +2,67 @@
 
 (in-package #:libxml2.tree)
 
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defgeneric parse (obj &key)
+(defun parse (obj &key)
+  (let ((*cleanup-for-abort-restart* #'%xmlFreeDoc))
+    (restart-case
+        (make-instance 'document
+                       :pointer (parse/impl obj))
+      (return-nil () nil))))
+
+
+
+(defgeneric parse/impl (obj &key)
   (:documentation "parse xml"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((path pathname))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlReadFile" %xmlReadFile)  %xmlDocPtr
+(define-libxml2-function ("xmlReadFile" %xmlReadFile)  %xmlDocPtr
   (filename :pointer)
   (encoding :pointer)
   (options :int))
 
-(defmethod parse ((path pathname) &key)
+(defmethod parse/impl ((path pathname) &key)
   (with-foreign-string (_path (format nil "~A" path))
-    (make-instance 'document
-                   :pointer (%xmlReadFile _path (cffi:null-pointer) 0))))
+    %xmlReadFile _path (cffi:null-pointer) 0))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((str string))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlReadDoc" %xmlReadDoc) %xmlDocPtr
+(define-libxml2-function ("xmlReadDoc" %xmlReadDoc) %xmlDocPtr
   (cur %xmlCharPtr)
   (base-url %xmlCharPtr)
   (encoding %xmlCharPtr)
   (options :int))
 
-(defmethod parse ((str string)  &key)
+(defmethod parse/impl ((str string)  &key)
   (with-foreign-string (%str str)
-    (make-instance 'document
-                   :pointer (%xmlReadDoc %str
-                                         (null-pointer)
-                                         (null-pointer)
-                                         0))))
+    (%xmlReadDoc %str
+                 (null-pointer)
+                 (null-pointer)
+                 0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((uri puri))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmethod parse ((uri puri:uri)  &key)
+(defmethod parse/impl ((uri puri:uri)  &key)
   (with-foreign-string (_path (format nil "~A" uri))
-    (make-instance 'document
-                   :pointer (%xmlReadFile _path (cffi:null-pointer) 0))))
+    (%xmlReadFile _path (cffi:null-pointer) 0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((octets (array unsigned-byte)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmethod parse ((octets array) &key)
+(defmethod parse/impl ((octets array) &key)
   (flexi-streams:with-input-from-sequence (in octets)
     (parse in)))
 
@@ -101,7 +109,7 @@
       (cffi:callback %read-binary-stream)))
           
 
-(defcfun ("xmlReadIO" %xmlReadIO) %xmlDocPtr
+(define-libxml2-function ("xmlReadIO" %xmlReadIO) %xmlDocPtr
   (ioread :pointer)
   (ioclose :pointer)
   (ioctx :pointer)
@@ -109,15 +117,14 @@
   (encoding %xmlCharPtr)
   (options :int))
 
-(defmethod parse ((stream stream) &key)
+(defmethod parse/impl ((stream stream) &key)
   (let ((*stream-for-xml-parse* stream))
-    (make-instance 'document
-                   :pointer (%xmlReadIO (%stream-reader-callback *stream-for-xml-parse*)
-                                        (cffi:null-pointer)
-                                        (cffi:null-pointer)
-                                        (cffi:null-pointer)
-                                        (cffi:null-pointer)
-                                        0))))
+    (%xmlReadIO (%stream-reader-callback *stream-for-xml-parse*)
+                (cffi:null-pointer)
+                (cffi:null-pointer)
+                (cffi:null-pointer)
+                (cffi:null-pointer)
+                0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; with-parse-document

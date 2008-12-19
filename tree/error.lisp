@@ -60,110 +60,135 @@
 ;;
 (defctype %xmlErrorPtr :pointer)
    
-(defcfun ("xmlGetLastError" %xmlGetLastError) %xmlErrorPtr)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; xmlerror
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defwrapper xmlerror %xmlError)
+;;(defwrapper xmlerror %xmlError)
 
-;;; last-error
+(defclass xmlerror ()
+  ((message :initarg :message :reader error-message)
+   (domain :initarg :domain :reader error-domain)
+   (level :initarg :level :reader error-level)))
 
-(defun last-error ()
-  (make-libxml2-cffi-object-wrapper/impl (%xmlGetLastError) 'xmlerror))
-
-;;; error-message
-
-(defun error-message (err)
-  (metatilities:strip-whitespace (foreign-string-to-lisp (wrapper-slot-value err '%message))))
-
-;;; error-domain
-
-(defun error-domain (err)
-  (wrapper-slot-value err '%domain))
-
-;;; error-level
-
-(defun error-level (err)
-  (wrapper-slot-value err '%level))
+(defun make-xmlerror (err)
+  (make-instance 'xmlerror
+                 :message (metatilities:strip-whitespace (foreign-string-to-lisp (foreign-slot-value err '%xmlError '%message)))
+                 :domain (foreign-slot-value err '%xmlError '%domain)
+                 :level (foreign-slot-value err '%xmlError '%level)))
 
 (defmethod print-object ((err xmlerror) stream)
   (format stream
-          "~A ~A: ~A"
-          (case (error-domain err)
-            (:xml-from-parser "XML parser")
-            (:xml-from-xpath "XPath")
-            (:xml-from-xslt "XSLT engine")
-            (otherwise (error-domain err)))
-          (case (error-level err)
-            (:xml-err-warning "warning")
-            (:xml-err-error   "recoverable error")
-            (:xml-err-fatal   "fatal error")
-            (otherwise        "none error"))
-          (error-message err)))
+          "~A"
+          (concatenate 'string
+               (case (error-domain err)
+                 (:xml-from-parser "XML parser")
+                 (:xml-from-xpath "XPath")
+                 (:xml-from-xslt "XSLT engine")
+                 (otherwise (symbol-name (error-domain err))))
+               " "
+               (case (error-level err)
+                 (:xml-err-warning "warning")
+                 (:xml-err-error   "recoverable error")
+                 (:xml-err-fatal   "fatal error")
+                 (otherwise        "none error"))
+               ": "
+               (error-message err))))
 
-;;; reset error
 
-(defcfun ("xmlResetError" %xmlResetError) :void
-  (err %xmlErrorPtr))
+;;; last-error
 
-(defun reset-error (err)
-  (%xmlResetError (pointer err)))
-  
+(defcfun ("xmlGetLastError" %xmlGetLastError) %xmlErrorPtr)
+
+(defun last-error ()
+  (let ((err (%xmlGetLastError)))
+    (if err
+        (make-xmlerror err))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; structred error 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define-condition libxml2-error (error)
-  ((xmlerror :initarg :xmlerror :reader getxmlerror)))
+(defvar *libxml2-errors*)
 
-(defmethod print-object ((err libxml2-error) stream)
-  (print-object (getxmlerror err) stream))
+(defcfun ("xmlResetError" %xmlResetError) :void
+  (err %xmlErrorPtr))
 
 (defcallback %structured-error-handler :void ((userdata :pointer) (%err %xmlErrorPtr))
   (declare (ignore userdata))
-  (let ((err (make-instance 'xmlerror :pointer %err)))
-    (if (eql (error-level err) :xml-err-fatal)
-        (error 'libxml2-error :xmlerror err)
-        (restart-case (error 'libxml2-error :xmlerror err)
-          (reset () (reset-error err))))))
-
-;; with-simple-reset
-
-(defun reset-libxml2-error (c)
-  (declare (ignore c))
-  (let ((restart (find-restart 'reset)))
-    (when restart (invoke-restart restart))))
-
-(defmacro with-simple-reset (&body body)
-  `(handler-bind ((libxml2-error #'reset-libxml2-error))
-     (progn ,@body)))
-
-;;; init-error-handling
+  (if (boundp '*libxml2-errors*)
+      (push (make-xmlerror  %err) *libxml2-errors*))
+  (%xmlResetError %err))
 
 (defcfun ("xmlSetStructuredErrorFunc" %xmlSetStructuredErrorFunc) :void
   (ctx :pointer)
   (handler :pointer))
 
-
-
-(defun init-error-handling ()
+(defun init-error-handling (&optional (handler (callback %structured-error-handler)))
   (%xmlSetStructuredErrorFunc (null-pointer)
-                              (callback %structured-error-handler)))
+                              handler))
 
 (init-error-handling)
+;;(init-error-handling (null-pointer))
 
-(defcfun ("xmlMemUsed" xml-memory-used) :int)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; memory
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlMemSetup" %xmlMemSetup) :int
-  (freeFunc :pointer)
-  (mallocFunc :pointer)
-  (reallocFunc :pointer)
-  (strdupFunc :pointer))
+;; (defcfun ("xmlMemUsed" xml-memory-used) :int)
 
-(%xmlMemSetup (foreign-symbol-pointer "xmlMemFree")
-              (foreign-symbol-pointer "xmlMemMalloc")
-              (foreign-symbol-pointer "xmlMemRealloc")
-              (foreign-symbol-pointer "xmlMemoryStrdup"))
+;; (defcfun ("xmlMemSetup" %xmlMemSetup) :int
+;;   (freeFunc :pointer)
+;;   (mallocFunc :pointer)
+;;   (reallocFunc :pointer)
+;;   (strdupFunc :pointer))
+
+;; (%xmlMemSetup (foreign-symbol-pointer "xmlMemFree")
+;;               (foreign-symbol-pointer "xmlMemMalloc")
+;;               (foreign-symbol-pointer "xmlMemRealloc")
+;;               (foreign-symbol-pointer "xmlMemoryStrdup"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar *last-error* nil)
+
+(define-condition libxml2-error (error)
+  ((errors :initarg :errors :reader getxmlerrors)
+   (saved-result :initarg :call-result :reader saved-result)))
+
+(defmethod print-object ((err libxml2-error) stream)
+  (format stream "~{~A~^~%~})" (getxmlerrors err)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; defin-libxml2-function
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar *cleanup-for-abort-restart*)
+
+(defmacro define-libxml2-function ((foreign-name lisp-name) return-type &body args)
+  (let ((impl-name (intern (format nil "%~A" (symbol-name lisp-name))))
+        (simplify-args (map 'list #'car args)))
+  `(progn
+     (defcfun (,foreign-name ,impl-name) ,return-type ,@args)
+     (defun ,lisp-name ,simplify-args
+       (let ((*libxml2-errors* nil))
+         (let ((result (,impl-name ,@simplify-args)))
+           (if *libxml2-errors*
+               (gp:with-garbage-pool ()
+                 (if *cleanup-for-abort-restart*
+                     (gp:cleanup-register result *cleanup-for-abort-restart*))
+                 (if (position :xml-err-fatal *libxml2-errors* :key #'error-level)
+                     (restart-case (error 'libxml2-error :errors (nreverse *libxml2-errors*))
+                       (ignore-lixml2-error ()
+                         (progn (gp:cancel-object-cleanup result)
+                                result)))
+                     (restart-case (error 'libxml2-error :errors (nreverse *libxml2-errors*))
+                       (ignore-no-fatal-libxml2-error ()
+                         (progn (gp:cancel-object-cleanup result)
+                                    result))
+                       (ignore-lixml2-error ()
+                         (progn (gp:cancel-object-cleanup result
+                                                          result)))))))
+               result))))))
+
 
