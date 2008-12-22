@@ -27,7 +27,7 @@
 ;; make-ns
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlSearchNs" %xmlSearchNs) %xmlNsPtr
+(define-libxml2-function ("xmlSearchNs" %xmlSearchNs) %xmlNsPtr
   (doc %xmlDocPtr)
   (node %xmlNodePtr)
   (prefix %xmlCharPtr))
@@ -40,7 +40,7 @@
                                                                   (pointer element)
                                                                   %prefix))))))
 
-(defcfun ("xmlNewNs" %xmlNewNs) %xmlNsPtr
+(define-libxml2-function ("xmlNewNs" %xmlNewNs) %xmlNsPtr
   (node %xmlNodePtr)
   (href %xmlCharPtr)
   (prefix %xmlCharPtr))
@@ -57,7 +57,7 @@
 ;; search-ns-by-href
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlSearchNsByHref" %xmlSearchNsByHref) %xmlNsPtr
+(define-libxml2-function ("xmlSearchNsByHref" %xmlSearchNsByHref) %xmlNsPtr
   (doc %xmlDocPtr)
   (node %xmlNodePtr)
   (href %xmlCharPtr))

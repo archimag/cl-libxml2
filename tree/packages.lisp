@@ -14,10 +14,11 @@
    :%xmlNsPtr
    :defwrapper
    :wrapper-slot-value
+   :define-libxml2-function
    ))
 
 (defpackage :libxml2.tree
-  (:use :cl :iter :cffi :libxml2.private)
+  (:use :cl :iter :cffi :libxml2.private :metabang.bind)
   (:nicknames :tree :xtree)
   (:export
    :node

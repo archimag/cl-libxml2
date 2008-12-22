@@ -17,8 +17,8 @@
   (use-foreign-library libxslt)
   (use-foreign-library libexslt))
 
-(defcfun ("xsltInit" %xsltInit) :void)
-(defcfun ("exsltRegisterAll" register-exslt-extensions) :void)
+(define-libxml2-function ("xsltInit" %xsltInit) :void)
+(define-libxml2-function ("exsltRegisterAll" register-exslt-extensions) :void)
 
 (%xsltInit)
 ;;(%exsltRegisterAll)

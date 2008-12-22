@@ -132,18 +132,18 @@
 
 (defctype %xmlXPathContextPtr :pointer)
 
-(defcfun ("xmlXPathNewContext" %xmlXPathNewContext) %xmlXPathContextPtr
+(define-libxml2-function ("xmlXPathNewContext" %xmlXPathNewContext) %xmlXPathContextPtr
   (doc %xmlDocPtr))
 
-(defcfun ("xmlXPathFreeContext" %xmlXPathFreeContext) :void
+(define-libxml2-function ("xmlXPathFreeContext" %xmlXPathFreeContext) :void
   (ctxt %xmlXPathContextPtr))
 
-(defcfun ("xmlXPathRegisterNs" %xmlXPathRegisterNs) :int
+(define-libxml2-function ("xmlXPathRegisterNs" %xmlXPathRegisterNs) :int
   (ctxt %xmlXPathContextPtr ctxt)
   (prefix %xmlCharPtr)
   (ns_uri %xmlCharPtr))
 
-(defcfun ("xmlXPathRegisterFuncNS" %xmlXPathRegisterFuncNS) :int
+(define-libxml2-function ("xmlXPathRegisterFuncNS" %xmlXPathRegisterFuncNS) :int
   (ctxt %xmlXPathContextPtr)
   (name %xmlCharPtr)
   (ns-uri %xmlCharPtr)

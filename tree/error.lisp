@@ -174,21 +174,9 @@
        (let ((*libxml2-errors* nil))
          (let ((result (,impl-name ,@simplify-args)))
            (if *libxml2-errors*
-               (gp:with-garbage-pool ()
-                 (if *cleanup-for-abort-restart*
-                     (gp:cleanup-register result *cleanup-for-abort-restart*))
-                 (if (position :xml-err-fatal *libxml2-errors* :key #'error-level)
-                     (restart-case (error 'libxml2-error :errors (nreverse *libxml2-errors*))
-                       (ignore-lixml2-error ()
-                         (progn (gp:cancel-object-cleanup result)
-                                result)))
-                     (restart-case (error 'libxml2-error :errors (nreverse *libxml2-errors*))
-                       (ignore-no-fatal-libxml2-error ()
-                         (progn (gp:cancel-object-cleanup result)
-                                    result))
-                       (ignore-lixml2-error ()
-                         (progn (gp:cancel-object-cleanup result
-                                                          result)))))))
-               result))))))
+               (if (position :xml-err-fatal *libxml2-errors* :key #'error-level)
+                   (error 'libxml2-error :errors (nreverse *libxml2-errors*))
+                   (warn "~{~A~^~%~})" *libxml2-errors*)))
+           result))))))
 
 

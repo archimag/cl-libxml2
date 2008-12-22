@@ -33,7 +33,7 @@
 
 (defwrapper xpath-object %xmlXPathObject)
 
-(defcfun ("xmlXPathFreeObject" %xmlXPathFreeObject) :void
+(define-libxml2-function ("xmlXPathFreeObject" %xmlXPathFreeObject) :void
   (obj %xmlXPathObjectPtr))
 
 (defmethod libxml2.tree::release/impl ((result xpath-object))
@@ -78,7 +78,7 @@
 
 ;;; make-xpath-object ((val number))
 
-(defcfun ("xmlXPathNewFloat" %xmlXPathNewFloat) %xmlXPathObjectPtr
+(define-libxml2-function ("xmlXPathNewFloat" %xmlXPathNewFloat) %xmlXPathObjectPtr
   (val :double))
 
 (defmethod make-xpath-object ((val number))
@@ -86,7 +86,7 @@
 
 ;;;make-xpath-object ((val string))
 
-(defcfun ("xmlXPathNewString" %xmlXPathNewString) %xmlXPathObjectPtr
+(define-libxml2-function ("xmlXPathNewString" %xmlXPathNewString) %xmlXPathObjectPtr
   (val %xmlCharPtr))
 
 (defmethod make-xpath-object ((val string))
@@ -95,7 +95,7 @@
 
 ;;; make-xpath-object ((val node))
 
-(defcfun ("xmlXPathNewNodeSet" %xmlXPathNewNodeSet) %xmlXPathObjectPtr
+(define-libxml2-function ("xmlXPathNewNodeSet" %xmlXPathNewNodeSet) %xmlXPathObjectPtr
   (val %xmlNodePtr))
 
 (defmethod make-xpath-object ((val node))
@@ -103,7 +103,7 @@
 
 ;;; make-xpath-object ((val node-set))
 
-(defcfun ("xmlXPathNewNodeSetList" %xmlXPathNewNodeSetList) %xmlXPathObjectPtr
+(define-libxml2-function ("xmlXPathNewNodeSetList" %xmlXPathNewNodeSetList) %xmlXPathObjectPtr
   (val %xmlNodeSetPtr))
 
 (defmethod make-xpath-object ((val node-set))
@@ -111,7 +111,7 @@
 
 ;;; make-xpath-object (val)
 
-(defcfun ("xmlXPathNewBoolean" %xmlXPathNewBoolean) %xmlXPathObjectPtr
+(define-libxml2-function ("xmlXPathNewBoolean" %xmlXPathNewBoolean) %xmlXPathObjectPtr
   (val :int))
 
 (defmethod make-xpath-object (val)
@@ -134,7 +134,7 @@
 
 ;;; xpath-object-cast (obj (type (eql 'string)))
 
-(defcfun ("xmlXPathCastToString" %xmlXPathCastToString) %xmlCharPtr
+(define-libxml2-function ("xmlXPathCastToString" %xmlXPathCastToString) %xmlCharPtr
   (val %xmlXPathObjectPtr))
 
 (def-xo-cast (string :xpath-string)
@@ -146,7 +146,7 @@
 
 ;;; xpath-object-cast (obj (type (eql 'number)))
 
-(defcfun ("xmlXPathCastToNumber" %xmlXPathCastToNumber) :double
+(define-libxml2-function ("xmlXPathCastToNumber" %xmlXPathCastToNumber) :double
   (val %xmlXPathObjectPtr))
 
 (def-xo-cast (number :xpath-number)
@@ -154,7 +154,7 @@
 
 ;;; xpath-object-cast (obj (type (eql 'boolean)))
 
-(defcfun ("xmlXPathCastToBoolean" %xmlXPathCastToBoolean) :int
+(define-libxml2-function ("xmlXPathCastToBoolean" %xmlXPathCastToBoolean) :int
     (val %xmlXPathObjectPtr))
 
 (def-xo-cast (boolean :xpath-boolean)

@@ -10,7 +10,7 @@
 
 (defctype %xmlXPathCompExprPtr :pointer)
 
-(defcfun ("xmlXPathFreeCompExpr" %xmlXPathFreeCompExpr) :void
+(define-libxml2-function ("xmlXPathFreeCompExpr" %xmlXPathFreeCompExpr) :void
   (comp %xmlXPathCompExprPtr))
 
 (defmethod libxml2.tree::release/impl ((expr compiled-expression))
@@ -18,7 +18,7 @@
 
 ;;; compile-expression
 
-(defcfun ("xmlXPathCompile" %xmlXPathCompile) %xmlXPathCompExprPtr
+(define-libxml2-function ("xmlXPathCompile" %xmlXPathCompile) %xmlXPathCompExprPtr
   (str %xmlCharPtr))
 
 (defun compile-expression (str)
@@ -53,7 +53,7 @@
 
 ;;; eval-expression ((doc document) expr &key ns-map
 
-(defcfun ("xmlXPathEvalExpression" %xmlXPathEvalExpression) %xmlXPathObjectPtr
+(define-libxml2-function ("xmlXPathEvalExpression" %xmlXPathEvalExpression) %xmlXPathObjectPtr
   (str %xmlCharPtr)
   (ctxt %xmlXPathContextPtr))
 
@@ -73,7 +73,7 @@
 
 ;;; eval-expression ((node node) (expr compiled-expression) &key ns-map
 
-(defcfun ("xmlXPathCompiledEval" %xmlXPathCompiledEval) %xmlXPathObjectPtr
+(define-libxml2-function ("xmlXPathCompiledEval" %xmlXPathCompiledEval) %xmlXPathObjectPtr
   (comp %xmlXPathCompExprPtr)
   (ctxt %xmlXPathContextPtr))
 
@@ -122,7 +122,7 @@
 ;; getpath
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlGetNodePath" %xmlGetNodePath) :pointer
+(define-libxml2-function ("xmlGetNodePath" %xmlGetNodePath) :pointer
   (node %xmlNodePtr))
 
 (defun getpath (node)

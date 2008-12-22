@@ -144,7 +144,7 @@
 ;; custom xpath funstions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xsltRegisterExtFunction" %xsltRegisterExtFunction) :int
+(define-libxml2-function ("xsltRegisterExtFunction" %xsltRegisterExtFunction) :int
   (ctxt %xsltTransformContextPtr)
   (name %xmlCharPtr)
   (URI %xmlCharPtr)
@@ -167,7 +167,7 @@
 ;; custom xsl elements
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xsltRegisterExtElement" %xsltRegisterExtElement) :int
+(define-libxml2-function ("xsltRegisterExtElement" %xsltRegisterExtElement) :int
   (ctxt %xsltTransformContextPtr)
   (name %xmlCharPtr)
   (URI %xmlCharPtr)
@@ -206,11 +206,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(defcfun ("xsltNewTransformContext" %xsltNewTransformContext) %xsltTransformContextPtr
+(define-libxml2-function ("xsltNewTransformContext" %xsltNewTransformContext) %xsltTransformContextPtr
   (style %xsltStylesheetPtr)
   (doc libxml2.tree::%xmlDocPtr))
 
-(defcfun ("xsltFreeTransformContext" %xsltFreeTransformContext) :void
+(define-libxml2-function ("xsltFreeTransformContext" %xsltFreeTransformContext) :void
   (ctxt %xsltTransformContextPtr))
 
 (defmacro with-transform-context ((var (style doc)) &body body)

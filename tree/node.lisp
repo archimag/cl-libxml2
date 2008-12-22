@@ -46,7 +46,7 @@
 ;; release/impl
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlFreeNode" %xmlFreeNode) :void
+(define-libxml2-function ("xmlFreeNode" %xmlFreeNode) :void
   (node %xmlNodePtr))
 
 (defmethod release/impl ((node node))
@@ -56,7 +56,7 @@
 ;; copy
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlCopyNode" %xmlCopyNode) %xmlNodePtr
+(define-libxml2-function ("xmlCopyNode" %xmlCopyNode) %xmlNodePtr
   (node %xmlNodePtr)
   (extended :int))
 
@@ -73,7 +73,7 @@
 ;; make-element
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlNewNode" %xmlNewNode) %xmlNodePtr
+(define-libxml2-function ("xmlNewNode" %xmlNewNode) %xmlNodePtr
   (ns %xmlNsPtr)
   (name %xmlCharPtr))
 
@@ -99,7 +99,7 @@
 ;; make-text
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlNewText" %xmlNewText) %xmlNodePtr
+(define-libxml2-function ("xmlNewText" %xmlNewText) %xmlNodePtr
   (content %xmlCharPtr))
 
 (defun make-text (data)
@@ -111,7 +111,7 @@
 ;; make-comment
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlNewComment" %xmlNewComment) %xmlNodePtr
+(define-libxml2-function ("xmlNewComment" %xmlNewComment) %xmlNodePtr
   (content %xmlCharPtr))
 
 (defun make-comment (data)
@@ -123,7 +123,7 @@
 ;; make-process-instruction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlNewPI" %xmlNewPI) %xmlNodePtr
+(define-libxml2-function ("xmlNewPI" %xmlNewPI) %xmlNodePtr
   (name %xmlCharPtr)
   (content %xmlCharPtr))
 
@@ -204,7 +204,7 @@
 ;;; text-content
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlNodeGetContent" %xmlNodeGetContent) %xmlCharPtr
+(define-libxml2-function ("xmlNodeGetContent" %xmlNodeGetContent) %xmlCharPtr
   (cur %xmlNodePtr))
 
 (defun text-content (node)
@@ -214,7 +214,7 @@
            (foreign-string-to-lisp %content)
         (%xmlFree %content)))))
 
-(defcfun ("xmlNodeSetContent" %xmlNodeSetContent) :void
+(define-libxml2-function ("xmlNodeSetContent" %xmlNodeSetContent) :void
   (cur %xmlNodePtr)
   (content %xmlCharPtr))
 
@@ -227,7 +227,7 @@
 ;; base-url
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlNodeGetBase" %xmlNodeGetBase) %xmlCharPtr
+(define-libxml2-function ("xmlNodeGetBase" %xmlNodeGetBase) %xmlCharPtr
   (doc %xmlDocPtr)
   (cur %xmlNodePtr))
 
@@ -242,7 +242,7 @@
 ;;; process-xinclude
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlXIncludeProcessTree" %xmlXIncludeProcessTree) :int
+(define-libxml2-function ("xmlXIncludeProcessTree" %xmlXIncludeProcessTree) :int
   (node %xmlNodePtr))
 
 (defmethod process-xinclude ((node node))
@@ -332,7 +332,7 @@
 ;;; insert-child-before
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlAddPrevSibling" %xmlAddPrevSibling) %xmlNodePtr
+(define-libxml2-function ("xmlAddPrevSibling" %xmlAddPrevSibling) %xmlNodePtr
   (cur %xmlNodePtr)
   (elem %xmlNodePtr))
 
@@ -344,7 +344,7 @@
 ;;; insert-child-after
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlAddNextSibling" %xmlAddNextSibling) %xmlNodePtr
+(define-libxml2-function ("xmlAddNextSibling" %xmlAddNextSibling) %xmlNodePtr
   (cur %xmlNodePtr)
   (elem %xmlNodePtr))
 
@@ -356,7 +356,7 @@
 ;;; append-child
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlAddChild" %xmlAddChild) %xmlNodePtr
+(define-libxml2-function ("xmlAddChild" %xmlAddChild) %xmlNodePtr
   (parent %xmlNodePtr)
   (child %xmlNodePtr))
 
@@ -378,7 +378,7 @@
 ;;; detach
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlUnlinkNode" %xmlUnlinkNode) :void
+(define-libxml2-function ("xmlUnlinkNode" %xmlUnlinkNode) :void
   (node %xmlNodePtr))
 
 (defun detach (node)
@@ -396,7 +396,7 @@
 ;;; replace-child
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlReplaceNode" %xmlReplaceNode) %xmlNodePtr
+(define-libxml2-function ("xmlReplaceNode" %xmlReplaceNode) %xmlNodePtr
   (old %xmlNodePtr)
   (cur %xmlNodePtr))
 

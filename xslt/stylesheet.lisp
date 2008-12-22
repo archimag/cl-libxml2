@@ -9,7 +9,7 @@
 (defclass stylesheet (libxml2.tree::libxml2-cffi-object-wrapper)
   ((params :initform nil)))
 
-(defcfun ("xsltFreeStylesheet" %xsltFreeStylesheet) :void
+(define-libxml2-function ("xsltFreeStylesheet" %xsltFreeStylesheet) :void
   (style %xsltStylesheetPtr))
 
 (defmethod libxml2.tree::release/impl ((style stylesheet))
@@ -52,7 +52,7 @@
 
 ;;; parse-stylehseet ((filename pathname))
 
-(defcfun ("xsltParseStylesheetFile" %xsltParseStylesheetFile) %xsltStylesheetPtr
+(define-libxml2-function ("xsltParseStylesheetFile" %xsltParseStylesheetFile) %xsltStylesheetPtr
   (filename libxml2.tree::%xmlCharPtr))
 
 (defmethod parse-stylesheet ((filename pathname))
@@ -62,7 +62,7 @@
 
 ;;; parse-stylesheet ((doc document))
 
-(defcfun ("xsltParseStylesheetDoc" %xsltParseStylesheetDoc) %xsltStylesheetPtr
+(define-libxml2-function ("xsltParseStylesheetDoc" %xsltParseStylesheetDoc) %xsltStylesheetPtr
   (doc libxml2.tree::%xmlDocPtr))
 
 (defmethod parse-stylesheet ((doc document))
@@ -105,7 +105,7 @@
         %array)
       (null-pointer)))
     
-(defcfun ("xsltApplyStylesheetUser" %xsltApplyStylesheetUser) libxml2.tree::%xmlDocPtr
+(define-libxml2-function ("xsltApplyStylesheetUser" %xsltApplyStylesheetUser) libxml2.tree::%xmlDocPtr
   (style %xsltStylesheetPtr)
   (doc libxml2.tree::%xmlDocPtr)
   (args :pointer)

@@ -63,7 +63,7 @@
 ;; release/impl
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlFreeDoc" %xmlFreeDoc) :void
+(define-libxml2-function ("xmlFreeDoc" %xmlFreeDoc) :void
   (doc %xmlDocPtr))
 
 (defmethod release/impl ((doc document))
@@ -73,10 +73,10 @@
 ;; root
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlDocGetRootElement" %xmlDocGetRootElement) %xmlNodePtr
+(define-libxml2-function ("xmlDocGetRootElement" %xmlDocGetRootElement) %xmlNodePtr
   (doc %xmlDocPtr))
 
-(defcfun ("xmlDocSetRootElement" %xmlDocSetRootElement) %xmlNodePtr
+(define-libxml2-function ("xmlDocSetRootElement" %xmlDocSetRootElement) %xmlNodePtr
   (doc %xmlDocPtr)
   (root %xmlNodePtr))
 
@@ -105,7 +105,7 @@
 ;; copy
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlCopyDoc" %xmlCopyDoc) %xmlDocPtr
+(define-libxml2-function ("xmlCopyDoc" %xmlCopyDoc) %xmlDocPtr
   (doc %xmlDocPtr)
   (recursive :int))
 
@@ -117,7 +117,7 @@
 ;; make-document
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlNewDoc" %xmlNewDoc) %xmlDocPtr
+(define-libxml2-function ("xmlNewDoc" %xmlNewDoc) %xmlDocPtr
   (version %xmlCharPtr))
 
 (defun make-document (document-element)

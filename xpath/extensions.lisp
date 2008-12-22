@@ -50,7 +50,7 @@
 
 ;;; value-push
 
-(defcfun ("valuePush" %valuePush) :int
+(define-libxml2-function ("valuePush" %valuePush) :int
   (ctxt %xmlXPathContextPtr)
   (value %xmlXPathObjectPtr))
 
@@ -60,7 +60,7 @@
 
 ;;; value-pop
 
-(defcfun ("valuePop" %valuePop) %xmlXPathObjectPtr
+(define-libxml2-function ("valuePop" %valuePop) %xmlXPathObjectPtr
   (ctxt %xmlXPathContextPtr))
 
 (defun value-pop (&optional (ctxt *parser-context*))

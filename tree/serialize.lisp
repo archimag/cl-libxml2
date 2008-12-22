@@ -12,7 +12,7 @@
 ;;; serialize ((doc document) (filename pathname))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlSaveFile" %xmlSaveFile) :int
+(define-libxml2-function ("xmlSaveFile" %xmlSaveFile) :int
   (filename :pointer)
   (doc %xmlDocPtr))
 
@@ -24,7 +24,7 @@
 ;;; serialize ((doc document) (s (eql :to-string)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlDocDumpFormatMemoryEnc" %xmlDocDumpFormatMemoryEnc) :void
+(define-libxml2-function ("xmlDocDumpFormatMemoryEnc" %xmlDocDumpFormatMemoryEnc) :void
   (doc %xmlDocPtr)
   (doc_txt_ptr :pointer)
   (doc_txt_len :pointer)
@@ -68,12 +68,12 @@
       (cffi:callback %write-string-stream)
       (cffi:callback %write-binary-stream)))
 
-(defcfun ("xmlSaveFileTo" %xmlSaveFileTo) :int
+(define-libxml2-function ("xmlSaveFileTo" %xmlSaveFileTo) :int
   (buf %xmlOutputBufferPtr)
   (cur %xmlDocPtr)
   (encoding %xmlCharPtr))
 
-(defcfun ("xmlOutputBufferCreateIO" %xmlOutputBufferCreateIO) %xmlOutputBufferPtr
+(define-libxml2-function ("xmlOutputBufferCreateIO" %xmlOutputBufferCreateIO) %xmlOutputBufferPtr
   (iowrite :pointer)
   (ioclose :pointer)
   (ioctx :pointer)

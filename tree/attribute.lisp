@@ -53,7 +53,7 @@
 ;;; attribute-value
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlGetNsProp" %xmlGetNsProp) %xmlCharPtr
+(define-libxml2-function ("xmlGetNsProp" %xmlGetNsProp) %xmlCharPtr
   (node %xmlNodePtr)
   (name %xmlCharPtr)
   (uri %xmlCharPtr))
@@ -66,7 +66,7 @@
            (%xmlGetNsProp (pointer element) %name %uri))
          (%xmlGetNsProp (pointer element) %name (null-pointer))))))
 
-(defcfun ("xmlSetNsProp" %xmlSetNsProp) %xmlAttrPtr
+(define-libxml2-function ("xmlSetNsProp" %xmlSetNsProp) %xmlAttrPtr
   (node %xmlNodePtr)
   (ns %xmlNsPtr)
   (name %xmlCharPtr)
@@ -86,12 +86,12 @@
 ;;; remove-attribute
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlHasNsProp" %xmlHasNsProp) %xmlAttrPtr
+(define-libxml2-function ("xmlHasNsProp" %xmlHasNsProp) %xmlAttrPtr
   (node %xmlNodePtr)
   (name %xmlCharPtr)
   (href %xmlCharPtr))
 
-(defcfun ("xmlRemoveProp" %xmlRemoveProp) :int
+(define-libxml2-function ("xmlRemoveProp" %xmlRemoveProp) :int
   (attr %xmlAttrPtr))
 
 (defun remove-attribute (element name &optional uri)

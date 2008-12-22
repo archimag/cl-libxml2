@@ -11,9 +11,9 @@
 ;; with-custom-resolvers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlGetExternalEntityLoader" %xmlGetExternalEntityLoader) %xmlExternalEntityLoader)
+(define-libxml2-function ("xmlGetExternalEntityLoader" %xmlGetExternalEntityLoader) %xmlExternalEntityLoader)
 
-(defcfun ("xmlSetExternalEntityLoader" %xmlSetExternalEntityLoader) :void
+(define-libxml2-function ("xmlSetExternalEntityLoader" %xmlSetExternalEntityLoader) :void
   (loader %xmlExternalEntityLoader))
 
 (defvar *resolvers*)
@@ -47,7 +47,7 @@
 ;; resolve-file/url
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlNewInputFromFile" %xmlNewInputFromFile) %xmlParseInputPtr
+(define-libxml2-function ("xmlNewInputFromFile" %xmlNewInputFromFile) %xmlParseInputPtr
   (ctxt %xmlParserCtxPtr)
   (filename %xmlCharPtr))
 
@@ -60,7 +60,7 @@
 ;; resolve-string
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defcfun ("xmlNewStringInputStream" %xmlNewStringInputStream) %xmlParseInputPtr
+(define-libxml2-function ("xmlNewStringInputStream" %xmlNewStringInputStream) %xmlParseInputPtr
   (ctxt %xmlParserCtxPtr)
   (buffer %xmlCharPtr))
 
@@ -99,12 +99,12 @@
   (:xml-char-encoding-ascii 22) ;; = 22 : pure ASCII
   )
 
-(defcfun ("xmlNewIOInputStream" %xmlNewIOInputStream) %xmlParseInputPtr
+(define-libxml2-function ("xmlNewIOInputStream" %xmlNewIOInputStream) %xmlParseInputPtr
   (ctxt %xmlParserCtxPtr)
   (input %xmlParserInputBufferPtr)
   (enc %xmlCharEncoding))
 
-(defcfun ("xmlParserInputBufferCreateIO" %xmlParserInputBufferCreateIO) %xmlParserInputBufferPtr
+(define-libxml2-function ("xmlParserInputBufferCreateIO" %xmlParserInputBufferCreateIO) %xmlParserInputBufferPtr
   (ioread :pointer)
   (ioclose :pointer)
   (ioctx :pointer)

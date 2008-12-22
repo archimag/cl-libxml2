@@ -9,13 +9,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun parse (obj &key)
-  (let ((*cleanup-for-abort-restart* #'%xmlFreeDoc))
-    (restart-case
-        (make-instance 'document
-                       :pointer (parse/impl obj))
-      (return-nil () nil))))
-
-
+  (make-instance 'document
+                 :pointer (parse/impl obj)))
 
 (defgeneric parse/impl (obj &key)
   (:documentation "parse xml"))
@@ -31,7 +26,7 @@
 
 (defmethod parse/impl ((path pathname) &key)
   (with-foreign-string (_path (format nil "~A" path))
-    %xmlReadFile _path (cffi:null-pointer) 0))
+    (%xmlReadFile _path (cffi:null-pointer) 0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((str string))
@@ -64,7 +59,7 @@
 
 (defmethod parse/impl ((octets array) &key)
   (flexi-streams:with-input-from-sequence (in octets)
-    (parse in)))
+    (parse/impl in)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((stream stream)
