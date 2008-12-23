@@ -19,7 +19,7 @@
     </xsl:template>
 </xsl:stylesheet>")
     (with-parse-document (doc "<root/>")
-      (with-transfom-result (res (style doc))
+      (with-transform-result (res (style doc))
         (serialize res :to-string)))))
 
 
@@ -38,7 +38,7 @@
     </xsl:template>
 </xsl:stylesheet>")
     (with-parse-document (doc "<root/>")
-      (with-transfom-result (res (style doc))
+      (with-transform-result (res (style doc))
         (serialize res :to-string)))))
 
 
@@ -56,5 +56,5 @@
     </xsl:template>
 </xsl:stylesheet>")
     (with-parse-document (doc "<root><a attr=\"1\"/><b /><c attr=\"2\"/><d /></root>")
-      (with-transfom-result (res (style doc))
+      (with-transform-result (res (style doc))
         (serialize res :to-string)))))

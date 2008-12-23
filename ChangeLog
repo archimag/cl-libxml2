@@ -1,3 +1,106 @@
+2008-12-23 10:50  archimag
+
+	* cl-libxml2-xslt.asd, cl-libxml2.asd, tree/package.lisp,
+	  tree/packages.lisp, xpath/package.lisp, xpath/packages.lisp,
+	  xslt/package.lisp, xslt/packages.lisp: update
+
+2008-12-23 10:43  archimag
+
+	* tree/xtree.lisp: check buf with xmlFree
+
+2008-12-23 10:31  archimag
+
+	* test/test.lisp, tree/error.lisp, xslt/packages.lisp,
+	  xslt/stylesheet.lisp: some bug fixes
+
+2008-12-23 00:10  archimag
+
+	* test/test.lisp, tree/error.lisp, tree/parse.lisp: bug fixes
+
+2008-12-22 16:48  archimag
+
+	* tree/attribute.lisp, tree/document.lisp, tree/error.lisp,
+	  tree/namespace.lisp, tree/node.lisp, tree/packages.lisp,
+	  tree/parse.lisp, tree/resolve.lisp, tree/serialize.lisp,
+	  xpath/expression.lisp, xpath/extensions.lisp,
+	  xpath/xpath-context.lisp, xpath/xpath-object.lisp,
+	  xslt/extensions.lisp, xslt/stylesheet.lisp, xslt/xslt.lisp:
+	  update error handling
+
+2008-12-19 16:43  archimag
+
+	* cl-libxml2.asd, test/test.lisp, tree/error.lisp, tree/parse.lisp:
+	  update
+
+2008-12-18 21:29  archimag
+
+	* tree/error.lisp: add code for controle memory allocation size
+
+2008-12-18 16:49  archimag
+
+	* cl-libxml2.asd, test/test.lisp, tree/error.lisp,
+	  tree/packages.lisp: warning: tests failed
+
+2008-12-18 15:24  archimag
+
+	* cl-libxml2.asd, tree/error.lisp, tree/packages.lisp: add error
+	  handling
+
+2008-11-29 09:18  archimag
+
+	* cl-libxml2.asd, xpath/context.lisp, xpath/extensions.lisp: code
+	  reformation
+
+2008-11-29 09:15  archimag
+
+	* cl-libxml2.asd, xpath/context.lisp, xpath/expression.lisp,
+	  xpath/low-level-api.lisp, xpath/node-set.lisp,
+	  xpath/packages.lisp, xpath/xpath-context.lisp,
+	  xpath/xpath-object.lisp: code reformation
+
+2008-11-28 15:00  archimag
+
+	* xslt/extensions.lisp, xslt/stylesheet.lisp: code reformation
+
+2008-11-28 14:42  archimag
+
+	* cl-libxml2.asd, tree/add-remove.lisp, tree/childs.lisp,
+	  tree/low-level-api.lisp, tree/objects.lisp, tree/xtree.lisp: code
+	  reformation
+
+2008-11-28 14:39  archimag
+
+	* cl-libxml2.asd, tree/add-remove.lisp, tree/childs.lisp,
+	  tree/document.lisp, tree/low-level-api.lisp, tree/node.lisp,
+	  tree/objects.lisp, tree/resolve.lisp: code reformation
+
+2008-11-28 14:08  archimag
+
+	* cl-libxml2.asd, tree/attribute.lisp, tree/childs.lisp,
+	  tree/low-level-api.lisp, tree/namespace.lisp, tree/node.lisp,
+	  tree/objects.lisp, tree/packages.lisp: code reformation
+
+2008-11-28 12:31  archimag
+
+	* cl-libxml2.asd, test/test.lisp, tree/childs.lisp,
+	  tree/document.lisp, tree/low-level-api.lisp, tree/objects.lisp,
+	  tree/parse.lisp, tree/serialize.lisp: code reformation
+
+2008-11-28 11:50  archimag
+
+	* cl-libxml2.asd, test/test.lisp, tree/low-level-api.lisp,
+	  tree/parse.lisp, tree/resolve.lisp, tree/serialize.lisp: code
+	  reformation
+
+2008-11-28 08:15  archimag
+
+	* tree/attribute.lisp, tree/packages.lisp: remove
+	  attrivute-node-value
+
+2008-11-27 14:09  archimag
+
+	* ChangeLog: update ChangeLog
+
 2008-11-27 13:47  archimag
 
 	* tree/low-level-api.lisp, tree/parse.lisp, tree/serialize.lisp:
