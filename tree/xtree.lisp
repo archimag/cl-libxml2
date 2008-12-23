@@ -53,12 +53,10 @@
 
 (defctype %xmlNsType %xmlElementType)
 
-;; fuck! fuck! fuck!
-;; (defcfun ("xmlFree" %xmlFree) :void
-;;    (ptr :pointer))
-(defun %xmlFree (ptr)
-  (foreign-funcall "free" :pointer ptr :void))
+(defcvar ("xmlFree" %xmlFreeVar) :pointer)
 
+(defun %xmlFree (ptr)
+  (foreign-funcall-pointer %xmlFreeVar nil :pointer ptr :void))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; libxml2-cffi-obejct-wrapper
