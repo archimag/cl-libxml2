@@ -114,21 +114,28 @@
 (defcfun ("xmlResetError" %xmlResetError) :void
   (err %xmlErrorPtr))
 
+(defcfun ("xmlSetStructuredErrorFunc" %xmlSetStructuredErrorFunc) :void
+  (ctx :pointer)
+  (handler :pointer))
+
 (defcallback %structured-error-handler :void ((userdata :pointer) (%err %xmlErrorPtr))
   (declare (ignore userdata))
   (if (boundp '*libxml2-errors*)
       (push (make-xmlerror  %err) *libxml2-errors*))
   (%xmlResetError %err))
 
-(defcfun ("xmlSetStructuredErrorFunc" %xmlSetStructuredErrorFunc) :void
-  (ctx :pointer)
-  (handler :pointer))
 
-(defun init-error-handling (&optional (handler (callback %structured-error-handler)))
+;; (defun init-error-handling (&optional (handler (callback %structured-error-handler)))
+;;   (%xmlSetStructuredErrorFunc (null-pointer)
+;;                               handler))
+
+(defun init-error-handling (flag)
   (%xmlSetStructuredErrorFunc (null-pointer)
-                              handler))
+                              (if flag
+                                  (callback %structured-error-handler)
+                                  (null-pointer))))
 
-(init-error-handling)
+(init-error-handling t)
 ;;(init-error-handling (null-pointer))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -176,6 +183,7 @@
            (if *libxml2-errors*
                (if (position :xml-err-fatal *libxml2-errors* :key #'error-level)
                    (error 'libxml2-error :errors (nreverse *libxml2-errors*))
+                   ;;(warn "~{~A~^~%~})" *libxml2-errors*)
                    (warn "~{~A~^~%~})" *libxml2-errors*)))
            result))))))
 

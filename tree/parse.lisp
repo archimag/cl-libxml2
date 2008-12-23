@@ -89,6 +89,7 @@
                         curpos)
                      len)
                   (iter (for byte in-vector octets)
+                        ;;(print (flex:octets-to-string #(byte)))
                         (setf (cffi:mem-ref buffer :uchar curpos) byte)
                         (incf curpos))
                   (progn
@@ -114,16 +115,22 @@
 
 (defmethod parse/impl ((stream stream) &key)
   (let ((*stream-for-xml-parse* stream))
+    (with-foreign-string (%utf-8 "utf-8")
     (%xmlReadIO (%stream-reader-callback *stream-for-xml-parse*)
                 (cffi:null-pointer)
                 (cffi:null-pointer)
                 (cffi:null-pointer)
                 (cffi:null-pointer)
-                0)))
+                0))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; with-parse-document
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro with-parse-document ((var src) &rest body)
-  `(with-libxml2-object (,var (parse ,src)) ,@body))
+  `(let ((,var (parse ,src)))
+     (unwind-protect
+          (progn ,@body)
+       (if ,var (release ,var)))))
+
+

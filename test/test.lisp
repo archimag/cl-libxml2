@@ -945,5 +945,5 @@
 ;; run-libxml2-test
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun run-libxml2-tests ()
-  (run-tests :suite 'libxml2-test :report-pathname nil))
+(defun run-libxml2-tests (&optional (test 'libxml2-test))
+  (run-tests :suite test :report-pathname nil))
