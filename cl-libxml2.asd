@@ -7,8 +7,8 @@
   ((:module :tree
             :serial t
             :components
-            ((:file "packages")
-             (:file "xtree" :depends-on ("packages"))
+            ((:file "package")
+             (:file "xtree" :depends-on ("package"))
              (:file "error" :depends-on ("xtree"))
              (:file "namespace" :depends-on ("error"))
              (:file "attribute" :depends-on ("error"))
@@ -19,10 +19,10 @@
              (:file "resolve" :depends-on ("parse"))))
    (:module :xpath
             :components
-            ((:file "packages")
-             (:file "node-set" :depends-on ("packages"))
+            ((:file "package")
+             (:file "node-set" :depends-on ("package"))
              (:file "xpath-object" :depends-on ("node-set"))
-             (:file "xpath-context" :depends-on ("packages"))
+             (:file "xpath-context" :depends-on ("package"))
              (:file "expression" :depends-on ("xpath-object" "xpath-context"))
              (:file "extensions" :depends-on ("expression")))
             :depends-on ("tree"))))
