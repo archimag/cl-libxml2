@@ -124,36 +124,13 @@
       (push (make-xmlerror  %err) *libxml2-errors*))
   (%xmlResetError %err))
 
-
-;; (defun init-error-handling (&optional (handler (callback %structured-error-handler)))
-;;   (%xmlSetStructuredErrorFunc (null-pointer)
-;;                               handler))
-
-(defun init-error-handling (flag)
+(defun switch-error-handling (flag)
   (%xmlSetStructuredErrorFunc (null-pointer)
                               (if flag
                                   (callback %structured-error-handler)
                                   (null-pointer))))
 
-(init-error-handling t)
-;;(init-error-handling (null-pointer))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; memory
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (defcfun ("xmlMemUsed" xml-memory-used) :int)
-
-;; (defcfun ("xmlMemSetup" %xmlMemSetup) :int
-;;   (freeFunc :pointer)
-;;   (mallocFunc :pointer)
-;;   (reallocFunc :pointer)
-;;   (strdupFunc :pointer))
-
-;; (%xmlMemSetup (foreign-symbol-pointer "xmlMemFree")
-;;               (foreign-symbol-pointer "xmlMemMalloc")
-;;               (foreign-symbol-pointer "xmlMemRealloc")
-;;               (foreign-symbol-pointer "xmlMemoryStrdup"))
+(switch-error-handling t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -11,7 +11,7 @@
    :stylesheet-remove-param
    :stylesheet-clear-params
    :transform
-   :with-transfom-result
+   :with-transform-result
    :register-exslt-extensions
    :define-xslt-element
    :with-xslt-elements))

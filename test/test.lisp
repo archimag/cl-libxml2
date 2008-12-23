@@ -647,7 +647,7 @@
     </xsl:template>
 </xsl:stylesheet>")
                  (with-parse-document (doc "<root>Hello world</root>")
-                   (with-transfom-result (res (style doc))
+                   (with-transform-result (res (style doc))
                      (list (local-name (root res))
                            (find-string (root res) "text()")))))))
 
@@ -665,7 +665,7 @@
 </xsl:stylesheet>")
                  (stylesheet-set-param style "arg1" "Hello world")
                  (with-parse-document (doc "<root />")
-                   (with-transfom-result (res (style doc))
+                   (with-transform-result (res (style doc))
                      (list (local-name (root res))
                            (find-string (root res) "text()")))))))
 
@@ -684,7 +684,7 @@
                  (stylesheet-set-param style "arg1" "Hello")
                  (stylesheet-set-param style "arg2" "world")
                  (with-parse-document (doc "<root />")
-                   (with-transfom-result (res (style doc))
+                   (with-transform-result (res (style doc))
                      (list (local-name (root res))
                            (find-string (root res) "text()")))))))
 
@@ -703,7 +703,7 @@
     </xsl:template>
 </xsl:stylesheet>")
                  (with-parse-document (doc "<root><node>a</node><node>b</node><node>c</node></root>")
-                   (with-transfom-result (res (style doc))
+                   (with-transform-result (res (style doc))
                      (list (local-name (root res))
                            (find-string (root res) "text()")))))))
 
@@ -744,7 +744,7 @@
   (ensure-same "node"
                (with-input-from-string (in "<node />")
                  (with-custom-resolvers ((lambda (url id ctxt) (resolve-stream in ctxt)))
-                   (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/xinclude\">
+                   (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/XInclude\">
 <xi:include href=\"/tmp/blank.xml\" />
 </root>")
                      (process-xinclude doc)
@@ -754,14 +754,14 @@
 (addtest (custom-resolve-test)
   with-custom-resolve-stream-2
   (ensure-same "/root/foo/bar"
-               (with-input-from-string (in1 "<foo><xi:include xmlns:xi=\"http://www.w3.org/2001/xinclude\" href=\"my2:data\" /></foo>")
+               (with-input-from-string (in1 "<foo><xi:include xmlns:xi=\"http://www.w3.org/2001/XInclude\" href=\"my2:data\" /></foo>")
                  (with-input-from-string (in2 "<bar />")
                    (with-custom-resolvers ((lambda (url id ctxt)
                                              (if (eql (puri:uri-scheme url) :my1)
                                                  (resolve-stream in1 ctxt)))
                                            (lambda (url id ctxt)
                                              (resolve-stream in2 ctxt)))
-                     (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/xinclude\">
+                     (with-parse-document (doc "<root xmlns:xi=\"http://www.w3.org/2001/XInclude\">
 <xi:include href=\"my1:data\" />
 </root>")
                        (process-xinclude doc)
@@ -776,7 +776,7 @@
                                          (declare (ignore url id))
                                          (resolve-string "<node>hello world</node>" ctxt)))
                  (with-stylesheet (style "<?xml version=\"1.0\"?>
-<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/xsl/transform\" version=\"1.0\">
+<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">
     <xsl:template match=\"/\">
         <result>
             <xsl:copy-of select=\"document('data')\" />
@@ -784,7 +784,7 @@
     </xsl:template>
 </xsl:stylesheet>")
                    (with-parse-document (doc "<root/>")
-                     (with-transfom-result (res (style doc))
+                     (with-transform-result (res (style doc))
                        (list (local-name (root res))
                              (find-string (root res) "/result/node/text()"))))))))
 
@@ -889,7 +889,7 @@
     </xsl:template>
 </xsl:stylesheet>")
                    (with-parse-document (doc "<root/>")
-                     (with-transfom-result (res (style doc))
+                     (with-transform-result (res (style doc))
                        (iter (for node in-child-nodes (root res) with (:type :xml-element-node))
                              (collect (find-string node "text()")))))))))
 
@@ -916,7 +916,7 @@
     </xsl:template>
 </xsl:stylesheet>")
                    (with-parse-document (doc "<root/>")
-                     (with-transfom-result (res (style doc))
+                     (with-transform-result (res (style doc))
                        (find-string res "/result/text()")))))))
 
 (define-xslt-element my-copy-of (self input output)
@@ -936,7 +936,7 @@
     </xsl:template>
 </xsl:stylesheet>")
                    (with-parse-document (doc "<root><a attr=\"1\"/><b /><c attr=\"2\"/><d /></root>")
-                     (with-transfom-result (res (style doc))
+                     (with-transform-result (res (style doc))
                        (iter (for node in-child-nodes (root res) with (:type :xml-element-node))
                              (collect (local-name node)))))))))
                        ;;(find-string res "/result/text()")))))))

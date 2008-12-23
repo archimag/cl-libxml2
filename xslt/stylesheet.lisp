@@ -47,33 +47,41 @@
 ;;; parse-stylesheet
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defgeneric parse-stylesheet (obj))
+(defun parse-stylesheet (obj)
+  (let ((%style (parse-stylesheet/impl obj)))
+    (if %style
+        (make-instance 'stylesheet :pointer %style)
+        (error "This is not stylesheet"))))
 
+
+(defgeneric parse-stylesheet/impl (obj))
 
 ;;; parse-stylehseet ((filename pathname))
 
 (define-libxml2-function ("xsltParseStylesheetFile" %xsltParseStylesheetFile) %xsltStylesheetPtr
   (filename libxml2.tree::%xmlCharPtr))
 
-(defmethod parse-stylesheet ((filename pathname))
+(defmethod parse-stylesheet/impl ((filename pathname))
   (with-foreign-string (%filename (format nil "~A" filename))
-    (make-instance 'stylesheet
-                   :pointer (%xsltParseStylesheetFile %filename))))
+    (%xsltParseStylesheetFile %filename)))
 
 ;;; parse-stylesheet ((doc document))
 
 (define-libxml2-function ("xsltParseStylesheetDoc" %xsltParseStylesheetDoc) %xsltStylesheetPtr
   (doc libxml2.tree::%xmlDocPtr))
 
-(defmethod parse-stylesheet ((doc document))
-  (make-instance 'stylesheet
-                 :pointer (%xsltParseStylesheetDoc (pointer doc))))
+(defmethod parse-stylesheet/impl ((doc document))
+  (%xsltParseStylesheetDoc (pointer doc)))
 
 ;;; parse-stylesheet (obj)
 
-(defmethod parse-stylesheet (obj)
-  (with-parse-document (doc obj)
-    (parse-stylesheet doc)))
+(defmethod parse-stylesheet/impl (obj)
+  (gp:with-garbage-pool ()
+    (let* ((doc (gp:object-register (parse obj)))
+           (%style (parse-stylesheet/impl (parse obj))))
+      (unless (null-pointer-p %style)
+        (progn (gp:cancel-object-cleanup doc)
+               %style)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; with-stylesheet
@@ -127,7 +135,7 @@
 ;;; with-tranform-result
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro with-transfom-result ((res (style doc)) &rest body)
+(defmacro with-transform-result ((res (style doc)) &rest body)
   `(let ((,res (transform ,style ,doc)))
      (unwind-protect
           (progn ,@body)
