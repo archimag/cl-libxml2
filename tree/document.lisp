@@ -140,8 +140,12 @@
 ;;; process-xinclude
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(define-libxml2-function ("xmlXIncludeProcess" %xmlXIncludeProcess) :int
+  (doc %xmlDocPtr))
+
 (defmethod process-xinclude ((doc document))
-  (process-xinclude (root doc)))
+  (%xmlXIncludeProcess (pointer doc)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; document

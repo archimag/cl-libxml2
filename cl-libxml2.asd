@@ -25,4 +25,8 @@
              (:file "xpath-context" :depends-on ("package"))
              (:file "expression" :depends-on ("xpath-object" "xpath-context"))
              (:file "extensions" :depends-on ("expression")))
-            :depends-on ("tree"))))
+            :depends-on ("tree"))
+   (:module :xhtml
+            :components
+            ((:file "package")
+             (:file "xhtml" :depends-on ("package"))))))
