@@ -7,6 +7,7 @@
    :stylesheet
    :parse-stylesheet
    :with-stylesheet
+   :defxsl
    :stylesheet-set-param
    :stylesheet-remove-param
    :stylesheet-clear-params

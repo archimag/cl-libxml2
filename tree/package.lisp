@@ -51,6 +51,7 @@
    
    :with-libxml2-object
    :with-parse-document
+   :defxml
    :process-xinclude
 
 

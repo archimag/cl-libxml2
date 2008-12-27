@@ -2,22 +2,35 @@
 
 (in-package :libxml2.xhtml)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; meta-encoding
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-libxml2-function ("htmlGetMetaEncoding" %htmlGetMetaEncoding) %xmlCharPtr
+  (doc %xmlDocPtr))
+
+(defun meta-encoding (doc)
+  (foreign-string-to-lisp (%htmlGetMetaEncoding (pointer doc))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; serialize-html
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defgeneric serialize-html (obj target))
 
-
 ;;; serialize-html (doc (filename apthname))
 
-(define-libxml2-function ("htmlSaveFile" %htmlSaveFile) :int
+(define-libxml2-function ("htmlSaveFileEnc" %htmlSaveFileEnc) :int
   (filename %xmlCharPtr)
-  (doc xtree::%xmlDocPtr))
+  (doc xtree::%xmlDocPtr)
+  (encoding %xmlCharPtr))
 
-(defmethod serialize-html (doc (filename pathname))
+(defmethod serialize-html (doc (filename pathname) )
   (with-foreign-string (%path (format nil "~A" filename))
-    (%htmlSaveFile %path (pointer doc))))
+    (%htmlSaveFileEnc %path
+                      (pointer doc)
+                      (%htmlGetMetaEncoding (pointer doc)))))
 
 
 ;;; serialize-html (doc :to-string)

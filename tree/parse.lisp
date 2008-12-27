@@ -133,4 +133,11 @@
           (progn ,@body)
        (if ,var (release ,var)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; defxml
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defmacro defxml (var src)
+  `(progn
+     (if (boundp (quote ,var)) (xtree:release ,var))
+     (defparameter ,var (xtree:parse ,src))))
