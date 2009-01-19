@@ -2,6 +2,6 @@
 #+TITLE: CL-LIBXML2. BUGS.
 
 
-* TODO xmlFree
+* DONE xmlFree
    "Unhandled memory fault at #x0" by call "xmlFree" after "xmlDocDumpFormatMemoryEnc".
    Temporarily use "free" instead "xmlFree" (it works :-().

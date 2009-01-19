@@ -99,7 +99,8 @@
 (defgeneric release/impl (obj))
 
 (defun release (obj)
-  (release/impl obj)
+  (if (slot-value obj 'pointer)
+      (release/impl obj))
   (setf (slot-value obj 'pointer) nil))
 
 (gp:defcleanup libxml2-cffi-object-wrapper #'release)

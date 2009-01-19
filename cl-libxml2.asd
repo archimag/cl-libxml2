@@ -1,7 +1,6 @@
 ;; cl-libxml2.asd
 
 (defsystem :cl-libxml2
-  :version "0.0.1"
   :depends-on (#:cffi #:iterate #:puri #:flexi-streams #:alexandria #:garbage-pools #:metabang-bind #:metatilities)
   :components
   ((:module :tree
