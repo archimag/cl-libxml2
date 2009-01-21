@@ -107,3 +107,8 @@
         (setf (foreign-slot-value %doc '%xmlDoc '%children) (null-pointer))
         (setf (foreign-slot-value %doc '%xmlDoc '%last) (null-pointer))
         (%xmlFreeDoc %doc)))))
+
+(defmethod serialize ((el node) target)
+  (element-p el :throw-error t)
+  (with-fake-document (doc el)
+    (serialize doc target)))

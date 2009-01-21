@@ -6,6 +6,19 @@
 ;; document
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; enum xmlDocProperties
+(defbitfield %xmlDocProperties
+  (:xml-doc-wellformed 1) ;; document is XML well formed
+  (:xml-doc-nsvalid 2)    ;; document is Namespace valid
+  (:xml-doc-old10 4)      ;; parsed with old XML-1.0 parser
+  (:xml-doc-dtdvalid 8)   ;; DTD validation was successful
+  (:xml-doc-xinclude 16)  ;; XInclude substitution was done
+  (:xml-doc-userbuilt 32) ;; Document was built using the API and not by parsing an instance
+  (:xml-doc-internal 64)  ;; built for internal processing
+  (:xml-doc-html 128))    ;; parsed or built HTML document
+
+
+
 ;; struct _xmlDoc
 (defcstruct %xmlDoc
   ;; void *	_private	: application data
@@ -55,7 +68,7 @@
   ;; int	parseFlags	: set of xmlParserOption used to parse th
   (%parseFlags :int)
   ;; int	properties	: set of xmlDocProperties for this docume
-  (%properties :int))
+  (%properties %xmlDocProperties))
 
 (defwrapper document %xmlDoc)
 
@@ -153,3 +166,22 @@
 
 (defun document (node)
   (wrapper-slot-wrapper node '%doc 'document))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; with-fake-document
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro with-fake-document ((var root) &rest body)
+  `(let ((,var (make-instance 'document
+                              :pointer (%xmlNewDoc (null-pointer)))))
+     (unwind-protect
+          (progn
+            (setf (foreign-slot-value (pointer ,var) '%xmlDoc '%children) (pointer ,root))
+            (setf (foreign-slot-value (pointer ,var) '%xmlDoc '%last) (pointer ,root))
+            ,@body)
+       (progn
+         (setf (foreign-slot-value (pointer ,var) '%xmlDoc '%children) (null-pointer))
+         (setf (foreign-slot-value (pointer ,var) '%xmlDoc '%last) (null-pointer))
+         (release ,var)))))
+     

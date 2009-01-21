@@ -647,9 +647,10 @@
     </xsl:template>
 </xsl:stylesheet>")
                  (with-parse-document (doc "<root>Hello world</root>")
-                   (with-transform-result (res (style doc))
+                   (with-transform-result (res (style (root doc)))
                      (list (local-name (root res))
                            (find-string (root res) "text()")))))))
+
 
 (addtest (xslt-test)
   xslt-test-2

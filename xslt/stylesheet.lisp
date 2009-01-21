@@ -130,7 +130,11 @@
   (profile :pointer)
   (userCtxt %xsltTransformContextPtr))
 
-(defun transform (style doc)
+(defgeneric transform (style obj))
+
+;;; transform (style (doc document))
+
+(defmethod transform (style (doc document))
   (gp:with-garbage-pool ()  
     (with-transform-context (%ctxt (style doc))
       (libxml2.tree::make-libxml2-cffi-object-wrapper/impl (%xsltApplyStylesheetUser (pointer style)
@@ -140,6 +144,12 @@
                                                                                      (null-pointer)
                                                                                      %ctxt)
                                                            'document))))
+;;; transform (style (el node))
+
+(defmethod transform (style (el node))
+  (with-fake-document (doc el)
+    (transform style doc)))
+  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; with-tranform-result
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
