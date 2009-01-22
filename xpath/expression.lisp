@@ -114,6 +114,7 @@
   (with-xpath-object (res (obj expr ns-map))
     (if (and res
              (eql (xpath-object-type res) :xpath-nodeset)
+             (xpath-object-value res)
              (> (node-set-length (xpath-object-value res)) 0))
         (node-set-at (xpath-object-value res) 0))))
 
