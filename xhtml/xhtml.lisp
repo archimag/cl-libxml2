@@ -21,6 +21,40 @@
   (foreign-string-to-lisp (%htmlGetMetaEncoding (pointer doc))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; parse
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defgeneric parse-html/impl (obj &key)
+  (:documentation "parse html"))
+
+(defun parse-html (obj &key)
+  (make-instance 'document
+                 :pointer (parse-html/impl obj)))
+
+;;; parse-html ((str string))
+
+(define-libxml2-function ("htmlReadDoc" %htmlReadDoc) %xmlDocPtr
+  (cur %xmlCharPtr)
+  (base-url %xmlCharPtr)
+  (encoding %xmlCharPtr)
+  (options :int))
+
+(defmethod parse-html/impl ((str string)  &key)
+  (with-foreign-string (%utf8 "utf-8")
+    (with-foreign-string (%str str)
+      (%htmlReadDoc %str
+                    (null-pointer)
+                    %utf8
+                    0))))
+
+(defmacro with-parse-html ((var src) &rest body)
+  `(let ((,var (parse-html ,src)))
+     (unwind-protect
+          (progn ,@body)
+       (if ,var (release ,var)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; serialize-html
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
