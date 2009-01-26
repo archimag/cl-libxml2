@@ -27,3 +27,39 @@
 
 (defctype %xsltStylesheetPtr :pointer)
 (defctype %xsltTransformContextPtr :pointer)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; errors
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defcfun ("xsltSetGenericErrorFunc" %xsltSetGenericErrorFunc) :void
+  (ctx :pointer)
+  (handler :pointer))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-foreign-library cl_libxml2
+  (:unix (:or "cl_libxml2.so"))
+  (t (:default "cl_libxml2")))
+
+(use-foreign-library cl_libxml2)
+
+
+(defcallback %generic-error-handler :void ((message :pointer))
+;;  (print message)
+  (foreign-string-to-lisp message)
+  ;;(print (foreign-string-to-lisp message))
+  (print "error"))
+;;   (if (boundp 'xtree::*libxml2-errors*)
+;;       (push (make-instance 'xtree:xmlerror
+;;                            :message message
+;;                            :domain :xml-from-none
+;;                            :level :xml-err-error)
+;;             xtree::*libxml2-errors*)))
+
+
+(%xsltSetGenericErrorFunc (callback %generic-error-handler)
+                         (cffi:foreign-symbol-pointer "cl_libxml2_error_func"))
+
