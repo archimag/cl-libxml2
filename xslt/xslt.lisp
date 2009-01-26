@@ -40,11 +40,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define-foreign-library cl_libxml2
-  (:unix (:or "cl_libxml2.so"))
-  (t (:default "cl_libxml2")))
+(define-foreign-library cllibxml2
+  (:unix (:or "cllibxml2.so"))
+  (t (:default "cllibxml2")))
 
-(use-foreign-library cl_libxml2)
+(use-foreign-library cllibxml2)
 
 
 (defcallback %generic-error-handler :void ((message :string))
