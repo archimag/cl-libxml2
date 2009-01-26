@@ -47,19 +47,16 @@
 (use-foreign-library cl_libxml2)
 
 
-(defcallback %generic-error-handler :void ((message :pointer))
-;;  (print message)
-  (foreign-string-to-lisp message)
-  ;;(print (foreign-string-to-lisp message))
-  (print "error"))
-;;   (if (boundp 'xtree::*libxml2-errors*)
-;;       (push (make-instance 'xtree:xmlerror
-;;                            :message message
-;;                            :domain :xml-from-none
-;;                            :level :xml-err-error)
-;;             xtree::*libxml2-errors*)))
+(defcallback %generic-error-handler :void ((message :string))
+  (if (boundp 'xtree::*libxml2-errors*)
+      (push (make-instance 'xtree:xmlerror
+                           :message message
+                           :domain :xml-from-xslt
+                           :level :xml-err-fatal)
+            xtree::*libxml2-errors*)))
 
 
 (%xsltSetGenericErrorFunc (callback %generic-error-handler)
                          (cffi:foreign-symbol-pointer "cl_libxml2_error_func"))
+
 
