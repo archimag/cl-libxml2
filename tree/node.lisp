@@ -238,6 +238,23 @@
          (puri:parse-uri (foreign-string-to-lisp %str))
       (%xmlFree %str))))
 
+
+(define-libxml2-function ("xmlNodeSetBase" %xmlNodeSetBase) :void
+  (node %xmlNodePtr)
+  (uri %xmlCharPtr))
+
+(defgeneric (setf base-url) (uri obj))
+
+(defmethod (setf base-url) ((uri string) (node node))
+  (with-foreign-string (%uri uri)
+    (%xmlNodeSetBase (pointer node)
+                     %uri))
+  uri)
+                   
+(defmethod (setf base-url) ((uri puri:uri) (node node))
+  (setf (base-url node)
+        (format nil "~A" uri)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; process-xinclude
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
