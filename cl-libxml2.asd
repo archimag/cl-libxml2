@@ -28,5 +28,5 @@
    (:module :html
             :components
             ((:file "package")
-             (:file "xhtml" :depends-on ("package")))
+             (:file "html" :depends-on ("package")))
             :depends-on ("tree"))))
