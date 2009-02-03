@@ -1,8 +1,8 @@
 ;; xhtml/package.lisp
 
-(defpackage :libxml2.xhtml
+(defpackage :libxml2.html
   (:use :cl :cffi :libxml2.private :libxml2.tree)
-  (:nicknames :xhtml)
+  (:nicknames :html)
   (:export :html-p
            :parse-html
            :with-parse-html
