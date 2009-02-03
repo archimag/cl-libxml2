@@ -79,6 +79,10 @@
   (ioctx :pointer)
   (encoder :pointer))
 
+(define-libxml2-function ("xmlOutputBufferClose" %xmlOutputBufferClose) :int
+  (buf %xmlOutputBufferPtr))
+  
+
 (defmethod serialize ((doc document) (stream stream))
   (with-foreign-string (%utf-8 "utf-8")
     (let ((*stream-for-xml-serialize* stream))

@@ -1,24 +1,65 @@
-;; xhtml.lisp
+;; html.lisp
 
 (in-package :libxml2.html)
 
+
+(defctype %htmlDocPtr %xmlDocPtr)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; html-p
+;;; create-html-document
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-libxml2-function ("htmlNewDocNoDtD" %htmlNewDocNoDtD) %htmlDocPtr
+  (uri %xmlCharPtr)
+  (external-id %xmlCharPtr))
+
+
+(defun create-html-document (&key (uri "http://www.w3.org/TR/REC-html40/loose.dtd") (external-id "-//W3C//DTD HTML 4.0 Transitional//EN"))
+  "Creates a new HTML document. Do not initialize the DTD if uri and external-id is nil.
+Params:
+uri:          URI for the dtd, default -  http://www.w3.org/TR/REC-html40/loose.dtd
+external-id:  the external ID of the DTD 
+Returns: a new document
+"
+  (flet ((toforeign (str)
+           (if str
+               (gp:cleanup-register (foreign-string-alloc str) #'foreign-string-free)
+               (null-pointer))))
+    (gp:with-garbage-pool ()
+      (make-instance 'document
+                     :pointer (%htmlNewDocNoDtD (toforeign uri)
+                                                (toforeign external-id))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; html-p
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun html-p (doc)
   (find :xml-doc-html (wrapper-slot-value doc 'xtree::%properties)))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; meta-encoding
+;;; meta-encoding
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-libxml2-function ("htmlGetMetaEncoding" %htmlGetMetaEncoding) %xmlCharPtr
-  (doc %xmlDocPtr))
+  (doc %htmlDocPtr))
 
 (defun meta-encoding (doc)
+  "Encoding definition lookup in the Meta tags"
   (foreign-string-to-lisp (%htmlGetMetaEncoding (pointer doc))))
+
+(define-libxml2-function ("htmlSetMetaEncoding" %htmlSetMetaEncoding) :int
+  (doc %htmlDocPtr)
+  (encoding %xmlCharPtr))
+
+;;; (setf meta-encoding)
+
+(defun (setf meta-encoding) (encoding doc)
+  "Sets the current encoding in the Meta tags
+NOTE: this will not change the document content encoding, just the META flag associated."
+  (with-foreign-string (%encoding encoding)
+    (%htmlSetMetaEncoding (pointer doc)
+                          %encoding)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; parse
@@ -47,6 +88,10 @@
                     %utf8
                     0))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; with-parse-html
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defmacro with-parse-html ((var src) &rest body)
   `(let ((,var (parse-html ,src)))
      (unwind-protect
@@ -58,7 +103,7 @@
 ;;; serialize-html
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defgeneric serialize-html (obj target))
+(defgeneric serialize-html (obj target &key))
 
 ;;; serialize-html (doc (filename apthname))
 
@@ -67,7 +112,7 @@
   (doc xtree::%xmlDocPtr)
   (encoding %xmlCharPtr))
 
-(defmethod serialize-html (doc (filename pathname) )
+(defmethod serialize-html (doc (filename pathname) &key)
   (with-foreign-string (%path (format nil "~A" filename))
     (%htmlSaveFileEnc %path
                       (pointer doc)
@@ -82,7 +127,7 @@
   (size :pointer)
   (format :int))
 
-(defmethod serialize-html ((doc document) (s (eql :to-string)))
+(defmethod serialize-html ((doc document) (s (eql :to-string)) &key)
   (with-foreign-pointer (%xml-string (foreign-type-size :pointer))
     (with-foreign-pointer (%xml-string-len (foreign-type-size :pointer))
       (%htmlDocDumpMemoryFormat (pointer doc)
@@ -94,3 +139,22 @@
              (foreign-string-to-lisp %ptr)
           (xtree::%xmlFree %ptr))))))
   
+;;; serialize-html (doc (stream stream))
+
+(define-libxml2-function ("htmlDocContentDumpOutput" %htmlDocContentDumpOutput) :void
+   (buf xtree::%xmlOutputBufferPtr)
+   (cur %xmlDocPtr)
+   (encoding %xmlCharPtr))
+
+
+(defmethod serialize-html ((doc document) (stream stream) &key)
+  (let ((xtree::*stream-for-xml-serialize* stream)
+        (%buf (xtree::%xmlOutputBufferCreateIO (xtree::%stream-writer-callback stream)
+                                               (null-pointer)
+                                               (null-pointer)
+                                               (null-pointer))))
+    (%htmlDocContentDumpOutput %buf
+                               (pointer doc)
+                               (null-pointer))
+    (xtree::%xmlOutputBufferClose %buf)))
+
