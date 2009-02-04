@@ -11,45 +11,6 @@
 (defctype %xmlXPathFuncLookupFunc :pointer)
 (defctype %xmlStructuredErrorFunc :pointer)
 
-(defcenum %xmlErrorLevel
-  (:xml-err-none  0)
-  ;; A simple warning
-  (:xml-err-warning 1) 
-  ;; A recoverable error
-  (:xml-err-error 2) 
-  ;; A fatal error
-  (:xml-err-fatal 3))
-
-
-;;struct xmlError
-(defcstruct %xmlError
-  ;; int	domain	: What part of the library raised this er
-  (%domain :int)
-  ;; int	code	: The error code, e.g. an xmlParserError
-  (%code :int)
-  ;; char *	message	: human-readable informative error messag
-  (%message %charPtr)
-  ;; xmlErrorLevel	level	: how consequent is the error
-  (%level %xmlErrorLevel)
-  ;; char *	file	: the filename
-  (%file %charPtr)
-  ;; int	line	: the line number if available
-  (%line :int)
-  ;; char *	str1	: extra string information
-  (%str1 %charPtr)
-  ;; char *	str2	: extra string information
-  (%str2 %charPtr)
-  ;; char *	str3	: extra string information
-  (%str3 %charPtr)
-  ;; int	int1	: extra number information
-  (%int1 :int)
-  ;; int	int2	: column number of the error or 0 if N/A
-  (%int2 :int)
-  ;; void *	ctxt	: the parser context if available
-  (%ctxt :pointer)
-  ;; void *	node	: the node in the tree
-  (%node :pointer))
-
 (defcstruct %xmlXPathContext 
   ;; xmlDocPtr	doc	: The current document
   (%doc %xmlDocPtr)
@@ -120,7 +81,7 @@
   ;; xmlStructuredErrorFunc	error	: the callback in case of errors
   (%error	%xmlStructuredErrorFunc)
   ;; xmlError	lastError	: the last error
-  (%lastError	%xmlError)
+  (%lastError	xtree::%xmlError)
   ;; xmlNodePtr	debugNode	: the source node XSLT dictionary
   (%debugNode	%xmlNodePtr)
   ;; xmlDictPtr	dict	: dictionary if any

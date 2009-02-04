@@ -72,7 +72,7 @@ NOTE: this will not change the document content encoding, just the META flag ass
   (make-instance 'document
                  :pointer (parse-html/impl obj)))
 
-;;; parse-html ((str string))
+;;; parse-html ((str string) &key)
 
 (define-libxml2-function ("htmlReadDoc" %htmlReadDoc) %xmlDocPtr
   (cur %xmlCharPtr)
@@ -88,6 +88,54 @@ NOTE: this will not change the document content encoding, just the META flag ass
                     %utf8
                     0))))
 
+;;; parse-html ((path pathname) &key)
+
+(define-libxml2-function ("htmlReadFile" %htmlReadFile) %htmlDocPtr
+  (filename %xmlCharPtr)
+  (encoding %xmlCharPtr)
+  (options :int))
+
+(defmethod parse-html/impl ((path pathname) &key)
+  (with-foreign-string (%path (format nil "~A" path))
+    (%htmlReadFile %path
+                   (cffi:null-pointer)
+                   0)))
+
+;;; parse-html ((uri puri:uri))
+
+(defmethod parse-html/impl ((uri puri:uri) &key)
+  (with-foreign-string (%path (format nil "~A" uri))
+    (%htmlReadFile %path
+                   (cffi:null-pointer)
+                   0)))
+
+;;; parse-html ((octets (array unsigned-byte)))
+
+(defmethod parse-html/impl ((octets array) &key)
+  (flexi-streams:with-input-from-sequence (in octets)
+    (parse-html/impl in)))
+
+
+;;; parse-html ((stream stream)
+
+(define-libxml2-function ("htmlReadIO" %htmlReadIO) %htmlDocPtr
+  (ioread :pointer)
+  (ioclose :pointer)
+  (ioctx :pointer)
+  (url %xmlCharPtr)
+  (encoding %xmlCharPtr)
+  (options :int))
+
+(defmethod parse-html/impl ((stream stream) &key)
+  (let ((xtree::*stream-for-xml-parse* stream))
+    (with-foreign-string (%utf-8 "utf-8")
+      (%htmlReadIO (xtree::%stream-reader-callback xtree::*stream-for-xml-parse*)
+                  (cffi:null-pointer)
+                  (cffi:null-pointer)
+                  (cffi:null-pointer)
+                  (cffi:null-pointer)
+                  0))))
+  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; with-parse-html
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
