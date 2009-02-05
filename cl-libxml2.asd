@@ -1,7 +1,7 @@
 ;; cl-libxml2.asd
 
 (defsystem :cl-libxml2
-  :depends-on (#:cffi #:iterate #:puri #:flexi-streams #:alexandria #:garbage-pools #:metabang-bind #:metatilities)
+  :depends-on (#:cffi #:iterate #:puri #:flexi-streams #:alexandria #:garbage-pools #:metabang-bind)
   :components
   ((:module :tree
             :serial t

@@ -73,7 +73,7 @@
 
 (defun make-xmlerror (err)
   (make-instance 'xmlerror
-                 :message (metatilities:strip-whitespace (foreign-string-to-lisp (foreign-slot-value err '%xmlError '%message)))
+                 :message (string-right-trim '(#\Newline) (foreign-string-to-lisp (foreign-slot-value err '%xmlError '%message)))
                  :domain (foreign-slot-value err '%xmlError '%domain)
                  :level (foreign-slot-value err '%xmlError '%level)))
 
