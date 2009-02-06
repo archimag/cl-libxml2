@@ -1,3 +1,101 @@
+2009-02-06 09:39  archimag
+
+	* cl-libxml2-test.asd, cl-libxml2-xslt-test.asd,
+	  cl-libxml2-xslt.asd, cl-libxml2.asd, doc/TODO, test/libxml2.lisp,
+	  test/libxslt.lisp, test/test.lisp: divide tests for libxml2 and
+	  libxslt in different systems
+
+2009-02-05 08:48  archimag
+
+	* cl-libxml2.asd, tree/error.lisp: remove depends from metatilities
+
+2009-02-04 15:32  archimag
+
+	* html/html.lisp, xpath/xpath-context.lisp: implement parse html
+	  from:
+	  * pathname
+	  * puri:uri
+	  * octets (array unsigned-byte)
+	  * stream
+
+2009-02-03 16:54  archimag
+
+	* html/html.lisp, html/package.lisp, tree/serialize.lisp:
+	  implement:
+	  create-html-document
+	  (setf meta-encoding)
+	  serialize-html ((doc document) (stream stream))
+
+2009-02-03 15:23  archimag
+
+	* html/html.lisp, html/package.lisp: rename package libxml2.xhtml
+	  to libxml2.html with nickanme: html
+
+2009-02-03 15:21  archimag
+
+	* cl-libxml2.asd, html/html.lisp, html/xhtml.lisp: rename file
+	  xhtml.lisp to html.lisp
+
+2009-02-03 15:20  archimag
+
+	* cl-libxml2.asd, html, xhtml: rename folder xhtml to html
+
+2009-01-29 11:35  archimag
+
+	* tree/document.lisp, tree/node.lisp: update
+
+2009-01-26 23:28  archimag
+
+	* foreign/Makefile, foreign/cl_libxml2.c, foreign/cllibxml2.c,
+	  xslt/xslt.lisp: update
+
+2009-01-26 23:22  archimag
+
+	* foreign/cl_libxml2.c, xslt/xslt.lisp: add error handling for
+	  libxslt
+
+2009-01-26 16:55  archimag
+
+	* foreign, foreign/Makefile, foreign/cl_libxml2.c, xslt/xslt.lisp:
+	  update
+
+2009-01-25 14:46  archimag
+
+	* xhtml/package.lisp, xhtml/xhtml.lisp: implement parse html from
+	  string
+
+2009-01-22 17:00  archimag
+
+	* xpath/expression.lisp: update
+
+2009-01-21 14:24  archimag
+
+	* test/test.lisp, tree/document.lisp, tree/package.lisp,
+	  tree/serialize.lisp, tree/xtree.lisp, xhtml/package.lisp,
+	  xhtml/xhtml.lisp, xslt/stylesheet.lisp: implemented
+	  xtree:with-fake-document, html:html-p, xslt:transform (style (el
+	  node)), updated "release"
+
+2009-01-19 16:49  archimag
+
+	* cl-libxml2.asd, doc/BUGS, tree/xtree.lisp: update
+
+2008-12-27 01:59  archimag
+
+	* cl-libxml2.asd, tree/package.lisp, tree/parse.lisp,
+	  xhtml/package.lisp, xhtml/xhtml.lisp, xslt/package.lisp,
+	  xslt/stylesheet.lisp: update
+
+2008-12-26 17:05  archimag
+
+	* cl-libxml2.asd, tree/document.lisp, xhtml, xhtml/package.lisp,
+	  xhtml/xhtml.lisp: initial work on html support
+
+2008-12-23 11:07  archimag
+
+	* ChangeLog, examples/xslt.lisp: update ChangeLog
+	  version 0.2.5 released
+
 2008-12-23 10:50  archimag
 
 	* cl-libxml2-xslt.asd, cl-libxml2.asd, tree/package.lisp,
