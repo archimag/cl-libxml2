@@ -101,10 +101,8 @@
     (if res (xpath-object-cast res 'string))))
 
 (defun find-number (obj expr &key (ns-map *default-ns-map*))
-  (let ((val (with-xpath-object (res (obj expr ns-map))
-               (if res (xpath-object-cast res 'number)))))
-    #+:IEEE-FLOATING-POINT(if (and val (not (float-nan-p val))) val)
-    #-:IEEE-FLOATING-POINT val))
+  (with-xpath-object (res (obj expr ns-map))
+    (xpath-object-cast res 'number)))
 
 (defun find-boolean (obj expr &key (ns-map *default-ns-map*))
   (with-xpath-object (res (obj expr ns-map))

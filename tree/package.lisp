@@ -19,7 +19,7 @@
 
 (defpackage :libxml2.tree
   (:use :cl :iter :cffi :libxml2.private :metabang.bind)
-  (:nicknames :tree :xtree)
+  (:nicknames :xtree)
   (:export
    :node
    :document

@@ -150,7 +150,9 @@
   (val %xmlXPathObjectPtr))
 
 (def-xo-cast (number :xpath-number)
-  (%xmlXPathCastToNumber (pointer obj)))
+  #+clisp (handler-case (%xmlXPathCastToNumber (pointer obj)) (system::simple-arithmetic-error (err) nil))
+  #+sbcl (let ((val (%xmlXPathCastToNumber (pointer obj)))) (if (and val (not (float-nan-p val))) val))
+  )
 
 ;;; xpath-object-cast (obj (type (eql 'boolean)))
 
