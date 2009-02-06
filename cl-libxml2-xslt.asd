@@ -10,3 +10,7 @@
              (:file "xslt" :depends-on ("package"))
              (:file "extensions" :depends-on ("xslt"))
              (:file "stylesheet" :depends-on ("extensions"))))))
+
+(defmethod perform ((o test-op) (c (eql (find-system 'cl-libxml2-xslt))))
+  (operate 'load-op 'cl-libxml2-xslt-test)
+  (operate 'test-op 'cl-libxml2-xslt-test :force t))

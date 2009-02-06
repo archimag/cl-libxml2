@@ -10,10 +10,10 @@
 **** DONE (stream stream)
 **** DONE (stream string-stream)
 **** DONE (str string)
-**** DONE (octets array)
-*** TODO serialize (obj target)
+**** DONE (octets array)*
+** TODO serialize (obj target)
 **** DONE (doc document) (path pathname)
-**** TODO (doc document) (stream stream)
+**** DONE (doc document) (stream stream)
 **** DONE (doc document) (:to-string)
 **** DONE (el node) target
      

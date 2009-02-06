@@ -30,3 +30,7 @@
             ((:file "package")
              (:file "html" :depends-on ("package")))
             :depends-on ("tree"))))
+
+(defmethod perform ((o test-op) (c (eql (find-system 'cl-libxml2))))
+  (operate 'load-op 'cl-libxml2-test)
+  (operate 'test-op 'cl-libxml2-test :force t))
