@@ -1,3 +1,13 @@
+2009-02-06 10:37  archimag
+
+	* cl-libxml2-test.asd, tree/package.lisp, xpath/expression.lisp,
+	  xpath/xpath-object.lisp: fix bug with find-number in clisp
+	  remove nickname tree for libxml2.tree package
+
+2009-02-06 09:48  archimag
+
+	* ChangeLog: update ChangeLog
+
 2009-02-06 09:39  archimag
 
 	* cl-libxml2-test.asd, cl-libxml2-xslt-test.asd,
