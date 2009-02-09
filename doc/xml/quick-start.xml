@@ -4,12 +4,16 @@
 
 <page>
     <title>Quick Start</title>
-    
-    cl-libxml2 is a binding to C-library, resource management is necessary! Uses:
-    * tree:release
-    * tree:with-parse-document
-    *  tree:with-libxml2-object
-    * [http://code.google.com/p/garbage-pools/ garbage-pools]
+
+    <p>
+        <strong>cl-libxml2</strong> is a binding to C-library, resource management is necessary! Uses:
+    <ul>
+        <li>tree:release</li>
+        <li>tree:with-parse-document</li>
+        <li>tree:with-libxml2-object</li>
+        <li><a href="http://code.google.com/p/garbage-pools/">garbage-pools</a></li>
+    </ul>
+    </p>
 
 
     <h2>Tree API</h2>

@@ -1,14 +1,13 @@
 /* style.css */
 
 body {
-    /*background-color: white;*/
     font-family: verdana, arial;
 
     margin: 0;
     padding: 0;
 }
 
-h1, h2, h3 {
+h1, h2 {
     color: green;
 }
 
@@ -20,18 +19,13 @@ h1 {
 
 #page-title {
     top: 0px;
-    /*margin-top: -5px;*/
     margin: 0;
 
     
     padding-left: 10px;
-    /*padding-bottom: 5px;*/
-    
-    border-bottom: 2px solid navy;
-    background-color: #d48d66;
-    /*background: white url(../lisplogo_flag2_128.png);*/
 
-    /*border-top: 1px solid white;*/
+    border: 1px solid black;
+    background-color: #d48d66;
 
     position: fixed;
     width: 100%;
@@ -51,20 +45,16 @@ h1 {
 #rightmenu {
     position: fixed;
     top: 5px;
-    right: -1px;
-    /*padding: 10px;*/
-    border: 1px solid gray;
+    right: 5px;
+
+    border: 1px solid #d0d0d0;
     font-size: 110%;
 
-    /*background-color: #e5ecf9;*/
     background-color: #f4f5d8;
 }
 
 #rightmenu ul {
     margin: 0;    
-    /*background-color: #f4f5d8;*/
-    /*background-color: #e5ecf9;*/
-
     padding: 20px;
 }
 
@@ -75,7 +65,6 @@ h1 {
 }
 
 #rightmenu a {
-    /*color: #6f6f74;*/
     color: #c3454f;
 }
 
@@ -90,6 +79,7 @@ h1 {
 }
 
 pre.code {
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
+    background-color: #eeeeee;
+    border: 1px solid #d0d0d0;
+    font-size: 110%;
 }
