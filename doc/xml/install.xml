@@ -12,7 +12,7 @@
     <h2>Implementation-specific notes</h2>
     <p><cl-libxml2 /> tested with sbcl and clisp on Gentoo Linux (with use <a href="http://repo.or.cz/w/gentoo-lisp-overlay.git">gentoo-lisp-overlay</a>). </p>
 
-    <h2>Prerequisites</h2>
+    <h2>Requirements</h2>
     <p><cl-libxml2 /> needs: </p>
     <ul>
         <li><a href="http://www.xmlsoft.org/" rel="nofollow">libxml2</a> </li>
@@ -36,8 +36,8 @@
         $ svn checkout http://cl-libxml2.googlecode.com/svn/trunk/ cl-libxml2
     </code>
 
-    <h2>Build C helper libraries</h2>
-    <p>libxslt for error handling require callback functions that called with a varying number of arguments of varying types (see xsltSetGenericErrorFunc). &cffi; is do not support it. Thus, C helper librare are required for translate xslt error to lisp conditions. The helper libraries reside in the directory foreign. </p>
+    <h2>Build C helper library</h2>
+    <p><libxslt /> for error handling require callback functions that called with a varying number of arguments of varying types (see xsltSetGenericErrorFunc). &cffi; is do not support it. Thus, C helper librare are required for translate <libxslt /> errors to lisp conditions. The helper library reside in the directory <strong>foreign</strong>. </p>
 
     <code>
         $ cd /path/to/cl-libxml2

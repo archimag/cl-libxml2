@@ -31,20 +31,10 @@
                             <a href="install.xml">Download and Installation</a>
                         </li>
                         <li>
-                            <a href="quick-start.xml">Quick-Start and Examples</a>
+                            <a href="quick-start.xml">Code Examples</a>
                         </li>
                         <li>
                             <a href="api.xml">API References</a>
-                            <!--
-                            Developing with cl-libxml2
-                            <ul>
-                                <li><a href="parsing.xml">Parsing</a></li>
-                                <li><a href="serialize.xml">Serialization</a></li>
-                                <li><a href="xtree.xml">xtree</a></li>
-                                <li><a href="xtree.xml">xpath</a></li>
-                                <li><a href="xtree.xml">xslt</a></li>
-                            </ul>
-                            -->
                         </li>
                     </ul>
                 </div>

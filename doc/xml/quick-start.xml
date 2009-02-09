@@ -3,7 +3,7 @@
 <?xml-stylesheet type="text/xsl" href="style.xsl"?>
 
 <page>
-    <title>Quick Start</title>
+    <title>Code Examples</title>
 
     <p>
         <cl-libxml2 /> is a binding to C-library, resource management is necessary! Uses:
@@ -242,7 +242,7 @@
         (xpath:define-xpath-function echo (msg) msg)
         ECHO
 
-        (xpath:define-xpath-function join (delimiter &apos;rest strs)
+        (xpath:define-xpath-function join (delimiter &amp;rest strs)
           (iter (for str in strs)
                 (reducing str
                    by (lambda (s x) (concatenate 'string s delimiter x)))))
