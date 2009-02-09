@@ -1,23 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 
 <?xml-stylesheet type="text/xsl" href="style.xsl"?>
 
 <page>
     <title>About cl-libxml2</title>
 
-    <div>
-        <h2>Features:</h2>
-        <ul>
-            <li>Interfaces for tree manipulation (like cxml-stp)</li>
-            <li>Interface for an HTML 4.0 non-verifying parser</li>
-            <li>Specific APIs to process HTML tree, especially serialization</li>
-            <li>XPath API</li>
-            <li>XSLT API</li>
-            <li>Custom URL resolvers</li>
-            <li>XPath extension functions</li>
-            <li>XSLT extension elements</li>
-            <li>Translate libxml2 and libxslt errors to Lisp conditions</li>
-            <li>iterate drivers for enumerate child nodes and etc.</li>
-        </ul>
-    </div>
+    <table>
+        <tbody>
+            <tr>
+                <td><strong>Homepage: </strong></td>
+                <td><a href="http://code.google.com/p/cl-libxml2/">http://code.google.com/p/cl-libxml2/</a></td>
+            </tr>
+
+            <tr>
+                <td><strong>Discussion Group: </strong></td>
+                <td><a href="http://groups.google.com/group/cl-libxml2-devel">http://groups.google.com/group/cl-libxml2-devel</a></td>
+            </tr>
+
+            <tr>
+                <td><strong>Author:</strong></td>
+                <td><a href="mailto:archimag@google.com">Moskvitin Andrey</a></td>
+            </tr>
+
+            <tr>
+                <td><strong>Licence:</strong></td>
+                <td>MIT</td>
+            </tr>
+
+        </tbody>
+    </table>
+    
+    <h2>Features:</h2>
+    <ul>
+        <li>Interfaces for tree manipulation (like <a href="http://www.lichteblau.com/cxml-stp/">cxml-stp</a>)</li>
+        <li>Interface for an HTML 4.0 non-verifying parser</li>
+        <li>Specific APIs to process HTML tree, especially serialization</li>
+        <li>XPath API</li>
+        <li>XSLT API</li>
+        <li>Custom URL resolvers</li>
+        <li>XPath extension functions</li>
+        <li>XSLT extension elements</li>
+        <li>Translate <libxml2 /> and <libxslt /> errors to Lisp conditions</li>
+        <li><a href="http://common-lisp.net/project/iterate/">iterate</a> drivers for enumerate child nodes and etc.</li>
+    </ul>
+
+    <h2>Recent Changes</h2>
+    <ul>
+        <li>
+            2009-02-06 Version 0.3 is released
+            <ul>
+                <li>Nickname <strong>tree</strong> for <strong>libxml2.tree</strong> package is removed</li>
+                <li>New function <strong>html:parse-html</strong></li>
+                <li>New function <strong>html:create-html-document</strong></li>
+                <li>New functions <strong>html:meta-encoding</strong> and <strong>(setf html:meta-encoding)</strong></li>
+                <li>New function <strong>html:serialize-html</strong></li>
+                <li>Implement error handling for <libxslt /></li>
+                <li>New function <strong>html:html-p</strong></li>
+                <li>New method <strong>xslt:transform (style (el xtree:node))</strong></li>
+                <li>Some bug fixes</li>
+            </ul>
+        </li>
+    </ul>
 </page>

@@ -6,7 +6,7 @@
     <title>Quick Start</title>
 
     <p>
-        <strong>cl-libxml2</strong> is a binding to C-library, resource management is necessary! Uses:
+        <cl-libxml2 /> is a binding to C-library, resource management is necessary! Uses:
     <ul>
         <li>tree:release</li>
         <li>tree:with-parse-document</li>
@@ -35,7 +35,7 @@
             ...)
     </code>
 
-    <h3>parse and register in [http://code.google.com/p/garbage-pools/ garbage-pool</h3>
+    <h3>parse and register in <a href="http://code.google.com/p/garbage-pools/">garbage-pool</a></h3>
     <code>
         (gp:with-garbage-pool ()
             (gp:register-object (tree:parse #u"http://www.example.org/test.xml")))
@@ -188,25 +188,25 @@
     <h3>Custom URL resolving and process-xinclude </h3>
     <code>
         (tree:with-custom-resolvers ((lambda (url id ctxt)
-        (declare (ignore id))
-        (if (eql (puri:uri-scheme url) :my1)
-        (tree:resolve-string "&lt;node1 /&gt;" ctxt)))
-        (lambda (url id ctxt)
-        (declare (ignore id))
-        (if (eql (puri:uri-scheme url) :my2)
-        (tree:resolve-string "&lt;node2 /&gt;" ctxt))))
-        (tree:with-parse-document (doc "&lt;root xmlns:xi=\"http://www.w3.org/2001/XInclude\"&gt;
-        &lt;xi:include href=\"my1:doc\" /&gt;
-        &lt;xi:include href=\"my2:doc\" /&gt;
-        &lt;xi:include href=\"my3:doc\" /&gt;
+                                       (declare (ignore id))
+                                       (if (eql (puri:uri-scheme url) :my1)
+                                           (tree:resolve-string "&lt;node1 /&gt;" ctxt)))
+                                     (lambda (url id ctxt)
+                                       (declare (ignore id))
+                                       (if (eql (puri:uri-scheme url) :my2)
+                                           (tree:resolve-string "&lt;node2 /&gt;" ctxt))))
+          (tree:with-parse-document (doc "&lt;root xmlns:xi=\"http://www.w3.org/2001/XInclude\"&gt;
+            &lt;xi:include href=\"my1:doc\" /&gt;
+            &lt;xi:include href=\"my2:doc\" /&gt;
+            &lt;xi:include href=\"my3:doc\" /&gt;
         &lt;/root&gt;")
-        (tree:process-xinclude doc)
-        (tree:serialize doc :to-string)))
+            (tree:process-xinclude doc)
+            (tree:serialize doc :to-string)))
         "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;
         &lt;root xmlns:xi=\"http://www.w3.org/2001/XInclude\"&gt;
-        &lt;node1/&gt;
-        &lt;node2/&gt;
-        &lt;xi:include href=\"my3:doc\"/&gt;
+            &lt;node1/&gt;
+            &lt;node2/&gt;
+            &lt;xi:include href=\"my3:doc\"/&gt;
         &lt;/root&gt;
         "
     </code>
@@ -214,22 +214,22 @@
     <h3>Custom URL resolving and XSLT-transformation</h3>
     <code>
         (tree:with-custom-resolvers ((lambda (url id ctxt)
-        (declare (ignore url id))
-        (tree:resolve-string "&lt;node&gt;Hello world&lt;/node&gt;" ctxt)))
+                                       (declare (ignore url id))
+                                       (tree:resolve-string "&lt;node&gt;Hello world&lt;/node&gt;" ctxt)))
         (xslt:with-stylesheet (style "&lt;?xml version=\"1.0\"?&gt;
         &lt;xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"&gt;
-        &lt;xsl:template match=\"/\"&gt;
-        &lt;result&gt;
-        &lt;xsl:copy-of select=\"document('data')\" /&gt;
-        &lt;/result&gt;
-        &lt;/xsl:template&gt;
+            &lt;xsl:template match=\"/\"&gt;
+                &lt;result&gt;
+                    &lt;xsl:copy-of select=\"document('data')\" /&gt;
+                &lt;/result&gt;
+            &lt;/xsl:template&gt;
         &lt;/xsl:stylesheet&gt;")
-        (tree:with-parse-document (doc "&lt;root/&gt;")
-        (xslt:with-transform-result (res (style doc))
-        (tree:serialize res :to-string)))))
+          (tree:with-parse-document (doc "&lt;root/&gt;")
+            (xslt:with-transform-result (res (style doc))
+              (tree:serialize res :to-string)))))
         "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;
         &lt;result&gt;
-        &lt;node&gt;Hello world&lt;/node&gt;
+            &lt;node&gt;Hello world&lt;/node&gt;
         &lt;/result&gt;
         "
     </code>
@@ -243,40 +243,40 @@
         ECHO
 
         (xpath:define-xpath-function join (delimiter &apos;rest strs)
-        (iter (for str in strs)
-        (reducing str
-        by (lambda (s x) (concatenate 'string s delimiter x)))))
+          (iter (for str in strs)
+                (reducing str
+                   by (lambda (s x) (concatenate 'string s delimiter x)))))
         JOIN
 
         (xpath:with-xpath-functions ((hello-world "hello-world")
-        (echo "echo")
-        (join "join"))
-        (tree:with-parse-document (doc "&lt;root /&gt;")
-        (xpath:find-string doc "join('//', hello-world(), '---', echo('Buy!'))")))
+                                     (echo "echo")
+                                     (join "join"))
+          (tree:with-parse-document (doc "&lt;root /&gt;")
+            (xpath:find-string doc "join('//', hello-world(), '---', echo('Buy!'))")))
         "Hello world!//---//Buy!"
     </code>
 
     <h3>XSLT extension elements</h3>
     <code>
         (xslt:define-xslt-element my-copy-of (self input output)
-        (iter (for node in-xpath-result (tree:attribute-value self "select")  on input)
-        (tree:append-child output (tree:copy node))))
+          (iter (for node in-xpath-result (tree:attribute-value self "select")  on input)
+                (tree:append-child output (tree:copy node))))
         MY-COPY-OF
 
         (xslt:with-xslt-elements ((my-copy-of "copy-of" "www.sample.org"))
-        (xslt:with-stylesheet (style "&lt;?xml version=\"1.0\"?&gt;
+          (xslt:with-stylesheet (style "&lt;?xml version=\"1.0\"?&gt;
         &lt;xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:my=\"www.sample.org\"  extension-element-prefixes=\"my\" version=\"1.0\"&gt;
-        &lt;xsl:template match=\"/root\"&gt;
-        &lt;result&gt;&lt;my:copy-of select=\"node()[@attr]\" /&gt;&lt;/result&gt;
-        &lt;/xsl:template&gt;
+            &lt;xsl:template match=\"/root\"&gt;
+                &lt;result&gt;&lt;my:copy-of select=\"node()[@attr]\" /&gt;&lt;/result&gt;
+            &lt;/xsl:template&gt;
         &lt;/xsl:stylesheet&gt;")
-        (tree:with-parse-document (doc "&lt;root&gt;&lt;a attr=\"1\"/&gt;&lt;b /&gt;&lt;c attr=\"2\"/&gt;&lt;d /&gt;&lt;/root&gt;")
-        (xslt:with-transform-result (res (style doc))
-        (tree:serialize res :to-string)))))
+            (tree:with-parse-document (doc "&lt;root&gt;&lt;a attr=\"1\"/&gt;&lt;b /&gt;&lt;c attr=\"2\"/&gt;&lt;d /&gt;&lt;/root&gt;")
+              (xslt:with-transform-result (res (style doc))
+                (tree:serialize res :to-string)))))
         "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;
         &lt;result&gt;
-        &lt;a attr=\"1\"/&gt;
-        &lt;c attr=\"2\"/&gt;
+            &lt;a attr=\"1\"/&gt;
+            &lt;c attr=\"2\"/&gt;
         &lt;/result&gt;
         "
     </code>

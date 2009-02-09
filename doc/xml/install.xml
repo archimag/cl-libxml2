@@ -2,18 +2,22 @@
 
 <?xml-stylesheet type="text/xsl" href="style.xsl"?>
 
+<!DOCTYPE page [
+    <!ENTITY cffi "<a href='http://common-lisp.net/project/cffi/'>cffi</a>">
+]>
+
 <page>
     <title>Installation</title>
 
     <h2>Implementation-specific notes</h2>
-    <p><strong>cl-libxml2</strong> tested with sbcl and clisp on Gentoo Linux (with use <a href="http://repo.or.cz/w/gentoo-lisp-overlay.git">gentoo-lisp-overlay</a>). </p>
+    <p><cl-libxml2 /> tested with sbcl and clisp on Gentoo Linux (with use <a href="http://repo.or.cz/w/gentoo-lisp-overlay.git">gentoo-lisp-overlay</a>). </p>
 
     <h2>Prerequisites</h2>
-    <p><strong>cl-libxml2</strong> needs: </p>
+    <p><cl-libxml2 /> needs: </p>
     <ul>
         <li><a href="http://www.xmlsoft.org/" rel="nofollow">libxml2</a> </li>
         <li><a href="http://www.xmlsoft.org/XSLT.html" rel="nofollow">libxslt</a> (optional, necessary for xslt support) </li>
-        <li><a href="http://common-lisp.net/project/cffi/" rel="nofollow">cffi</a> (=&gt; 0.10.2) </li>
+        <li>&cffi; (=&gt; 0.10.2) </li>
         <li><a href="http://common-lisp.net/project/lift/" rel="nofollow">lift</a> (optional, for tests)    </li>
         <li><a href="http://puri.b9.com/" rel="nofollow">puri</a> </li>
         <li><a href="http://common-lisp.net/project/iterate/" rel="nofollow">iterate</a> </li>
@@ -33,7 +37,7 @@
     </code>
 
     <h2>Build C helper libraries</h2>
-    <p>libxslt for error handling require callback functions that called with a varying number of arguments of varying types (see xsltSetGenericErrorFunc). <strong>cffi</strong> is do not support it. Thus, C helper librare are required for translate xslt error to lisp conditions. The helper libraries reside in the directory foreign. </p>
+    <p>libxslt for error handling require callback functions that called with a varying number of arguments of varying types (see xsltSetGenericErrorFunc). &cffi; is do not support it. Thus, C helper librare are required for translate xslt error to lisp conditions. The helper libraries reside in the directory foreign. </p>
 
     <code>
         $ cd /path/to/cl-libxml2
@@ -60,7 +64,7 @@
     </code>
 
     <h2>Run test suite (optional)</h2>
-    <p>The test suite can be executed using the <strong>asdf</strong> <i>test-op</i> operator. If <strong>cl-libxml2</strong> has not been loaded with <i>asdf:load-op</i>, the <i>asdf:test-op</i> operator will automatically load <strong>cl-libxml2</strong>. </p>
+    <p>The test suite can be executed using the <strong>asdf</strong> <i>test-op</i> operator. If <cl-libxml2 /> has not been loaded with <i>asdf:load-op</i>, the <i>asdf:test-op</i> operator will automatically load <cl-libxml2 />. </p>
 
     <p>Register the .asd files: </p>
 

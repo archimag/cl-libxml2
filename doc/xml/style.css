@@ -55,7 +55,7 @@ h1 {
     background-color: #f4f5d8;
 }
 
-#rightmenu ul {
+#rightmenu > ul {
     margin: 0;    
     padding: 20px;
 }
@@ -80,9 +80,19 @@ h1 {
     padding-right: 20px;
 }
 
+#content a {
+    font-weight: bold;
+    /*color: #736a9b;*/
+    color: #6a5eab;
+}
+
 pre.code {
     background-color: #eeeeee;
     border: 1px solid #d0d0d0;
     font-size: 110%;
     padding: 10px;
+}
+
+pre.code span.text {
+    background-color: green;
 }
