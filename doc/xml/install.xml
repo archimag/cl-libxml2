@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<?xml-stylesheet type="text/xml" href="style.xsl"?>
+
+<page>
+    <title>Installation</title>
+
+    <h2>Implementation-specific notes</h2>
+    <p><strong>cl-libxml2</strong> tested with sbcl and clisp on Gentoo Linux (with use <a href="http://repo.or.cz/w/gentoo-lisp-overlay.git">gentoo-lisp-overlay</a>). </p>
+
+    <h2>Prerequisites</h2>
+    <p><strong>cl-libxml2</strong> needs: </p>
+    <ul>
+        <li><a href="http://www.xmlsoft.org/" rel="nofollow">libxml2</a> </li>
+        <li><a href="http://www.xmlsoft.org/XSLT.html" rel="nofollow">libxslt</a> (optional, necessary for xslt support) </li>
+        <li><a href="http://common-lisp.net/project/cffi/" rel="nofollow">cffi</a> (=&gt; 0.10.2) </li>
+        <li><a href="http://common-lisp.net/project/lift/" rel="nofollow">lift</a> (optional, for tests)    </li>
+        <li><a href="http://puri.b9.com/" rel="nofollow">puri</a> </li>
+        <li><a href="http://common-lisp.net/project/iterate/" rel="nofollow">iterate</a> </li>
+        <li><a href="http://www.weitz.de/flexi-streams/" rel="nofollow">flexi-streams</a> </li>
+        <li><a href="http://common-lisp.net/project/metabang-bind" rel="nofollow">metabang-bind</a> </li>
+        <li><a href="http://code.google.com/p/garbage-pools/" rel="nofollow">garbage-pools</a> (=&gt; 0.1.1) </li>
+    </ul>
+
+
+    <h2>Download</h2>
+    <p>Download <a href="http://cl-libxml2.googlecode.com/files/cl-libxml2-0.3.tar.bz2" rel="nofollow">tarballs</a> 
+    <br />
+    Or get it from svn: </p>
+
+    <code>
+        $ svn checkout http://cl-libxml2.googlecode.com/svn/trunk/ cl-libxml2
+    </code>
+
+    <h2>Build C helper libraries</h2>
+    <p>libxslt for error handling require callback functions that called with a varying number of arguments of varying types (see xsltSetGenericErrorFunc). <strong>cffi</strong> is do not support it. Thus, C helper librare are required for translate xslt error to lisp conditions. The helper libraries reside in the directory foreign. </p>
+
+    <code>
+        $ cd /path/to/cl-libxml2
+        $ make -C foreign
+        $ make -C foreign install
+    </code>
+
+    <h2>Compilation and loading</h2>
+    <p>Register the .asd file, e.g. by symlinking it: </p>
+
+    <code>
+        $ ln -sf `pwd`/cl-libxml2/cl-libxml2.asd /path/to/your/registry/
+        $ ln -sf `pwd`/cl-libxml2/cl-libxml2-xslt.asd /path/to/your/registry/
+    </code>
+
+    <p>The compile cl-libxlm2 without xslt using: </p>
+    <code>
+        * (asdf:operate &#x27;asdf:load-op :cl-libxml2)
+    </code>
+
+    <p>Or with xslt using </p>
+    <code>
+        * (asdf:operate &#x27;asdf:load-op :cl-libxml2-xslt)
+    </code>
+
+    <h2>Run test suite (optional)</h2>
+    <p>The test suite can be executed using the <strong>asdf</strong> <i>test-op</i> operator. If <strong>cl-libxml2</strong> has not been loaded with <i>asdf:load-op</i>, the <i>asdf:test-op</i> operator will automatically load <strong>cl-libxml2</strong>. </p>
+
+    <p>Register the .asd files: </p>
+
+    <code>
+        $ ln -sf `pwd`/cl-libxml2/cl-libxml2-test.asd /path/to/your/registry/
+        $ ln -sf `pwd`/cl-libxml2/cl-libxml2-xslt-test.asd /path/to/your/registry/
+    </code>
+
+    <p>Run tests without xslt: </p>
+    <code>
+        * (asdf:operate &#x27;asdf:test-op :cl-libxml2)
+    </code>
+
+    <p>With xslt: </p>
+    <code>
+        * (asdf:operate &#x27;asdf:test-op :cl-libxml2-xslt)
+    </code>
+
+    <h2>Gentoo Linux</h2>
+    <p>For Gentoo users availabe <a href="http://repo.or.cz/w/restas-lisp-overlay.git" rel="nofollow">restas-lisp-overlay</a>: </p>
+
+    <code>
+        $ mkdir /usr/local/overlays
+        $ cd /usr/local/overlays
+        $ git clone http://repo.or.cz/r/gentoo-lisp-overlay.git
+        $ get clone http://repo.or.cz/r/restas-lisp-overlay.git
+        $ echo &quot;PORTDIR_OVERLAY=\&quot;/usr/local/overlays/gentoo-lisp-overlay /usr/local/overlays/restas-lisp-overlay\&quot;&quot; &gt;&gt; /etc/make.conf
+        $ emerge cl-libxml2
+    </code>
+    
+</page>

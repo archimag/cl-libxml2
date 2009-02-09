@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<?xml-stylesheet type="text/xml" href="style.xsl"?>
+
+<page>
+    <title>About cl-libxml2</title>
+
+    <div>
+        <h2>Features:</h2>
+        <ul>
+            <li>Interfaces for tree manipulation (like cxml-stp)</li>
+            <li>Interface for an HTML 4.0 non-verifying parser</li>
+            <li>Specific APIs to process HTML tree, especially serialization</li>
+            <li>XPath API</li>
+            <li>XSLT API</li>
+            <li>Custom URL resolvers</li>
+            <li>XPath extension functions</li>
+            <li>XSLT extension elements</li>
+            <li>Translate libxml2 and libxslt errors to Lisp conditions</li>
+            <li>iterate drivers for enumerate child nodes and etc.</li>
+        </ul>
+    </div>
+</page>

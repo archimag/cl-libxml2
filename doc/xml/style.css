@@ -1,0 +1,95 @@
+/* style.css */
+
+body {
+    /*background-color: white;*/
+    font-family: verdana, arial;
+
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3 {
+    color: green;
+}
+
+
+h1 {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+#page-title {
+    top: 0px;
+    /*margin-top: -5px;*/
+    margin: 0;
+
+    
+    padding-left: 10px;
+    /*padding-bottom: 5px;*/
+    
+    border-bottom: 2px solid navy;
+    background-color: #d48d66;
+    /*background: white url(../lisplogo_flag2_128.png);*/
+
+    /*border-top: 1px solid white;*/
+
+    position: fixed;
+    width: 100%;
+    height: 100px;
+}
+
+/* logo */
+
+#logo {
+    position: fixed;
+    bottom: 2px;
+    right: 2px;
+}
+
+/* rightmenu  */
+
+#rightmenu {
+    position: fixed;
+    top: 5px;
+    right: -1px;
+    /*padding: 10px;*/
+    border: 1px solid gray;
+    font-size: 110%;
+
+    /*background-color: #e5ecf9;*/
+    background-color: #f4f5d8;
+}
+
+#rightmenu ul {
+    margin: 0;    
+    /*background-color: #f4f5d8;*/
+    /*background-color: #e5ecf9;*/
+
+    padding: 20px;
+}
+
+#rightmenu li {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    list-style-type: none;
+}
+
+#rightmenu a {
+    /*color: #6f6f74;*/
+    color: #c3454f;
+}
+
+/*   */
+
+
+#content {
+    margin-top: 120px;
+    background-color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+pre.code {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+}
