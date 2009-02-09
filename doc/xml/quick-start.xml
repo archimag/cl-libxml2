@@ -26,31 +26,31 @@
     <h3>parse string</h3>
     <code>
         (tree:with-libxml2-object (doc (tree:parse "&lt;root /&gt;"))
-        ...)
+            ...)
     </code>
 
     <h3>with-parse-document</h3>
     <code>
         (tree:with-parse-document (doc "&lt;root /&gt;")
-        ...)
+            ...)
     </code>
 
     <h3>parse and register in [http://code.google.com/p/garbage-pools/ garbage-pool</h3>
     <code>
         (gp:with-garbage-pool ()
-        (gp:register-object (tree:parse #u"http://www.example.org/test.xml")))
+            (gp:register-object (tree:parse #u"http://www.example.org/test.xml")))
     </code>
 
     <h3>serialize to fil</h3>
     <code>
         (tree:with-parse-document (doc "&lt;root /&gt;")
-        (tree:serialize doc #P"out.xml"))
+            (tree:serialize doc #P"out.xml"))
     </code>
 
     <h3>serialize to string</h3>
     <code>
         (tree:with-parse-document (doc "&lt;root /&gt;")
-        (tree:serialize doc :to-string))
+            (tree:serialize doc :to-string))
         "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;
         &lt;root/&gt;
         "
@@ -59,7 +59,7 @@
     <h3>serialize to stream</h3>
     <code>
         (tree:with-parse-document (doc "&lt;root /&gt;")
-        (tree:serialize doc *standard-output*))
+            (tree:serialize doc *standard-output*))
     </code>
 
     <h3>make element (no namespace)</h3>
@@ -80,16 +80,16 @@
     <h3>attributes (no namespace)</h3>
     <code>
         (tree:with-parse-document (doc "&lt;root /&gt;")
-        (setf (tree:attribute-value (tree:root doc) "attr") "Hello")
-        (tree:attribute-value (tree:root doc) "attr"))
+            (setf (tree:attribute-value (tree:root doc) "attr") "Hello")
+            (tree:attribute-value (tree:root doc) "attr"))
         "Hello"
     </code>
 
     <h3>attributes (with namesapce)</h3>
     <code>
         (tree:with-parse-document (doc "&lt;root /&gt;")
-        (setf (tree:attribute-value (tree:root doc) "attr" "www.sample.org") "Buy!")
-        (tree:attribute-value (tree:root doc) "attr" "www.sample.org"))
+            (setf (tree:attribute-value (tree:root doc) "attr" "www.sample.org") "Buy!")
+            (tree:attribute-value (tree:root doc) "attr" "www.sample.org"))
         "Buy!"
     </code>
 
@@ -111,8 +111,8 @@
     <h3>iterate by child nodes</h3>
     <code>
         (tree:with-parse-document (doc "&lt;root&gt;&lt;a /&gt;&lt;b /&gt;&lt;c /&gt;&lt;/root&gt;")
-        (iter (for node in-child-nodes (tree:root doc) with (:type :xml-element-node))
-        (collect (tree:local-name node))))
+            (iter (for node in-child-nodes (tree:root doc) with (:type :xml-element-node))
+                  (collect (tree:local-name node))))
         ("a" "b" "c")
     </code>
 
@@ -121,22 +121,22 @@
     <h3>find string</h3>
     <code>
         (tree:with-parse-document (doc "&lt;root attr=\"Hello world!\" /&gt;")
-        (xpath:find-string doc "/root/@attr"))
+            (xpath:find-string doc "/root/@attr"))
         "Hello world!"
     </code>
 
     <h3>find number</h3>
     <code>
         (tree:with-parse-document (doc "&lt;root&gt;&lt;a /&gt;&lt;b /&gt;&lt;c /&gt;&lt;/root&gt;")
-        (xpath:find-number doc "count(/root/node())"))
+            (xpath:find-number doc "count(/root/node())"))
         3.0d0
     </code>
 
     <h3>iterate nodes in xpath query result</h3>
     <code>
         (tree:with-parse-document (doc "&lt;root&gt;&lt;a /&gt;&lt;b /&gt;&lt;c /&gt;&lt;/root&gt;")
-        (iter (for node in-xpath-result "/root/node()" on doc)
-        (collect (tree:local-name node))))
+            (iter (for node in-xpath-result "/root/node()" on doc)
+                  (collect (tree:local-name node))))
         ("a" "b" "c")
     </code>
 
@@ -147,15 +147,15 @@
     <code>
         (xslt:with-stylesheet (style "&lt;?xml version=\"1.0\"?&gt;
         &lt;xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"&gt;
-        &lt;xsl:template match=\"/\"&gt;
-        &lt;result&gt;
-        &lt;xsl:value-of select=\".\" /&gt;
-        &lt;/result&gt;
-        &lt;/xsl:template&gt;
+            &lt;xsl:template match=\"/\"&gt;
+                &lt;result&gt;
+                    &lt;xsl:value-of select=\".\" /&gt;
+                &lt;/result&gt;
+            &lt;/xsl:template&gt;
         &lt;/xsl:stylesheet&gt;")
-        (tree:with-parse-document (doc "&lt;root&gt;Hello world&lt;/root&gt;")
-        (xslt:with-transform-result (res (style doc))
-        (tree:serialize res :to-string))))
+          (tree:with-parse-document (doc "&lt;root&gt;Hello world&lt;/root&gt;")
+            (xslt:with-transform-result (res (style doc))
+              (tree:serialize res :to-string))))
         "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;
         &lt;result&gt;Hello world&lt;/result&gt;
         "
@@ -165,18 +165,18 @@
     <code>
         (xslt:with-stylesheet (style "&lt;?xml version=\"1.0\"?&gt;
         &lt;xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\"&gt;
-        &lt;xsl:param name=\"arg1\" /&gt;
-        &lt;xsl:template match=\"/\"&gt;
-        &lt;result&gt;
-        &lt;xsl:value-of select=\"concat($arg1, ' ', $arg2)\" /&gt;
-        &lt;/result&gt;
-        &lt;/xsl:template&gt;
+            &lt;xsl:param name=\"arg1\" /&gt;
+            &lt;xsl:template match=\"/\"&gt;
+                &lt;result&gt;
+                    &lt;xsl:value-of select=\"concat($arg1, ' ', $arg2)\" /&gt;
+                &lt;/result&gt;
+            &lt;/xsl:template&gt;
         &lt;/xsl:stylesheet&gt;")
-        (xslt:stylesheet-set-param style "arg1" "Hello")
-        (xslt:stylesheet-set-param style "arg2" "world")
-        (tree:with-parse-document (doc "&lt;root /&gt;")
-        (xslt:with-transform-result (res (style doc))
-        (tree:serialize res :to-string))))
+          (xslt:stylesheet-set-param style "arg1" "Hello")
+          (xslt:stylesheet-set-param style "arg2" "world")
+          (tree:with-parse-document (doc "&lt;root /&gt;")
+            (xslt:with-transform-result (res (style doc))
+              (tree:serialize res :to-string))))
         "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;
         &lt;result&gt;Hello world&lt;/result&gt;
         "
