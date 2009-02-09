@@ -31,7 +31,7 @@
                             <a href="install.xml">Download and Installation</a>
                         </li>
                         <li>
-                            <a href="quick-start.xml">Code Examples</a>
+                            <a href="examples.xml">Code Examples</a>
                         </li>
                         <li>
                             <a href="api.xml">API References</a>
