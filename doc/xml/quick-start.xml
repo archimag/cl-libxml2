@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<?xml-stylesheet type="text/xsl" href="style.xsl"?>
+
+<page>
+    <title>Quick Start</title>
+
+    <h2>Parsing</h2>
+    Parsing string to tree:
+    <code>
+        (xtree:parse "&lt;root attr=\"Hello world!\"&gt;&lt;a /&gt;&lt;b /&gt;&lt;c /&gt;&lt;/root&gt;")
+        #&lt;LIBXML2.TREE:DOCUMENT {BE2C8F1}&gt;
+    </code>
+
+    Save result for later:
+    <code>
+        (defparameter *doc* *)
+        *DOC*
+    </code>
+
+    <h2>Inspect tree</h2>
+    Root element (documentElement):
+    <code>
+        (xtree:root *doc*)
+        #&lt;LIBXML2.TREE:NODE {C093499}&gt;
+    </code>
+
+    Local name of the node (tagName):
+    <code>
+        (xtree:local-name (xtree:root *doc*))
+        "root"
+    </code>
+
+    Attribute value:
+    <code>
+        (xtree:attribute-value (xtree:root *doc*) "attr")
+        "Hello world!"
+    </code>
+
+    Enumerate child nodes:
+    <code>
+        (use-package :iter)
+        T
+        (iter (for node in-child-nodes (xtree:root *doc*) with (:type :xml-element-node))
+              (collect (xtree:local-name node)))
+        ("a" "b" "c")
+    </code>
+
+    <h2>Modify tree</h2>
+    Change attribute value:
+    <code>
+        (setf (xtree:attribute-value (xtree:root *doc*) "attr") "Buy!")
+        "Buy!"
+    </code>
+
+    Add new attribute:
+    <code>
+        (setf (xtree:attribute-value (xtree:root *doc*) "test") "new attribute")
+        "new attribute"
+    </code>
+
+    Append child nodes:
+    <code>
+        (iter (for x from 1 to 3)
+              (setf (xtree:text-content (xtree:append-child (xtree:root *doc*)
+                                                            (xtree:make-element "item")))
+                                        (format nil "Text ~A" x)))        
+    </code>
+
+    <h2>Serialization</h2>
+    Serialize to string:
+    <code>
+        (xtree:serialize *doc* :to-string)
+        "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;
+        &lt;root attr=\"Buy!\" test=\"new attribute\"&gt;
+            &lt;a/&gt;
+            &lt;b/&gt;
+            &lt;c/&gt;
+            &lt;item&gt;Text 1&lt;/item&gt;
+            &lt;item&gt;Text 2&lt;/item&gt;
+            &lt;item&gt;Text 3&lt;/item&gt;
+        &lt;/root&gt;
+        "
+    </code>
+
+    Serialize to file:
+    <code>
+        (xtree:serialize *doc* #P"/tmp/out.xml")
+    </code>
+
+    <h2>Free memory</h2>
+    <code>
+        (xtree:release *doc*)
+        NIL
+    </code>
+
+    To simlify memory management, use
+    <ul>
+        <li>xtree:with-parse-document</li>
+        <li>xtree:with-libxml2-object</li>
+        <li><a href="http://code.google.com/p/garbage-pools/">garbage-pools</a></li>
+    </ul>
+
+    <code>
+       (gp:with-garbage-pool ()
+         (let ((doc (gp:object-register (xtre:parse ...))))
+           (using-document doc)))
+    </code>
+
+    <h2>HTML</h2>
+    <code>
+        (html:with-parse-html (html "&lt;a href=\"http://www.xmlsoft.org/\">libxml2&lt;/a&gt; is a &lt;b&gt;great&lt;/b&gt; library")
+           (html:serialize-html html *standard-output*))
+        "&lt;!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\"&gt;
+        &lt;html&gt;&lt;body&gt;
+        &lt;a href=\"http://www.xmlsoft.org/\"&gt;libxml2&lt;/a&gt; is a &lt;b&gt;great&lt;/b&gt; library&lt;/body&gt;&lt;/html&gt;
+        "
+    </code>
+
+</page>

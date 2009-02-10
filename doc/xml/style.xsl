@@ -24,18 +24,15 @@
 
                 <div id="rightmenu">
                     <ul>
-                        <li>
-                            <a href="index.xml">About</a>
-                        </li>
-                        <li>
-                            <a href="install.xml">Download and Installation</a>
-                        </li>
-                        <li>
-                            <a href="examples.xml">Code Examples</a>
-                        </li>
-                        <li>
-                            <a href="api.xml">API References</a>
-                        </li>
+                        <li><a href="index.xml">About</a></li>
+                        
+                        <li><a href="install.xml">Download and Installation</a></li>
+
+                        <li><a href="quick-start.xml">Quick Start</a></li>
+                        
+                        <li><a href="examples.xml">Code Examples</a></li>
+                        
+                        <li><a href="api.xml">API References</a></li>
                     </ul>
                 </div>
 
@@ -44,11 +41,16 @@
                 
                 <div id="content">
                     <!--<xsl:copy-of select="//div" />-->
-                    <xsl:apply-templates select="*" />
+                    <xsl:apply-templates select="*|text()" />
                 </div>
             </body>
         </html>
     </xsl:template>
+
+    <!-- //////////////////////////////////////////////////////////////////////////////////////////////////// -->
+    <!-- //////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+    <xsl:template match="title" />
 
     <xsl:template match="code">
         <pre class="code">

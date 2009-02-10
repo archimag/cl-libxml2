@@ -15,15 +15,15 @@
     <h2>Requirements</h2>
     <p><cl-libxml2 /> needs: </p>
     <ul>
-        <li><a href="http://www.xmlsoft.org/" rel="nofollow">libxml2</a> </li>
-        <li><a href="http://www.xmlsoft.org/XSLT.html" rel="nofollow">libxslt</a> (optional, necessary for xslt support) </li>
+        <li><a href="http://www.xmlsoft.org/">libxml2</a> </li>
+        <li><a href="http://www.xmlsoft.org/XSLT.html">libxslt</a> (optional, necessary for xslt support) </li>
         <li>&cffi; (=&gt; 0.10.2) </li>
-        <li><a href="http://common-lisp.net/project/lift/" rel="nofollow">lift</a> (optional, for tests)    </li>
+        <li><a href="http://common-lisp.net/project/lift/">lift</a> (optional, for tests)    </li>
         <li><a href="http://puri.b9.com/" rel="nofollow">puri</a> </li>
-        <li><a href="http://common-lisp.net/project/iterate/" rel="nofollow">iterate</a> </li>
-        <li><a href="http://www.weitz.de/flexi-streams/" rel="nofollow">flexi-streams</a> </li>
-        <li><a href="http://common-lisp.net/project/metabang-bind" rel="nofollow">metabang-bind</a> </li>
-        <li><a href="http://code.google.com/p/garbage-pools/" rel="nofollow">garbage-pools</a> (=&gt; 0.1.1) </li>
+        <li><a href="http://common-lisp.net/project/iterate/">iterate</a> </li>
+        <li><a href="http://www.weitz.de/flexi-streams/">flexi-streams</a> </li>
+        <li><a href="http://common-lisp.net/project/metabang-bind">metabang-bind</a> </li>
+        <li><a href="http://code.google.com/p/garbage-pools/">garbage-pools</a> (=&gt; 0.1.1) </li>
     </ul>
 
 
