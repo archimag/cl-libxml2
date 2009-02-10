@@ -6,7 +6,7 @@
     <title>Code Examples</title>
 
     <p>
-        <cl-libxml2 /> is a binding to C-library, resource management is necessary! Uses:
+        <cl-libxml2 /> is a binding to C-library, resource management is necessary! Use:
     <ul>
         <li>tree:release</li>
         <li>tree:with-parse-document</li>
@@ -41,7 +41,7 @@
             (gp:register-object (tree:parse #u"http://www.example.org/test.xml")))
     </code>
 
-    <h3>serialize to fil</h3>
+    <h3>serialize to file</h3>
     <code>
         (tree:with-parse-document (doc "&lt;root /&gt;")
             (tree:serialize doc #P"out.xml"))
