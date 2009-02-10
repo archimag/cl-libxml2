@@ -32,7 +32,7 @@
                         
                         <li><a href="examples.xml">Code Examples</a></li>
                         
-                        <li><a href="api.xml">API References</a></li>
+                        <!--<li><a href="api.xml">API References</a></li>-->
                     </ul>
                 </div>
 
