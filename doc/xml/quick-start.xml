@@ -103,7 +103,7 @@
 
     <code>
        (gp:with-garbage-pool ()
-         (let ((doc (gp:object-register (xtre:parse ...))))
+         (let ((doc (gp:object-register (xtree:parse ...))))
            (using-document doc)))
     </code>
 
