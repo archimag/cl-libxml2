@@ -37,7 +37,7 @@
     </code>
 
     <h2>Build C helper library</h2>
-    <p><libxslt /> for error handling require callback functions that called with a varying number of arguments of varying types (see xsltSetGenericErrorFunc). &cffi; is do not support it. Thus, C helper librare are required for translate <libxslt /> errors to lisp conditions. The helper library reside in the directory <strong>foreign</strong>. </p>
+    <p><libxslt /> for error handling require callback functions that called with a varying number of arguments of varying types (see xsltSetGenericErrorFunc). &cffi; is do not support it. Thus, C helper library are required for translate <libxslt /> errors to lisp conditions. The helper library reside in the directory <strong>foreign</strong>. </p>
 
     <code>
         $ cd /path/to/cl-libxml2
