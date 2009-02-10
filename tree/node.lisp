@@ -141,9 +141,10 @@
      (if (eql (node-type node) ,node-type)
          t
          (if throw-error
-             (error (format nil "node is not ~A" ,node-type))))))
+             (error (format nil "node (~A) is not ~A" (node-type node) ,node-type))))))
 
 (def-node-p element-p :xml-element-node)
+(def-node-p document-node-p :xml-document-node)
 (def-node-p attribute-p :xml-attribute-node)
 (def-node-p text-p :xml-element-text)
 (def-node-p comment-p :xml-comment-node)

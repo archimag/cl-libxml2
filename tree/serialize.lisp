@@ -98,21 +98,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod serialize ((el node) target)
-  (element-p el :throw-error t)
-  (let ((%doc (%xmlNewDoc (null-pointer))))
-    (unwind-protect
-         (progn 
-           (setf (foreign-slot-value %doc '%xmlDoc '%children) (pointer el))
-           (setf (foreign-slot-value %doc '%xmlDoc '%last) (pointer el))
-           (serialize (make-instance 'document
-                                     :pointer %doc)
-                      target))
-      (progn
-        (setf (foreign-slot-value %doc '%xmlDoc '%children) (null-pointer))
-        (setf (foreign-slot-value %doc '%xmlDoc '%last) (null-pointer))
-        (%xmlFreeDoc %doc)))))
-
-(defmethod serialize ((el node) target)
-  (element-p el :throw-error t)
-  (with-fake-document (doc el)
-    (serialize doc target)))
+  (case  (node-type el)
+    (:xml-element-node (with-fake-document (doc el)
+                         (serialize doc target)))
+    (:xml-document-node (serialize (make-instance 'document
+                                                  :pointer (pointer el))
+                                   target))
+    (otherwise (error "Bad node type: ~A" (node-type el)))))
+     

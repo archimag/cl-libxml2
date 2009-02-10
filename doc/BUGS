@@ -5,3 +5,5 @@
 * DONE xmlFree
    "Unhandled memory fault at #x0" by call "xmlFree" after "xmlDocDumpFormatMemoryEnc".
    Temporarily use "free" instead "xmlFree" (it works :-().
+* TODO
+  xpath:node-set-at always return xtree:node, it is a bad, necessary identify type from node-type call result.
