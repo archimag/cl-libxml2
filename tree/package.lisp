@@ -21,6 +21,7 @@
   (:use :cl :iter :cffi :libxml2.private :metabang.bind)
   (:nicknames :xtree)
   (:export
+   :version
    :node
    :document
    :ns
