@@ -171,6 +171,31 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; document-properties
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-libxml2-function ("xmlGetDocProperties" %xmlGetDocProperties) :int
+  (doc %xmlDocPtr))
+
+(define-libxml2-function ("xmlSetDocProperties" %xmlSetDocProperties) :void
+  (doc %xmlDocPtr)
+  (properties :int))
+
+(defun document-properties (doc)
+  (foreign-bitfield-symbols '%xmlDocProperties
+                            (%xmlGetDocProperties (pointer doc))))
+
+(defun (setf document-properties) (value doc)
+  (%xmlSetDocProperties (pointer doc)
+                        (foreign-bitfield-value '%xmlDocProperties
+                                                value)))
+
+(defun append-document-property (doc property)
+  (setf (document-properties doc)
+        (cons property
+              (document-properties doc))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; with-fake-document
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

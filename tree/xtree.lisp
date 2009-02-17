@@ -7,11 +7,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-foreign-library libxml2
-  (:unix (:or "libxml2.so"))
+  (:unix (:or "libxml2.so" "libxml2.so.2"))
   (t (:default "libxml2")))
 
 (with-simple-restart (skip "Skip loading foreign library libxml2.")
   (use-foreign-library libxml2))
+
+(define-foreign-library cllibxml2
+  (:unix (:or "cllibxml2.so"))
+  (t (:default "cllibxml2")))
+
+(use-foreign-library cllibxml2)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; base forward declarations

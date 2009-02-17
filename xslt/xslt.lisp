@@ -5,11 +5,11 @@
 ;;; Define and load libxslt
 
 (define-foreign-library libxslt
-  (:unix (:or "libxslt.so"))
+  (:unix (:or "libxslt.so" "libxslt.so.1"))
   (t (:default "libxslt")))
 
 (define-foreign-library libexslt
-  (:unix (:or "libexslt.so"))
+  (:unix (:or "libexslt.so" "libexslt.so.0"))
   (t (:default "libexslt")))
 
 
@@ -39,13 +39,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(define-foreign-library cllibxml2
-  (:unix (:or "cllibxml2.so"))
-  (t (:default "cllibxml2")))
-
-(use-foreign-library cllibxml2)
-
 
 (defcallback %generic-error-handler :void ((message :string))
   (if (boundp 'xtree::*libxml2-errors*)

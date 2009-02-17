@@ -47,6 +47,9 @@
    :serialize
    :release
 
+   :document-properties
+   :append-document-property
+
    :base-url
    
    :with-libxml2-object

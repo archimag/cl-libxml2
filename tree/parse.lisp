@@ -3,16 +3,42 @@
 (in-package #:libxml2.tree)
 
 
+;;;Enum xmlParserOption
+(defbitfield %xmlParserOption
+  (:xml-parse-recover 1)        ;; recover on errors
+  (:xml-parse-noent 2)          ;; substitute entities
+  (:xml-parse-dtdload 4)        ;; load the external subset
+  (:xml-parse-dtdattr 8)        ;; default DTD attributes
+  (:xml-parse-dtdvalid 16)      ;; validate with the DTD
+  (:xml-parse-noerror 32)       ;; suppress error reports
+  (:xml-parse-nowarning 64)     ;; suppress warning reports
+  (:xml-parse-pedantic 128)     ;; pedantic error reporting
+  (:xml-parse-noblanks 256)     ;; remove blank nodes
+  (:xml-parse-sax1 512)         ;; use the SAX1 interface internally
+  (:xml-parse-xinclude 1024)    ;; Implement XInclude substitition
+  (:xml-parse-nonet 2048)       ;; Forbid network access
+  (:xml-parse-nodict 4096)      ;; Do not reuse the context dictionnary
+  (:xml-parse-nsclean 8192)     ;; remove redundant namespaces declarations
+  (:xml-parse-nocdata 16384)    ;; merge CDATA as text nodes
+  (:xml-parse-noxincnode 32768) ;; do not generate XINCLUDE START/END nodes
+  (:xml-parse-compact 65536)    ;; compact small text nodes; no modification of the tree allowed afterwards (will possibly crash if you try to modify the tree)
+  (:xml-parse-old10 131072)     ;; parse using XML-1.0 before update 5
+  (:xml-parse-nobasefix 262144) ;; do not fixup XINCLUDE xml:base uris
+  (:xml-parse-huge 524288)      ;; relax any hardcoded limit from the parser
+)
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun parse (obj &key)
+(defun parse (obj &rest options)
   (make-instance 'document
-                 :pointer (parse/impl obj)))
+                 :pointer (parse/impl obj
+                                      (foreign-bitfield-value '%xmlParserOption options))))
 
-(defgeneric parse/impl (obj &key)
+(defgeneric parse/impl (obj options)
   (:documentation "parse xml"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -24,9 +50,9 @@
   (encoding :pointer)
   (options :int))
 
-(defmethod parse/impl ((path pathname) &key)
+(defmethod parse/impl ((path pathname) options)
   (with-foreign-string (_path (format nil "~A" path))
-    (%xmlReadFile _path (cffi:null-pointer) 0)))
+    (%xmlReadFile _path (cffi:null-pointer) options)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((str string))
@@ -38,28 +64,28 @@
   (encoding %xmlCharPtr)
   (options :int))
 
-(defmethod parse/impl ((str string)  &key)
+(defmethod parse/impl ((str string) options)
   (with-foreign-string (%str str)
     (%xmlReadDoc %str
                  (null-pointer)
                  (null-pointer)
-                 0)))
+                 options)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((uri puri))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmethod parse/impl ((uri puri:uri)  &key)
+(defmethod parse/impl ((uri puri:uri)  options)
   (with-foreign-string (_path (format nil "~A" uri))
-    (%xmlReadFile _path (cffi:null-pointer) 0)))
+    (%xmlReadFile _path (cffi:null-pointer) options)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((octets (array unsigned-byte)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmethod parse/impl ((octets array) &key)
+(defmethod parse/impl ((octets array) options)
   (flexi-streams:with-input-from-sequence (in octets)
-    (parse/impl in)))
+    (parse/impl in options)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; parse ((stream stream)
@@ -113,7 +139,7 @@
   (encoding %xmlCharPtr)
   (options :int))
 
-(defmethod parse/impl ((stream stream) &key)
+(defmethod parse/impl ((stream stream) options)
   (let ((*stream-for-xml-parse* stream))
     (with-foreign-string (%utf-8 "utf-8")
     (%xmlReadIO (%stream-reader-callback *stream-for-xml-parse*)
@@ -121,14 +147,14 @@
                 (cffi:null-pointer)
                 (cffi:null-pointer)
                 (cffi:null-pointer)
-                0))))
+                options))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; with-parse-document
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro with-parse-document ((var src) &rest body)
-  `(let ((,var (parse ,src)))
+(defmacro with-parse-document ((var src &rest options) &rest body)
+  `(let ((,var (parse ,src ,@options)))
      (unwind-protect
           (progn ,@body)
        (if ,var (release ,var)))))

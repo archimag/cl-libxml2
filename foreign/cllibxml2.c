@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#include <libxml/tree.h>
+
 typedef void (*lisp_level_error_func) (const char *string);
 
 void cl_libxml2_error_func (lisp_level_error_func lispFun, const char *msg, ...) {
@@ -30,3 +32,10 @@ void cl_libxml2_error_func (lisp_level_error_func lispFun, const char *msg, ...)
     }
 }
 
+int xmlGetDocProperties (xmlDocPtr doc) {
+    return doc->properties;
+}
+
+void xmlSetDocProperties (xmlDocPtr doc, int properties) {
+    doc->properties = properties;
+}
