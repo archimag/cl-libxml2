@@ -43,7 +43,7 @@
    :parse
    :with-custom-resolvers
    :resolve-string
-   :resolve-file/uri
+   :resolve-file/url
    :resolve-stream
    :serialize
    :release
