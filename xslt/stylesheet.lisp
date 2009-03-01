@@ -98,9 +98,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro defxsl (var src)
-  `(progn
-     (if (boundp (quote ,var)) (xtree:release ,var))
-     (defparameter ,var (xslt:parse-stylesheet ,src))))
+  (if (boundp (quote var))
+      (xtree:release var))
+  `(defparameter ,var (xslt:parse-stylesheet ,src)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; transform
