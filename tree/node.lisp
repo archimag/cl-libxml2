@@ -256,6 +256,9 @@
   (setf (base-url node)
         (format nil "~A" uri)))
 
+(defmethod (setf base-url) ((empty (eql nil)) (node node))
+  (xtree:remove-attribute node "base" "http://www.w3.org/XML/1998/namespace"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; process-xinclude
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
