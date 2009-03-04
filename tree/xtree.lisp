@@ -135,6 +135,6 @@
 
 (defgeneric base-url (obj))
 
-(defgeneric process-xinclude (obj))
+(defgeneric process-xinclude (obj &optional options))
 
 (defgeneric copy (obj))

@@ -266,8 +266,14 @@
 (define-libxml2-function ("xmlXIncludeProcessTree" %xmlXIncludeProcessTree) :int
   (node %xmlNodePtr))
 
-(defmethod process-xinclude ((node node))
-  (%xmlXincludeProcessTree (pointer node)))
+(define-libxml2-function ("xmlXIncludeProcessTreeFlags" %xmlXIncludeProcessTreeFlags) :int
+  (node %xmlNodePtr)
+  (flags :int))
+
+(defmethod process-xinclude ((node node) &optional options)
+  (if options
+      (%xmlXIncludeProcessTreeFlags (pointer node) options)
+      (%xmlXIncludeProcessTree (pointer node))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

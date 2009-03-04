@@ -41,6 +41,7 @@
    :process-instruction-p
    
    :parse
+   :parse-options
    :with-custom-resolvers
    :resolve-string
    :resolve-file/url

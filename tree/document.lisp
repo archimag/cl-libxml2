@@ -158,8 +158,14 @@
 (define-libxml2-function ("xmlXIncludeProcess" %xmlXIncludeProcess) :int
   (doc %xmlDocPtr))
 
-(defmethod process-xinclude ((doc document))
-  (%xmlXIncludeProcess (pointer doc)))
+(define-libxml2-function ("xmlXIncludeProcessFlags" %xmlXIncludeProcessFlags) :int
+  (doc %xmlDocPtr)
+  (flags :int))
+
+(defmethod process-xinclude ((doc document) &optional options)
+  (if options
+      (%xmlXIncludeProcessFlags (pointer doc) options)
+      (%xmlXIncludeProcess (pointer doc))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
