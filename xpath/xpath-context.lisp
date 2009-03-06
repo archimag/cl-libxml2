@@ -116,33 +116,37 @@
 
 (defvar *lisp-xpath-functions*)
 
-(defmacro with-%context ((var doc node ns-map) &rest body)  
-  `(let ((,var (%xmlXPathNewContext (pointer ,doc))))
-     #+sbcl(declare (sb-ext:muffle-conditions sb-ext:code-deletion-note))
-     (unwind-protect
-          (progn
-            (if (boundp 'libxml2.xpath::*lisp-xpath-functions*)
-                (gp:with-garbage-pool ()
-                  (iter (for (func name ns) in *lisp-xpath-functions*)
-                        (%xmlXPathRegisterFuncNS ,var
-                                                 (gp:cleanup-register (foreign-string-alloc (eval name))
-                                                                      #'foreign-string-free)
-                                                 (if ns
-                                                     (gp:cleanup-register (foreign-string-alloc (eval ns))
-                                                                          #'foreign-string-free)
-                                                     (null-pointer))
-                                                 (get-callback func)))))
-            (if ,node
-                (setf (foreign-slot-value %ctxt
-                                          '%xmlXPathContext
-                                          '%node)
-                      (pointer ,node)))
-            (if ,ns-map
-                (iter (for (prefix uri) in ,ns-map)
-                      (with-foreign-strings ((%prefix prefix) (%uri uri))
-                        (%xmlXPathRegisterNs ,var
-                                             %prefix
-                                             %uri))))
-            ,@body)
-       (%xmlXPathFreeContext %ctxt))))
+(defvar *private-xpath-context*)
 
+(defmacro with-%context ((var doc node ns-map) &rest body)
+  `(gp:with-garbage-pool (xpath-context-pool)
+     (let ((,var (if (boundp '*private-xpath-context*) *private-xpath-context*
+                     (gp:cleanup-register (%xmlXPathNewContext (pointer ,doc))
+                                          #'%xmlXPathFreeContext
+                                          xpath-context-pool))))
+       #+sbcl(declare (sb-ext:muffle-conditions sb-ext:code-deletion-note))
+       (if (boundp 'libxml2.xpath::*lisp-xpath-functions*)
+           (gp:with-garbage-pool ()
+             (iter (for (func name ns) in *lisp-xpath-functions*)
+                   (%xmlXPathRegisterFuncNS ,var
+                                            (gp:cleanup-register (foreign-string-alloc (eval name))
+                                                                 #'foreign-string-free)
+                                            (if ns
+                                                (gp:cleanup-register (foreign-string-alloc (eval ns))
+                                                                     #'foreign-string-free)
+                                                (null-pointer))
+                                            (get-callback func)))))
+       (if ,node
+           (setf (foreign-slot-value %ctxt
+                                     '%xmlXPathContext
+                                     '%node)
+                 (pointer ,node)))
+       (if ,ns-map
+           (iter (for (prefix uri) in ,ns-map)
+                 (with-foreign-strings ((%prefix prefix) (%uri uri))
+                   (%xmlXPathRegisterNs ,var
+                                        %prefix
+                                        %uri))))
+       ,@body)))
+
+  

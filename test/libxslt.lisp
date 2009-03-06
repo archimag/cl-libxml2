@@ -146,18 +146,20 @@
 
 ;;; custom-xslt-element-1
 
-(define-xslt-element hello-element (self input output)
-  (declare (ignore self input))
-  (append-child output (make-text "Hello world!")))
+(define-xslt-element msg-element (self input output)
+  (let ((str (find-string input (attribute-value self "select"))))
+    (when str
+      (append-child output (make-text str)))))
 
 (addtest (libxslt-test)
   custom-xslt-element-1
   (ensure-same "Hello world!"
-               (with-xslt-elements ((hello-element "hello" "www.sample.org"))
+               (with-xslt-elements ((msg-element "msg" "www.sample.org"))
                  (with-stylesheet (style "<?xml version=\"1.0\"?>
 <xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:my=\"www.sample.org\"  extension-element-prefixes=\"my\" version=\"1.0\">
     <xsl:template match=\"/\">
-        <result><my:hello /></result>
+        <xsl:variable name=\"var\">Hello world!</xsl:variable>
+        <result><my:msg select=\"$var\" /></result>
     </xsl:template>
 </xsl:stylesheet>")
                    (with-parse-document (doc "<root/>")
