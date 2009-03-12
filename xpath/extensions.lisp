@@ -39,7 +39,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro with-xpath-functions ((&rest funcs) &body body)
-  `(let ((*lisp-xpath-functions* ',funcs))
+  `(let ((*lisp-xpath-functions* (concatenate 'list
+                                              ',funcs
+                                              *lisp-xpath-functions*)))
      ,@body))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

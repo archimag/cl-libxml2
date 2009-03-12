@@ -30,4 +30,6 @@
    :xpath-parser-context
    :with-xpath-functions
    :define-xpath-function
+
+   :*lisp-xpath-functions*
    ))
