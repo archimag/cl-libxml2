@@ -198,7 +198,9 @@
 (defvar *lisp-xslt-elements*)
 
 (defmacro with-xslt-elements ((&rest els) &body body)
-  `(let ((*lisp-xslt-elements* ',els))
+  `(let ((*lisp-xslt-elements* (concatenate 'list
+                                            ',els
+                                            *lisp-xslt-elements*)))
      ,@body))
 
 

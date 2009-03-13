@@ -15,4 +15,5 @@
    :with-transform-result
    :register-exslt-extensions
    :define-xslt-element
+   :*lisp-xslt-elements*
    :with-xslt-elements))
