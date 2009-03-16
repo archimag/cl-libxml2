@@ -41,7 +41,8 @@
 (defmacro with-xpath-functions ((&rest funcs) &body body)
   `(let ((*lisp-xpath-functions* (concatenate 'list
                                               ',funcs
-                                              *lisp-xpath-functions*)))
+                                              (if (boundp '*lisp-xpath-functions*)
+                                                  *lisp-xpath-functions*))))
      ,@body))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
