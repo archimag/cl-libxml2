@@ -59,12 +59,12 @@
   (uri %xmlCharPtr))
 
 (defun attribute-value (element name &optional uri)
-  (foreign-string-to-lisp 
-   (with-foreign-string (%name name)
-     (if uri
-         (with-foreign-string (%uri uri)
-           (%xmlGetNsProp (pointer element) %name %uri))
-         (%xmlGetNsProp (pointer element) %name (null-pointer))))))
+  (identity (foreign-string-to-lisp 
+             (with-foreign-string (%name name)
+               (if uri
+                   (with-foreign-string (%uri uri)
+                     (%xmlGetNsProp (pointer element) %name %uri))
+                   (%xmlGetNsProp (pointer element) %name (null-pointer)))))))
 
 (define-libxml2-function ("xmlSetNsProp" %xmlSetNsProp) %xmlAttrPtr
   (node %xmlNodePtr)
