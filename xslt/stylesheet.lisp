@@ -130,6 +130,7 @@
   (profile :pointer)
   (userCtxt %xsltTransformContextPtr))
 
+
 (defgeneric transform (style obj))
 
 ;;; transform (style (doc document))
@@ -148,6 +149,12 @@
 
 (defmethod transform (style (el node))
   (with-fake-document (doc el)
+    (transform style doc)))
+
+;;; transform (style doc)
+
+(defmethod transform (style document)
+  (with-parse-document (doc document)
     (transform style doc)))
   
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

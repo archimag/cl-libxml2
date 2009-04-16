@@ -138,11 +138,12 @@
   (val %xmlXPathObjectPtr))
 
 (def-xo-cast (string :xpath-string)
-  (let ((%str (%xmlXPathCastToString (pointer obj))))
-    (unwind-protect
-         (let ((str (foreign-string-to-lisp %str)))
-           (unless (string= str "") str))
-      (libxml2.tree::%xmlFree %str))))
+    (let ((%str (%xmlXPathCastToString (pointer obj))))
+      (unless (null-pointer-p %str)
+        (unwind-protect
+             (let ((str (foreign-string-to-lisp %str)))
+               (unless (string= str "") str))
+          (libxml2.tree::%xmlFree %str)))))
 
 ;;; xpath-object-cast (obj (type (eql 'number)))
 

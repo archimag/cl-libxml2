@@ -40,9 +40,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun parse (obj &rest options)
-  (make-instance 'document
-                 :pointer (parse/impl obj
-                                      (foreign-bitfield-value '%xmlParserOption options))))
+  (let ((ptr (parse/impl obj
+                         (foreign-bitfield-value '%xmlParserOption options))))
+    (unless (null-pointer-p ptr)
+      (make-instance 'document
+                     :pointer ptr))))
 
 (defgeneric parse/impl (obj options)
   (:documentation "parse xml"))
