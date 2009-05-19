@@ -198,9 +198,11 @@
 (defvar *lisp-xslt-elements*)
 
 (defmacro with-xslt-elements ((&rest els) &body body)
-  `(let ((*lisp-xslt-elements* (concatenate 'list
-                                            ',els
-                                            *lisp-xslt-elements*)))
+  `(let ((*lisp-xslt-elements* (if (boundp '*lisp-xslt-elements*)
+                                   (concatenate 'list
+                                                ',els
+                                                *lisp-xslt-elements*)
+                                   ',els)))
      ,@body))
 
 
