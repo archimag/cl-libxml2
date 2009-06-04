@@ -173,5 +173,7 @@
 
 (defmacro defxml (var src)
   `(progn
-     (if (boundp (quote ,var)) (xtree:release ,var))
+     (if (and (boundp (quote ,var))
+              (typep ,var 'xtree::libxml2-cffi-object-wrapper))
+         (xtree:release ,var))
      (defparameter ,var (xtree:parse ,src))))
