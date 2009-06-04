@@ -1,9 +1,9 @@
 ;;; cl-libxml2-xfactory.asd
 
-(defpackage :cl-libxml2-xfactory-system
+(defpackage :xfactory-system
   (:use :cl :asdf))
 
-(in-package :cl-libxml2-xfactory-system)
+(in-package :xfactory-system)
 
 (defsystem :cl-libxml2-xfactory
     :depends-on (#:cl-libxml2)
