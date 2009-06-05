@@ -5,7 +5,7 @@
 
 (in-package :xfactory-system)
 
-(defsystem :cl-libxml2-xfactory
+(defsystem :xfactory
     :depends-on (#:cl-libxml2)
     :components ((:module :xfactory
                           :components ((:file "packages")
