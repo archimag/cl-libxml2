@@ -27,7 +27,7 @@
                                              (cdr tree)))
           ((atom tree) tree)
           (t (iter (for child in tree)
-                   (collect (tree-to-commands child))))))))
+                   (collect (tree-to-commands child)))))))
 
 ;;; element-maker
 
@@ -40,24 +40,32 @@
   (let ((tag (car args))
         (childs (if (cdr args)
                     (tree-to-commands (cdr args)))))
-    `(let ((el (xtree:make-element (tagname ,tag)
-                                   (maker-namespace ,maker-symbol)
-                                   (maker-prefix ,maker-symbol))))
-       (let ((*node* el))
-          ,@childs)
-       (if (boundp '*node*)
-           (xtree:append-child *node*
-                               el)
-           el))))
+    `(let ((*node* (if (boundp '*node*)
+                       (xtree:make-child-element *node*
+                                                 (tagname ,tag)
+                                                 (maker-namespace ,maker-symbol)
+                                                 (maker-prefix ,maker-symbol))
+                       (xtree:make-element (tagname ,tag)
+                                           (maker-namespace ,maker-symbol)
+                                           (maker-prefix ,maker-symbol)))))
+       ,@childs
+       *node*)))
 
 ;;; attribute-maker
 
-(defclass attribute
+(defclass attribute-maker ()
+  ((namespace :initarg :namespace :initform nil :reader maker-namespace)
+   (prefix :initarg :prefix :initform nil :reader maker-prefix)))
 
+(defmethod tree-to-commands/impl (maker-symbol (maker-class (eql 'attribute-maker)) args)
+  `(setf (xtree:attribute-value *node*
+                                (tagname ,(car args))
+                                (maker-namespace ,maker-symbol))
+         ,(second args)))
 
 ;;; xfactory
     
-(defmacro xfactory ((&rest makers) &body body)
+(defmacro xfactory ((&rest makers) &body args)
   (let ((*makers* (iter (for maker in makers)
                         (collect (cons (first maker)
                                        (second maker))))))    
@@ -65,10 +73,18 @@
                       (collect `(,(car maker) (make-instance
                                                (quote ,(second maker))
                                                ,@(cddr maker))))))
-          (commands (tree-to-commands body)))
+          (commands (tree-to-commands args)))
     `(let (,@vars)
        ,@commands))))
-         
-  
+
+    
+
 ;;(xml ((node element-maker :namespace "http://www.sample.org"))
 ;;     (node :root))
+
+;; (xfactory ((E element-maker)
+;;            (A attribute-maker))
+;;           (E :root
+;;              (A :href "www.kuban.ru")))
+
+     
