@@ -48,6 +48,35 @@
                        (namespace-uri el)
                        (namespace-prefix el)))))
 
+;;; make-child-element
+
+(addtest (tree-test)
+  make-child-element-1
+  (ensure-same '("root" :xml-element-node  "child")
+               (with-libxml2-object (el (make-element "root"))
+                 (let ((child (make-child-element el "child")))
+                   (list (local-name (parent child))
+                         (node-type child)
+                         (local-name child))))))
+
+(addtest (tree-test)
+  make-child-element-2
+  (ensure-same '("child" "www.sample.org" "my")
+               (with-libxml2-object (el (make-element "root" "www.sample.org" "my"))
+                 (let ((child (make-child-element el "child" "www.sample.org")))
+                 (list (local-name child)
+                       (namespace-uri child)
+                       (namespace-prefix child))))))
+
+(addtest (tree-test)
+  make-child-element-3
+  (ensure-same '("child" "www.sample.org" "my2")
+               (with-libxml2-object (el (make-element "root" "www.sample.org" "my"))
+                 (let ((child (make-child-element el "child" "www.sample.org" "my2")))
+                 (list (local-name child)
+                       (namespace-uri child)
+                       (namespace-prefix child))))))
+
 ;;; make-comment
 
 (addtest (tree-test)

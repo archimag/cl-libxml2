@@ -93,7 +93,20 @@
                                (null-pointer))))))
     (make-instance 'node
                    :pointer %node)))
-                
+
+(defun make-child-element (parent name &optional href prefix)
+  (let* ((ns (if prefix
+                 (search-ns-by-prefix parent prefix)
+                 (search-ns-by-href parent href)))
+         (node (if ns
+                   (with-foreign-string (%name name)
+                     (make-instance 'node
+                                    :pointer (%xmlNewNode (pointer ns)
+                                                          %name)))
+                   (make-element name href prefix))))
+    (append-child parent node)))
+                     
+
                
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; make-text

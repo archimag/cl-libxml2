@@ -24,13 +24,45 @@
 (defwrapper ns %xmlNs)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; make-ns
+;; search-ns
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-libxml2-function ("xmlSearchNs" %xmlSearchNs) %xmlNsPtr
   (doc %xmlDocPtr)
   (node %xmlNodePtr)
   (prefix %xmlCharPtr))
+
+(defun search-ns-by-prefix (element prefix)
+  (gp:with-garbage-pool ()
+    (let ((%ns (%xmlSearchNs (pointer (document element))
+                             (pointer element)
+                             (if prefix
+                                 (gp:cleanup-register (foreign-string-alloc prefix) #'foreign-string-free)
+                                 (null-pointer)))))
+      (unless (null-pointer-p %ns)
+        (make-instance 'ns :pointer %ns)))))
+  
+
+(define-libxml2-function ("xmlSearchNsByHref" %xmlSearchNsByHref) %xmlNsPtr
+  (doc %xmlDocPtr)
+  (node %xmlNodePtr)
+  (href %xmlCharPtr))
+
+(defun search-ns-by-href (element href)
+  (gp:with-garbage-pool ()
+    (let ((%ns (%xmlSearchNsByHref (pointer (document element))
+                                   (pointer element)
+                                   (if href
+                                       (gp:cleanup-register (foreign-string-alloc href) #'foreign-string-free)
+                                       (null-pointer)))))
+      (unless (null-pointer-p %ns)
+        (make-instance 'ns :pointer %ns)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; make-ns
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (defun generate-ns-prefix (element)
   (iter (for i from 1)
@@ -51,24 +83,6 @@
                             (%xmlNewNs (pointer element)
                                        %href
                                        %prefix))))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; search-ns-by-href
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(define-libxml2-function ("xmlSearchNsByHref" %xmlSearchNsByHref) %xmlNsPtr
-  (doc %xmlDocPtr)
-  (node %xmlNodePtr)
-  (href %xmlCharPtr))
-
-(defun search-ns-by-href (element href)
-  (let ((%ns (with-foreign-string (%href href)
-               (%xmlSearchNsByHref (pointer (document element))
-                                   (pointer element)
-                                   %href))))
-    (unless (null-pointer-p %ns)
-      (make-instance 'ns :pointer %ns))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; namespace-uri

@@ -29,6 +29,7 @@
 
    :make-document
    :make-element
+   :make-child-element
    :make-text
    :make-comment
    :make-process-instruction
