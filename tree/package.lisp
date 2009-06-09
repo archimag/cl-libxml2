@@ -33,6 +33,7 @@
    :make-text
    :make-comment
    :make-process-instruction
+   :make-ns
    :copy
 
    :element-p
