@@ -123,10 +123,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro with-libxml2-object ((var value) &rest body)
-  `(unwind-protect
-        (let ((,var ,value))
-          ,@body)
-     (if ,value (release ,value))))
+  `(let ((,var ,value))
+     (unwind-protect 
+          (progn ,@body)
+       (if ,var (release ,var)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
