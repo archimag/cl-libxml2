@@ -2,6 +2,21 @@
 
 (in-package #:libxml2.tree)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; aux
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun encoding-string (encoding)
+  (if (keywordp encoding)
+      (string-downcase (symbol-name encoding))
+      encoding))
+
+(defun format-flag (format)
+  (if format
+      1
+      0))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; serialize
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -12,21 +27,19 @@
 ;;; serialize ((doc document) (filename pathname))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define-libxml2-function ("xmlSaveFile" %xmlSaveFile) :int
-  (filename :pointer)
-  (doc %xmlDocPtr))
-
-(define-libxml2-function ("xmlSaveFileEnc" %xmlSaveFileEnc) :int
+(define-libxml2-function ("xmlSaveFormatFileEnc" %xmlSaveFormatFileEnc) :int
   (filename :pointer)
   (doc %xmlDocPtr)
-  (encoding %xmlCharPtr))
+  (encoding %xmlCharPtr)
+  (format :int))
 
-(defmethod serialize ((doc document) (filename pathname) &key (encoding :utf-8))
+(defmethod serialize ((doc document) (filename pathname) &key (encoding :utf-8) (format nil))
   (with-foreign-strings ((%path (format nil "~A" filename))
-                         (%encoding (format nil "~A" encoding)))
-    (%xmlSaveFileEnc %path
-                     (pointer doc)
-                     %encoding)))
+                         (%encoding (encoding-string encoding)))
+    (%xmlSaveFormatFileEnc %path
+                           (pointer doc)
+                           %encoding
+                           (format-flag format))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; serialize ((doc document) (s (eql :to-string)))
@@ -39,15 +52,15 @@
   (txt_encoding :pointer)
   (format :int))
 
-(defmethod serialize ((doc document) (s (eql :to-string)) &key (encoding :utf-8))
-  (with-foreign-string (%encoding (format nil "~A" encoding))
+(defmethod serialize ((doc document) (s (eql :to-string)) &key (encoding :utf-8) (format nil))
+  (with-foreign-string (%encoding (encoding-string encoding))
     (with-foreign-pointer (%xml-string (foreign-type-size :pointer))
       (with-foreign-pointer (%xml-string-len (foreign-type-size :pointer))
         (%xmlDocDumpFormatMemoryEnc (pointer doc)
                                     %xml-string
                                     %xml-string-len
                                     %encoding
-                                    1)
+                                    (format-flag format))
         (let ((%ptr (mem-ref %xml-string :pointer)))
           (unwind-protect 
                (foreign-string-to-lisp %ptr)
@@ -67,7 +80,7 @@
 
 (defcallback %write-string-stream :int ((context :pointer) (buffer :pointer) (len :int))
   (declare (ignore context))
-  (write (foreign-string-to-lisp buffer :count len) :stream *stream-for-xml-serialize*)
+  (write-string (foreign-string-to-lisp buffer :count len) *stream-for-xml-serialize*)
   len)
 
 (defun %stream-writer-callback (stream)
@@ -76,10 +89,11 @@
       (cffi:callback %write-string-stream)
       (cffi:callback %write-binary-stream)))
 
-(define-libxml2-function ("xmlSaveFileTo" %xmlSaveFileTo) :int
+(define-libxml2-function ("xmlSaveFormatFileTo" %xmlSaveFormatFileTo) :int
   (buf %xmlOutputBufferPtr)
   (cur %xmlDocPtr)
-  (encoding %xmlCharPtr))
+  (encoding %xmlCharPtr)
+  (format :int))
 
 (define-libxml2-function ("xmlOutputBufferCreateIO" %xmlOutputBufferCreateIO) %xmlOutputBufferPtr
   (iowrite :pointer)
@@ -95,27 +109,29 @@
 (define-libxml2-function ("xmlFindCharEncodingHandler" %xmlFindCharEncodingHandler) %xmlCharEncodingHandlerPtr
   (name %xmlCharPtr))
 
-(defmethod serialize ((doc document) (stream stream) &key (encoding :utf-8))
+(defmethod serialize ((doc document) (stream stream) &key (encoding :utf-8) (format nil))
   (with-foreign-string (%encoding (format nil "~A" encoding))
     (let ((*stream-for-xml-serialize* stream))
-      (%xmlSaveFileTo (%xmlOutputBufferCreateIO (%stream-writer-callback stream)
+      (%xmlSaveFormatFileTo (%xmlOutputBufferCreateIO (%stream-writer-callback stream)
                                                 (null-pointer)
                                                 (null-pointer)
                                                 (%xmlFindCharEncodingHandler %encoding))
                       (pointer doc)
-                      %encoding))))
+                      %encoding
+                      (if format 1 0)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; serialize ((el node) target)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmethod serialize ((el node) target &key (encoding :utf-8))
+(defmethod serialize ((el node) target &key (encoding :utf-8) (format nil))
   (case  (node-type el)
     (:xml-element-node (with-fake-document (doc el)
-                         (serialize doc target)))
+                         (serialize doc target :format format)))
     (:xml-document-node (serialize (make-instance 'document
                                                   :pointer (pointer el))
                                    target
-                                   :encoding encoding))
+                                   :encoding encoding
+                                   :format format))
     (otherwise (error "Bad node type: ~A" (node-type el)))))
      
