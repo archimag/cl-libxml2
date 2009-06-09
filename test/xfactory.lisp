@@ -17,8 +17,8 @@
 (addtest (xfactory-test)
          xfactory-1
          (ensure-same '(:xml-element-node "root" nil nil)
-                      (with-libxml2-object (el (xfactory ((E element-maker))
-                                                         (E :root)))
+                      (with-libxml2-object (el (with-xfactory ((E))
+                                                 (E :root)))
                         (list (node-type el)
                               (local-name el)
                               (namespace-uri el)
@@ -27,8 +27,8 @@
 (addtest (xfactory-test)
          xfactory-2
          (ensure-same '(:xml-element-node "root" "www.sample.org" nil)
-                      (with-libxml2-object (el (xfactory ((E element-maker :namespace "www.sample.org"))
-                                                         (E :root)))
+                      (with-libxml2-object (el (with-xfactory ((E "www.sample.org"))
+                                                 (E :root)))
                         (list (node-type el)
                               (local-name el)
                               (namespace-uri el)
@@ -37,8 +37,8 @@
 (addtest (xfactory-test)
          xfactory-3
          (ensure-same '(:xml-element-node "root" "www.sample.org" "my")
-                      (with-libxml2-object (el (xfactory ((E element-maker :namespace "www.sample.org" :prefix "my"))
-                                                         (E :root)))
+                      (with-libxml2-object (el (with-xfactory ((E "www.sample.org" "my"))
+                                                 (E :root)))
                         (list (node-type el)
                               (local-name el)
                               (namespace-uri el)
@@ -47,21 +47,21 @@
 (addtest (xfactory-test)
          xfactory-4
          (ensure-same '("a" "b" "c")
-                      (with-libxml2-object (el (xfactory ((E element-maker))
-                                                         (E :root
-                                                            (E :a)
-                                                            (E :b)
-                                                            (E :c))))
+                      (with-libxml2-object (el (with-xfactory ((E))
+                                                 (E :root
+                                                    (E :a)
+                                                    (E :b)
+                                                    (E :c))))
                         (iter (for node in-child-nodes el)
                               (collect (xtree:local-name node))))))
                         
 (addtest (xfactory-test)
          xfactory-4
          (ensure-same '("a1" "a2" "a3")
-                      (with-libxml2-object (el (xfactory ((p element-maker))
-                                                         (p :root
-                                                            (iter (for i from 1 to 3)
-                                                                  (p (format nil "a~A" i))))))
+                      (with-libxml2-object (el (with-xfactory ((p))
+                                                 (p :root
+                                                    (iter (for i from 1 to 3)
+                                                          (p (format nil "a~A" i))))))
                         (iter (for node in-child-nodes el)
                               (collect (xtree:local-name node))))))
 
