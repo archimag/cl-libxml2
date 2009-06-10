@@ -193,4 +193,3 @@
 
 (defun run-libxslt-tests ()
   (libxml2.test:run-libxml2-tests))
-  ;;(run-tests :suite 'libxslt-test :report-pathname nil))
