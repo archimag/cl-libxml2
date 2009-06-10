@@ -31,6 +31,7 @@
    :make-element
    :make-child-element
    :make-text
+   :make-child-text
    :make-comment
    :make-process-instruction
    :make-ns
@@ -57,6 +58,7 @@
    :base-url
    
    :with-libxml2-object
+   :with-object
    :with-parse-document
    :with-fake-document
    :defxml

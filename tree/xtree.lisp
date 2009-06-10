@@ -128,6 +128,9 @@
           (progn ,@body)
        (if ,var (release ,var)))))
 
+(defmacro with-object ((var value) &rest body)
+  `(with-libxml2-object (,var ,value) ,@body))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; generic
