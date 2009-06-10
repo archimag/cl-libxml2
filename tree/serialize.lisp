@@ -106,7 +106,7 @@
   (name %xmlCharPtr))
 
 (defmethod serialize ((doc document) (stream stream) &key (encoding :utf-8) (pretty-print nil))
-  (with-foreign-string (%encoding (format nil "~A" encoding))
+  (with-foreign-string (%encoding (encoding-string encoding))
     (let ((*stream-for-xml-serialize* stream))
       (%xmlSaveFormatFileTo (%xmlOutputBufferCreateIO (%stream-writer-callback stream)
                                                 (null-pointer)
