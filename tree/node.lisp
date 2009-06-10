@@ -120,6 +120,16 @@
                  :pointer (with-foreign-string (%data data)
                             (%xmlNewText %data))))
 
+(define-libxml2-function ("xmlNodeAddContent" %xmlNodeAddContent) :void
+  (parent %xmlNodePtr)
+  (content %xmlCharPtr))
+
+(defun make-child-text (node content)
+  (with-foreign-string (%content content)
+    (%xmlNodeAddContent (pointer node)
+                        %content)))
+                      
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; make-comment
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
