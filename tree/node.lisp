@@ -146,14 +146,21 @@
 ;; make-process-instruction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define-libxml2-function ("xmlNewPI" %xmlNewPI) %xmlNodePtr
+(define-libxml2-function ("xmlNewDocPI" %xmlNewDocPI) %xmlNodePtr
+  (doc %xmlDocPtr)
   (name %xmlCharPtr)
   (content %xmlCharPtr))
 
-(defun make-process-instruction (name content)
+(defun make-process-instruction (name content &optional document)
   (make-instance 'node
                  :pointer (with-foreign-strings ((%name name) (%content content))
-                            (%xmlNewPI %name %content))))
+                            (%xmlNewDocPI (if document
+                                              (pointer document)
+                                              (null-pointer))
+                                          %name
+                                          %content))))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; predicates
