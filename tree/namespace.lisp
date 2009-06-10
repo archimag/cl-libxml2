@@ -90,11 +90,6 @@
 
 (defgeneric namespace-uri (obj))
 
-(defmethod namespace-uri ((node node))
-   (let ((%ns (wrapper-slot-value node '%ns)))
-     (unless (null-pointer-p %ns)
-       (cffi:foreign-string-to-lisp (cffi:foreign-slot-value %ns '%xmlNs '%href)))))
-
 (defmethod namespace-uri ((ns ns))
   (foreign-string-to-lisp (wrapper-slot-value ns '%href)))
 
@@ -103,11 +98,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defgeneric namespace-prefix (obj))
-
-(defmethod namespace-prefix ((node node))
-   (let ((ns (wrapper-slot-wrapper node '%ns 'ns)))
-     (if ns (cffi:foreign-string-to-lisp
-              (wrapper-slot-value ns '%prefix)))))
 
 (defmethod namespace-prefix ((ns ns))
   (foreign-string-to-lisp (wrapper-slot-value ns '%prefix)))
