@@ -2,7 +2,7 @@
 
 body {
     font-family: verdana, arial;
-
+    font-size: 90%;
     margin: 0;
     padding: 0;
 }
@@ -88,11 +88,49 @@ h1 {
 
 pre.code {
     background-color: #eeeeee;
-    border: 1px solid #d0d0d0;
+    /*font-family: Courier New;
     font-size: 110%;
+       */
+    font-family: Courier;
+    border: 1px solid #d0d0d0;
     padding: 10px;
 }
 
-pre.code span.text {
-    background-color: green;
+/* apidoc */
+
+.apidoc {
+    margin-top: 15px;
+    border: 1px solid #d0d0d0;
+    width: 90%;
+    font-size: 90%;
+
+}
+
+.apidoc > div {
+    padding: 5px;
+    padding-left: 40px;
+}
+
+.apidoc > div:first-child {
+    /*background-color: #dfebf1;*/
+    /*color: navy;*/
+    /*background-color: #284452;*/
+    background-color: #c5e3b5;
+    color: black;
+    border-bottom: 1px solid #d0d0d0;
+    padding: 3px;
+}
+
+.apidoc > div > ul {
+    margin: 0;
+    padding: 0;
+    padding-left: 20px;
+}
+
+.apidoc > div > div:first-child {
+    font-weight: bold;
+    /*color: #6a5eab;*/
+    /*color: navy;*/
+    margin-left: -20px;
+
 }

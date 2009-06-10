@@ -280,4 +280,46 @@
         &lt;/result&gt;
         "
     </code>
+
+    <h2>X-Factory system</h2>
+    <code>
+(xtree:with-object (doc (xfactory:with-document-factory 
+                            ((XUL "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" "xul")
+                             (SVG "http://www.w3.org/2000/svg" "svg"))
+                          (XUL "window"
+                               (xfactory:namespace "http://www.w3.org/1999/xlink" "xlink")
+                               (XUL "vbox"
+                                    (xfactory:attribute :flex 1
+                                                        :width 500)
+                                    (loop for i from 1 to 3
+                                       do (XUL "label" 
+                                               (xfactory:text "text ~A" i)))
+                                    (SVG "svg"
+                                         (xfactory:attribute :width "500px"
+                                                             :height "500px")
+                                         (SVG "a"
+                                              (xfactory:attribute "xlink:href" "http://www.w3.org")
+                                              (SVG "rect"
+                                                   (xfactory:attribute :x 100
+                                                                       :y 100
+                                                                       :width 300
+                                                                       :height 200
+                                                                       :fill "red"))))))))
+  (xtree:serialize doc *standard-output* :pretty-print t))
+==>
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;xul:window xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:xlink="http://www.w3.org/1999/xlink"&gt;
+  &lt;xul:vbox flex="1" width="500"&gt;
+    &lt;xul:label&gt;text 1&lt;/xul:label&gt;
+    &lt;xul:label&gt;text 2&lt;/xul:label&gt;
+    &lt;xul:label&gt;text 3&lt;/xul:label&gt;
+    &lt;svg:svg xmlns:svg="http://www.w3.org/2000/svg" width="500px" height="500px"&gt;
+      &lt;svg:a xlink:href="http://www.w3.org"&gt;
+        &lt;svg:rect x="100" y="100" width="300" height="200" fill="red"/&gt;
+      &lt;/svg:a&gt;
+    &lt;/svg:svg&gt;
+  &lt;/xul:vbox&gt;
+&lt;/xul:window&gt;
+  
+    </code>
 </page>
