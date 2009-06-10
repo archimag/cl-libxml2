@@ -133,11 +133,14 @@
 (define-libxml2-function ("xmlNewDoc" %xmlNewDoc) %xmlDocPtr
   (version %xmlCharPtr))
 
-(defun make-document (document-element)
-  (let ((%doc (%xmlNewDoc (null-pointer))))
-    (%xmlDocSetRootElement %doc (pointer document-element))
-    (make-instance 'document
-                   :pointer %doc)))
+(defun make-document (&optional document-element)
+  (if document-element
+      (let ((%doc (%xmlNewDoc (null-pointer))))
+        (%xmlDocSetRootElement %doc (pointer document-element))
+        (make-instance 'document
+                       :pointer %doc))
+      (make-instance 'document
+                     :pointer (%xmlNewDoc (null-pointer)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
