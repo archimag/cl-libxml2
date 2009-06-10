@@ -1,5 +1,10 @@
 ;; cl-libxml2.asd
 
+(defpackage :cl-libxml2-system
+  (:use :cl :asdf))
+
+(in-package :cl-libxml2-system)
+
 (defsystem :cl-libxml2
   :depends-on (#:cffi #:iterate #:puri #:flexi-streams #:alexandria #:garbage-pools #:metabang-bind)
   :components
