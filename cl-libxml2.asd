@@ -6,8 +6,8 @@
   ((:module :tree
             :serial t
             :components
-            ((:file "package")
-             (:file "xtree" :depends-on ("package"))
+            ((:file "packages")
+             (:file "xtree" :depends-on ("packages"))
              (:file "error" :depends-on ("xtree"))
              (:file "namespace" :depends-on ("error"))
              (:file "attribute" :depends-on ("error"))
