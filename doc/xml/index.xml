@@ -24,7 +24,7 @@
 
             <tr>
                 <td><strong>Licence:</strong></td>
-                <td>MIT</td>
+                <td><a href="http://opensource.franz.com/preamble.html">Lisp LGPL</a></td>
             </tr>
 
         </tbody>

@@ -50,7 +50,7 @@
 
     <code>
         $ ln -sf `pwd`/cl-libxml2/cl-libxml2.asd /path/to/your/registry/
-        $ ln -sf `pwd`/cl-libxml2/cl-libxml2-xslt.asd /path/to/your/registry/
+        $ ln -sf `pwd`/cl-libxml2/cl-libxslt.asd /path/to/your/registry/
     </code>
 
     <p>The compile cl-libxlm2 without xslt using: </p>
@@ -60,18 +60,11 @@
 
     <p>Or with xslt using </p>
     <code>
-        * (asdf:operate &#x27;asdf:load-op :cl-libxml2-xslt)
+        * (asdf:operate &#x27;asdf:load-op :cl-libxslt)
     </code>
 
     <h2>Run test suite (optional)</h2>
     <p>The test suite can be executed using the <strong>asdf</strong> <i>test-op</i> operator. If <cl-libxml2 /> has not been loaded with <i>asdf:load-op</i>, the <i>asdf:test-op</i> operator will automatically load <cl-libxml2 />. </p>
-
-    <p>Register the .asd files: </p>
-
-    <code>
-        $ ln -sf `pwd`/cl-libxml2/cl-libxml2-test.asd /path/to/your/registry/
-        $ ln -sf `pwd`/cl-libxml2/cl-libxml2-xslt-test.asd /path/to/your/registry/
-    </code>
 
     <p>Run tests without xslt: </p>
     <code>
@@ -80,7 +73,7 @@
 
     <p>With xslt: </p>
     <code>
-        * (asdf:operate &#x27;asdf:test-op :cl-libxml2-xslt)
+        * (asdf:operate &#x27;asdf:test-op :cl-libxslt)
     </code>
 
     <h2>Gentoo Linux</h2>
