@@ -17,7 +17,7 @@
 (addtest (xfactory-test)
          xfactory-1
          (ensure-same '(:xml-element-node "root" nil nil)
-                      (with-libxml2-object (el (with-xfactory ((E))
+                      (with-object (el (with-element-factory ((E))
                                                  (E :root)))
                         (list (node-type el)
                               (local-name el)
@@ -27,7 +27,7 @@
 (addtest (xfactory-test)
          xfactory-2
          (ensure-same '(:xml-element-node "root" "www.sample.org" nil)
-                      (with-libxml2-object (el (with-xfactory ((E "www.sample.org"))
+                      (with-object (el (with-element-factory ((E "www.sample.org"))
                                                  (E :root)))
                         (list (node-type el)
                               (local-name el)
@@ -37,7 +37,7 @@
 (addtest (xfactory-test)
          xfactory-3
          (ensure-same '(:xml-element-node "root" "www.sample.org" "my")
-                      (with-libxml2-object (el (with-xfactory ((E "www.sample.org" "my"))
+                      (with-object (el (with-element-factory ((E "www.sample.org" "my"))
                                                  (E :root)))
                         (list (node-type el)
                               (local-name el)
@@ -47,7 +47,7 @@
 (addtest (xfactory-test)
          xfactory-4
          (ensure-same '("a" "b" "c")
-                      (with-libxml2-object (el (with-xfactory ((E))
+                      (with-object (el (with-element-factory ((E))
                                                  (E :root
                                                     (E :a)
                                                     (E :b)
@@ -58,7 +58,7 @@
 (addtest (xfactory-test)
          xfactory-4
          (ensure-same '("a1" "a2" "a3")
-                      (with-libxml2-object (el (with-xfactory ((p))
+                      (with-object (el (with-element-factory ((p))
                                                  (p :root
                                                     (iter (for i from 1 to 3)
                                                           (p (format nil "a~A" i))))))
