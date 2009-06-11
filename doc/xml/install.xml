@@ -30,10 +30,10 @@
     <h2>Download</h2>
     <p>Download <a href="http://cl-libxml2.googlecode.com/files/cl-libxml2-0.3.tar.bz2" rel="nofollow">tarballs</a> 
     <br />
-    Or get it from svn: </p>
+    Or get it from git: </p>
 
     <code>
-        $ svn checkout http://cl-libxml2.googlecode.com/svn/trunk/ cl-libxml2
+        $ git clone git://github.com/archimag/cl-libxml2.git
     </code>
 
     <h2>Build C helper library</h2>
