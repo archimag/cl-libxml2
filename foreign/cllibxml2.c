@@ -1,4 +1,10 @@
 // cl_libxml2.c
+//
+// This file is part of the cl-libxml2 library, released under Lisp-LGPL.
+// See file COPYING for details.
+//
+// Author: Moskvitin Andrey <archimag@gmail.com>
+
 
 #include <stdio.h>
 #include <stdarg.h>

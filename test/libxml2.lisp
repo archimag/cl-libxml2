@@ -1,4 +1,9 @@
-;; test.lisp
+;;; test.lisp
+;;;
+;;; This file is part of the cl-libxml2 library, released under Lisp-LGPL.
+;;; See file COPYING for details.
+;;;
+;;; Author: Moskvitin Andrey <archimag@gmail.com>
 
 (defpackage :libxml2.test
   (:use :cl :iter :libxml2.tree :lift :libxml2.xpath :metabang.bind)

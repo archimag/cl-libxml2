@@ -1,4 +1,10 @@
-;; cl-libxml2.asd
+;;; cl-libxml2.asd
+;;;
+;;; This file is part of the cl-libxml2 library, released under Lisp-LGPL.
+;;; See file COPYING for details.
+;;;
+;;; Author: Moskvitin Andrey <archimag@gmail.com>
+
 
 (defpackage :cl-libxml2-system
   (:use :cl :asdf))
@@ -56,4 +62,5 @@
          (failures (funcall (intern (symbol-name 'failures) :lift) test-results)))
     (if (or errors failures)
         (error "test-op failed: ~A"
-               (concatenate 'list errors failures)))))
+               (concatenate 'list errors failures))
+        (print test-results))))
