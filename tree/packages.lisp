@@ -25,7 +25,7 @@
    :node
    :document
    :ns
-   :attribute
+   ;;:attribute
 
    :make-document
    :make-element

@@ -1,7 +1,7 @@
 ;; test.lisp
 
 (defpackage :xfactory.test
-  (:use :cl :iter :libxml2.tree :lift :libxml2.xpath :metabang.bind :xfactory)
+  (:use :cl :iter :lift :xfactory :xtree)
   (:export :xfactory-test
            :run-xfactory-tests))
 
