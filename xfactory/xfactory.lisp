@@ -42,7 +42,7 @@
 
 ;;; attribute
 
-(defun attribute (&rest args)
+(defun attributes (&rest args)
   (when (oddp (length args))
     (error "odd number of args to SETF"))
   (iter (for l first args then (cddr l))

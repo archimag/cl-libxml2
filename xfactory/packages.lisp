@@ -11,5 +11,5 @@
   (:export #:with-element-factory
            #:with-document-factory
            #:namespace
-           #:attribute
+           #:attributes
            #:text))
