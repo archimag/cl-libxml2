@@ -36,7 +36,7 @@
                     </ul>
                 </div>
 
-                <img src="../lisplogo_flag2_128.png" id="logo" />
+                <img src="lisplogo_flag2_128.png" id="logo" />
 
                 
                 <div id="content">
