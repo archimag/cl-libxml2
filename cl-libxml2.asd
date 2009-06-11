@@ -29,17 +29,17 @@
              (:file "resolve" :depends-on ("parse"))))
    (:module :xpath
             :components
-            ((:file "package")
-             (:file "node-set" :depends-on ("package"))
+            ((:file "packages")
+             (:file "node-set" :depends-on ("packages"))
              (:file "xpath-object" :depends-on ("node-set"))
-             (:file "xpath-context" :depends-on ("package"))
+             (:file "xpath-context" :depends-on ("packages"))
              (:file "expression" :depends-on ("xpath-object" "xpath-context"))
              (:file "extensions" :depends-on ("expression")))
             :depends-on ("tree"))
    (:module :html
             :components
-            ((:file "package")
-             (:file "html" :depends-on ("package")))
+            ((:file "packages")
+             (:file "html" :depends-on ("packages")))
             :depends-on ("tree"))))
 
 (defmethod perform ((o test-op) (c (eql (find-system 'cl-libxml2))))

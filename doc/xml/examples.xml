@@ -283,9 +283,8 @@
 
     <h2>X-Factory system</h2>
     <code>
-(xtree:with-object (doc (xfactory:with-document-factory 
-                            ((XUL "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" "xul")
-                             (SVG "http://www.w3.org/2000/svg" "svg"))
+(xtree:with-object (doc (xfactory:with-document-factory ((XUL "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" "xul")
+                                                         (SVG "http://www.w3.org/2000/svg" "svg"))
                           (XUL "window"
                                (xfactory:namespace "http://www.w3.org/1999/xlink" "xlink")
                                (XUL "vbox"

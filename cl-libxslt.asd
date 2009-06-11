@@ -16,8 +16,8 @@
   :components
   ((:module :xslt
             :components
-            ((:file "package")
-             (:file "xslt" :depends-on ("package"))
+            ((:file "packages")
+             (:file "xslt" :depends-on ("packages"))
              (:file "extensions" :depends-on ("xslt"))
              (:file "stylesheet" :depends-on ("extensions"))))))
 
