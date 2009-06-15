@@ -1,502 +1,1168 @@
-2009-02-06 10:37  archimag
+2009-06-15  Moskvitin Andrey  <archimag@gmail.com>
+
+	* doc/xml/examples.xml: update examples
+
+	* commit fd110bd07d95040ad5d1eaf6dbfad10bd28c2cf4
+
+2009-06-15  Moskvitin Andrey  <archimag@gmail.com>
+
+	* xfactory/packages.lisp, xfactory/xfactory.lisp: update
+	xfactory system
+
+	* commit 425cc2420b12048cfe526ad8bbb7d077fa75e21b
+
+2009-06-15  Moskvitin Andrey  <archimag@gmail.com>
+
+	* tree/entities.lisp, tree/packages.lisp: New functions:
+	xtree:encode-entitites and xtree:encode-special-chars
+
+	* commit bbe867c387cd926839816ca54bc554823cf38972
+
+2009-06-12  Moskvitin Andrey  <archimag@gmail.com>
+
+	* test/xfactory.lisp: update xfactory tests
+
+	* commit 78ce5da429e121a6c1e4798a40237d75c34e5092
+
+2009-06-12  Moskvitin Andrey  <archimag@gmail.com>
+
+	* xfactory/packages.lisp, xfactory/xfactory.lisp: rename
+	xfactory:attribute to xfactory:attributes
+
+	* commit 5cd332f9f96840511dc8f471d04251cddcc494df
+
+2009-06-12  Moskvitin Andrey  <archimag@gmail.com>
+
+	* cl-libxml2.asd, cl-libxslt.asd, doc/xml/examples.xml,
+	html/package.lisp, html/packages.lisp, xpath/package.lisp,
+	xpath/packages.lisp, xslt/package.lisp, xslt/packages.lisp:
+	rename package.lisp files to packages.lisp
+
+	* commit bd637c9346f01282da63ea46b7714fe6a399799a
+
+2009-06-12  Moskvitin Andrey  <archimag@gmail.com>
+
+	* tree/serialize.lisp: add 'encoding' and 'pretty-print' keyword
+	arguments to 'serialize' generic function
+
+	* commit 3d1d7ee4d4771250db40397f50a8632a7281e333
+
+2009-06-12  Moskvitin Andrey  <archimag@gmail.com>
+
+	* doc/xml/index.xml, doc/xml/install.xml, doc/xml/style.css:
+	update documentation
+
+	* commit 1d08eb6fed2b6c3e9348a5afdd59823c8052e3cd
+
+2009-06-11  Moskvitin Andrey  <archimag@gmail.com>
+
+	* COPYING, cl-libxml2.asd, cl-libxslt.asd, examples/resolve.lisp,
+	examples/xpath.lisp, examples/xslt.lisp, foreign/Makefile,
+	foreign/cllibxml2.c, html/html.lisp, html/package.lisp,
+	test/libxml2.lisp, test/libxslt.lisp, test/xfactory.lisp,
+	tree/attribute.lisp, tree/document.lisp, tree/error.lisp,
+	tree/namespace.lisp, tree/node.lisp, tree/packages.lisp,
+	tree/parse.lisp, tree/resolve.lisp, tree/serialize.lisp,
+	tree/xtree.lisp, xfactory.asd, xfactory/packages.lisp,
+	xfactory/xfactory.lisp, xpath/expression.lisp,
+	xpath/extensions.lisp, xpath/low-level-api.lisp,
+	xpath/node-set.lisp, xpath/package.lisp, xpath/xpath-context.lisp,
+	xpath/xpath-object.lisp, xslt/extensions.lisp, xslt/package.lisp,
+	xslt/stylesheet.lisp, xslt/xslt.lisp: add copyright
+
+	* commit ffbc422113f2369e82c99bf123d7adeb11eda1f7
+
+2009-06-11  Moskvitin Andrey  <archimag@gmail.com>
+
+	* doc/xml/style.css: update doc
+
+	* commit d3b6c3fb37febc6f21ebdaa0f4952dcec28d3b7d
+
+2009-06-11  Moskvitin Andrey  <archimag@gmail.com>
+
+	* doc/lisplogo_fancy_256.png, doc/lisplogo_flag2_128.png,
+	doc/xml/lisplogo_fancy_256.png, doc/xml/lisplogo_flag2_128.png,
+	doc/xml/style.xsl: move image for documentation
+
+	* commit 14ed6f1152b8844be80807975d9fb74fc429d608
+
+2009-06-11  Moskvitin Andrey  <archimag@gmail.com>
+
+	* doc/xml/install.xml: change link to repository in documentation
+
+	* commit df63e3f40a2d0d89cc90e1daa42c1c68719aa894
+
+2009-06-11  archimag  <archimag@gmail.com>
+
+	* test/xfactory.lisp: update xfactory tests
+
+	* commit 4a2d8acfc374b3f36db8a7aad61e87fd0794b5d9
+
+2009-06-11  archimag  <archimag@gmail.com>
+
+	* test/xfactory.lisp, tree/packages.lisp, xfactory.asd: update
+	xfactory system
+
+	* commit 79e88dc2ff88661d128b4e390c36fa0ca80ff43c
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* tree/node.lisp: Add optional argument "document" in function
+	make-process-instruction
+
+	* commit 5ddc31541c3d805cd7c7b2f59ee8c427bec59735
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* tree/document.lisp: Now in function make-document argument
+	document-element is optional
+
+	* commit 226b28312c58de11ae08b4c754f666a69cbe42ac
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* cl-libxslt.asd: update
+
+	* commit 837ab46f1620da1754afe3890fc23099ce1f51d6
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* cl-libxml2-xslt.asd, cl-libxslt.asd: rename cl-libxml2-xslt.asd
+	to cl-libxslt.asd
+
+	* commit 5712a4aa6ad6c07d97cf03972bf2a382af3ac5d0
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* xfactory/packages.lisp, xfactory/xfactory.lisp: update
+	xfactory system
+
+	* commit 1ab9c86442e9659b3eaad6806a599ad26d572d54
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* cl-libxml2-xslt-test.asd, cl-libxml2-xslt.asd, cl-libxml2.asd:
+	Move cl-libxml2-xslt-test system in file cl-libxml2-xslt.asd
+	and remove file cl-libxml2-test.asd
+
+	* commit 3c124a2609b16d6df0ea1fe8124857a762d229b1
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* cl-libxml2-test.asd, cl-libxml2.asd: Move cl-libxml2-test
+	system in file cl-libxml2.asd and remove file cl-libxml2-test.asd
+
+	* commit 8329566cc8cd2a0e566201e3ac0b855df46d0896
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* doc/xml/api.xml, doc/xml/examples.xml, doc/xml/style.css:
+	update documentation
+
+	* commit b1961a33b62bdd0b1e8015ac43c1e07731b028f7
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* cl-libxml2.asd, tree/package.lisp, tree/packages.lisp: rename
+	tree/package.lisp to tree/packages.lisp
+
+	* commit 34458459b696ee69d68a925c586ee2653e30f2fa
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* tree/namespace.lisp, tree/node.lisp: update
+
+	* commit 841402bf59be02b76eccf6c74889b31507924907
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* tree/serialize.lisp: small bug fix in serialize function
+
+	* commit ba6f881a7338cd3bbe08c5ce835bcac051536f18
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* tree/package.lisp, tree/xtree.lisp: add with-object macro for
+	with-libxml2-object replacement
+
+	* commit 6f6ba7d593652708800ff1a047cdb1ad46ac3d21
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* tree/attribute.lisp: comment wrapper for xmlAttr struct
+
+	* commit 95dc16a2f4ea4630becc77927e2f928ee6d29be3
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* test/libxslt.lisp: update
+
+	* commit eac7aa9928e009cddb3b626c88d6a1b63e4e2e9f
+
+2009-06-10  archimag  <archimag@gmail.com>
+
+	* tree/node.lisp: add make-child-text function
+
+	* commit c8f2eb0d9aff4c051b2922f03110d84263ab526d
+
+2009-06-09  archimag  <archimag@gmail.com>
+
+	* test/xfactory.lisp, xfactory/packages.lisp,
+	xfactory/xfactory.lisp: update xfactory
+
+	* commit e6342a6c0a9500bf9ef4ee67df8fcb3ec09e0690
+
+2009-06-09  archimag  <archimag@gmail.com>
+
+	* tree/namespace.lisp, tree/package.lisp: Export from
+	package libxml2.tree 'make-ns symbol Now namespace-uri and
+	namespace-prefix is generic functions
+
+	* commit e9ec4d49c895ffd8f8185f1447caf2b6513ff60f
+
+2009-06-09  archimag  <archimag@gmail.com>
+
+	* tree/serialize.lisp: update serialize function
+
+	* commit c24b35cb115cedc2d1e1f3cd2b9219a884d36157
+
+2009-06-09  archimag  <archimag@gmail.com>
+
+	* tree/serialize.lisp: add format keyword argument to serialize
+
+	* commit b223e5c3f7505b12e19052ba1553bc75d0f11ccb
+
+2009-06-09  archimag  <archimag@gmail.com>
+
+	* tree/xtree.lisp: bug fix in with-libxml2-object macro
+
+	* commit 4eb91c0986ab5c17e52b2231044a874c6ad033d2
+
+2009-06-08  archimag  <archimag@gmail.com>
+
+	* xfactory/xfactory.lisp: update
+
+	* commit 6d8d462e1d11a064f4ce6dd799c47a30d2793387
+
+2009-06-08  archimag  <archimag@gmail.com>
+
+	* test/libxml2.lisp, tree/namespace.lisp, tree/node.lisp,
+	tree/package.lisp: add make-child-element function
+
+	* commit 562cb5aa8ab9839329c7e1eae1fc132ee380db5b
+
+2009-06-05  archimag  <archimag@gmail.com>
+
+	* test/xfactory.lisp, xfactory/packages.lisp,
+	xfactory/xfactory.lisp: update xfactory
+
+	* commit 586d41bddb2dfe1c267237ebb60a46f804043f7d
+
+2009-06-05  archimag  <archimag@gmail.com>
+
+	* xfactory.asd: update
+
+	* commit 4699c6d60f9cda9560d01b6ecfa7a7fd1dff5bc0
+
+2009-06-04  archimag  <archimag@gmail.com>
+
+	* xfactory.asd: rename cl-libxml2-xfactory-system to
+	xfactory-system
+
+	* commit 0e2d5b9cd168e2d7b98cf50c642718650f6abf7b
+
+2009-06-04  archimag  <archimag@gmail.com>
+
+	* cl-libxml2-xfactory.asd, xfactory.asd: rename
+	cl-libxml2-xfactory.asd to xfactory.asd
+
+	* commit 4e387302067ee09a7a01e57cbfac3b67a62a780d
+
+2009-06-04  archimag  <archimag@gmail.com>
+
+	* cl-libxml2-xfactory.asd, test/xfactory.lisp,
+	xfactory/packages.lisp, xfactory/xfactory.lisp: init xfactory
+	system
+
+	* commit 356d5a7d1843813ba78b7ece6b18ad38b30c6e11
+
+2009-06-04  archimag  <archimag@gmail.com>
+
+	* tree/parse.lisp: fix bug in defxml
+
+	* commit 3c8bd17670c195dc5357b4225775854037b475b0
+
+2009-05-20  archimag  <archimag@gmail.com>
+
+	* tree/serialize.lisp: add encoding key to tree:serialize
+
+	* commit 83e948023a074b13faed0809795cdaf1af7ebdb5
+
+2009-05-19  archimag  <archimag@gmail.com>
+
+	* xslt/extensions.lisp: Fixed bug in macro with-xslt-elements
+
+	* commit 1d9fc5e0cb170a0fe304c76b61ed3a38b159cf88
+
+2009-04-16  archimag  <archimag@gmail.com>
+
+	* tree/parse.lisp, xpath/xpath-object.lisp, xslt/stylesheet.lisp:
+	update
+
+	* commit a6ad1bfbbd161ce1683df78594abc5bff8a01d77
+
+2009-03-24  archimag  <archimag@gmail.com>
+
+	* tree/attribute.lisp: now attribute-value return single value
+
+	* commit 5ff7d1def1ccf4aa1d632c233dd306cca86c4780
+
+2009-03-16  archimag  <archimag@gmail.com>
+
+	* xpath/extensions.lisp: update
+
+	* commit 26aa2368c536d6d0b30b204eb224ce08f243c5c5
+
+2009-03-13  archimag  <archimag@gmail.com>
+
+	* xslt/extensions.lisp, xslt/package.lisp: update
+
+	* commit 22f144ac44de2b7e0707de0137bdc0bb8dcb2970
+
+2009-03-12  archimag  <archimag@gmail.com>
+
+	* xpath/extensions.lisp, xpath/package.lisp: update
+
+	* commit c22f00a228e9ecb643cb83f021b0066ce150c888
+
+2009-03-06  archimag  <archimag@gmail.com>
+
+	* test/libxslt.lisp, xpath/xpath-context.lisp,
+	xslt/extensions.lisp: implement use already exist xpath context
+	in define-xslt-element
+
+	* commit 212c8f777d46a15df4e1ca5092c8b9b5013e86b0
+
+2009-03-04  archimag  <archimag@gmail.com>
+
+	* tree/document.lisp, tree/node.lisp, tree/package.lisp,
+	tree/parse.lisp, tree/xtree.lisp: add parse-options to parse
+	and process-xinclude
+
+	* commit fe7e24c8c086cc36a81d41cdfa243ad23ec5f4ac
+
+2009-03-04  archimag  <archimag@gmail.com>
+
+	* tree/node.lisp: implement method (setf base-url) ((empty
+	(eql nil)) (node node))
+
+	* commit 4dacb9fd0300e5ecb70d85eb7f4d78e4cef2e695
+
+2009-03-01  archimag  <archimag@gmail.com>
+
+	* xslt/stylesheet.lisp: update
+
+	* commit 9e15d37aeb7ed2e0eea26a8f4d0ffd5f9a179c30
+
+2009-02-19  archimag  <archimag@gmail.com>
+
+	* tree/package.lisp: update
+
+	* commit d062093d14ea8047523b4398ddc95184beda19e5
+
+2009-02-17  archimag  <archimag@gmail.com>
+
+	* foreign/cllibxml2.c, html/html.lisp, tree/document.lisp,
+	tree/package.lisp, tree/xtree.lisp: new function: version change
+	implementation ot the html:html-p
+
+	* commit 8d27fd6e020444f32e7d87572fc060f806e9a97e
+
+2009-02-17  archimag  <archimag@gmail.com>
+
+	* foreign/Makefile, foreign/cllibxml2.c, tree/document.lisp,
+	tree/package.lisp, tree/parse.lisp, tree/xtree.lisp,
+	xslt/xslt.lisp: new functions:	document-properties,
+	append-document-property
+
+	* commit af7934c5a74ac9ed84392167d15cbf4a668c822e
+
+2009-02-10  archimag  <archimag@gmail.com>
+
+	* doc/BUGS, tree/node.lisp, tree/serialize.lisp: update
+
+	* commit fe67d3d56b58ca1a229e9d7616e62bfabbc69791
+
+2009-02-10  archimag  <archimag@gmail.com>
+
+	* doc/xml/examples.xml: update
+
+	* commit ec0eba9b75faf2d23b8fe4be3d9daff89bbff744
+
+2009-02-10  archimag  <archimag@gmail.com>
+
+	* doc/xml/quick-start.xml: update
+
+	* commit b30ede5d54e68ea255504b4536216e99bfbc01d4
+
+2009-02-10  archimag  <archimag@gmail.com>
+
+	* doc/xml/install.xml: update
+
+	* commit 44b95465321f3129752993f1332ae4793766e9c3
+
+2009-02-10  archimag  <archimag@gmail.com>
+
+	* doc/xml/style.xsl: update
+
+	* commit ec415b47c87fd6bb2672120d0fa6485d0d12326c
+
+2009-02-10  archimag  <archimag@gmail.com>
+
+	* doc/xml/install.xml, doc/xml/quick-start.xml, doc/xml/style.xsl:
+	update
+
+	* commit 234db5bd9338850a9cd0eb6623c4852ec36af78f
+
+2009-02-09  archimag  <archimag@gmail.com>
+
+	* doc/xml/examples.xml, doc/xml/quick-start.xml,
+	doc/xml/style.xsl: update
+
+	* commit e7634414c6c43f3a3d42df9154baa9d44e6e94fe
+
+2009-02-09  archimag  <archimag@gmail.com>
+
+	* doc/xml/install.xml, doc/xml/quick-start.xml, doc/xml/style.xsl:
+	update
+
+	* commit aae6cda3e903161daf66c7ef4ff99ab832adc1c2
+
+2009-02-09  archimag  <archimag@gmail.com>
+
+	* doc/xml/api.xml, doc/xml/index.xml, doc/xml/install.xml,
+	doc/xml/manual.xml, doc/xml/quick-start.xml, doc/xml/style.css,
+	doc/xml/style.xsl: update
+
+	* commit 54f52ebb9d9bd9cbfb86581c774564d03754e124
+
+2009-02-09  archimag  <archimag@gmail.com>
+
+	* doc/xml/quick-start.xml, doc/xml/style.css, doc/xml/style.xsl:
+	update
+
+	* commit bf983acc5783b2bdb5a6bbc6755da2db8c32a0a6
+
+2009-02-09  archimag  <archimag@gmail.com>
+
+	* doc/xml/style.css: update
+
+	* commit 1d389ea10775ae2849fbd4b1591ed12971293a03
+
+2009-02-09  archimag  <archimag@gmail.com>
+
+	* doc/xml/install.xml, doc/xml/manual.xml,
+	doc/xml/quick-start.xml: update
+
+	* commit 464b83326b39f0152063ac3c6ae02ecbd1b4cc38
+
+2009-02-09  archimag  <archimag@gmail.com>
+
+	* doc/xml/index.xml: update
+
+	* commit 2503e1d50fcb3679267e59fb0df628792e4b8372
+
+2009-02-09  archimag  <archimag@gmail.com>
+
+	* doc/xml/index.xml: update
+
+	* commit 55c3f7cfe54f2d06a0160230ad301b8fb1cdfe4e
+
+2009-02-09  archimag  <archimag@gmail.com>
+
+	* doc/xml/quick-start.xml, doc/xml/style.css: update
+
+	* commit 873177ec19786e92546364a39c53736cc33fc84b
+
+2009-02-09  archimag  <archimag@gmail.com>
+
+	* doc/lisplogo_flag2_128.png, doc/xml/index.xml,
+	doc/xml/install.xml, doc/xml/manual.xml, doc/xml/quick-start.xml,
+	doc/xml/style.css, doc/xml/style.xsl: add some documentation
+
+	* commit 2f5b69b47a6ba63d7320217c044deda2fe7e4067
+
+2009-02-06  archimag  <archimag@gmail.com>
+
+	* ChangeLog: Version 0.3 released
+
+	* commit 30c999712ccac4ba7bc9b630be1cbd0dc561b3a1
+
+2009-02-06  archimag  <archimag@gmail.com>
 
 	* cl-libxml2-test.asd, tree/package.lisp, xpath/expression.lisp,
-	  xpath/xpath-object.lisp: fix bug with find-number in clisp
-	  remove nickname tree for libxml2.tree package
+	xpath/xpath-object.lisp: fix bug with find-number in clisp remove
+	nickname tree for libxml2.tree package
 
-2009-02-06 09:48  archimag
+	* commit f5584d9b2d0deb098f87eee1e0ba37cbc5e0bd5c
+
+2009-02-06  archimag  <archimag@gmail.com>
 
 	* ChangeLog: update ChangeLog
 
-2009-02-06 09:39  archimag
+	* commit 30ab01c1b600a67e2dfe90821f149fd79d627150
+
+2009-02-06  archimag  <archimag@gmail.com>
 
 	* cl-libxml2-test.asd, cl-libxml2-xslt-test.asd,
-	  cl-libxml2-xslt.asd, cl-libxml2.asd, doc/TODO, test/libxml2.lisp,
-	  test/libxslt.lisp, test/test.lisp: divide tests for libxml2 and
-	  libxslt in different systems
+	cl-libxml2-xslt.asd, cl-libxml2.asd, doc/TODO, test/libxml2.lisp,
+	test/libxslt.lisp, test/test.lisp: divide tests for libxml2 and
+	libxslt in different systems
 
-2009-02-05 08:48  archimag
+	* commit 517ec1555d95a6927b9f8e5bea910e1ce4b420ae
 
-	* cl-libxml2.asd, tree/error.lisp: remove depends from metatilities
+2009-02-05  archimag  <archimag@gmail.com>
 
-2009-02-04 15:32  archimag
+	* cl-libxml2.asd, tree/error.lisp: remove depends from
+	metatilities
 
-	* html/html.lisp, xpath/xpath-context.lisp: implement parse html
-	  from:
-	  * pathname
-	  * puri:uri
-	  * octets (array unsigned-byte)
-	  * stream
+	* commit 41051f1b700dda4954efa8db2bccd7e8387a4e74
 
-2009-02-03 16:54  archimag
+2009-02-04  archimag  <archimag@gmail.com>
+
+	* html/html.lisp, xpath/xpath-context.lisp: implement parse
+	html from:
+	 * pathname * puri:uri * octets (array unsigned-byte) * stream
+
+	* commit 40e9f7ef5747021a5ea94b282ad5eff9fe1e520b
+
+2009-02-03  archimag  <archimag@gmail.com>
 
 	* html/html.lisp, html/package.lisp, tree/serialize.lisp:
-	  implement:
-	  create-html-document
-	  (setf meta-encoding)
-	  serialize-html ((doc document) (stream stream))
+	implement:
+	  create-html-document (setf meta-encoding) serialize-html
+	  ((doc document) (stream stream))
 
-2009-02-03 15:23  archimag
+	* commit 52076c6979c0ce0a013c4f03dae597a6258f432a
+
+2009-02-03  archimag  <archimag@gmail.com>
 
 	* html/html.lisp, html/package.lisp: rename package libxml2.xhtml
-	  to libxml2.html with nickanme: html
+	to libxml2.html with nickanme: html
 
-2009-02-03 15:21  archimag
+	* commit 523f8db4c2cde7288ee1c2aad171911721d6c37a
+
+2009-02-03  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, html/html.lisp, html/xhtml.lisp: rename file
-	  xhtml.lisp to html.lisp
+	xhtml.lisp to html.lisp
 
-2009-02-03 15:20  archimag
+	* commit 8c516f128fde22e9149e7be6015a8bc653c6430c
 
-	* cl-libxml2.asd, html, xhtml: rename folder xhtml to html
+2009-02-03  archimag  <archimag@gmail.com>
 
-2009-01-29 11:35  archimag
+	* cl-libxml2.asd, html/package.lisp, html/xhtml.lisp,
+	xhtml/package.lisp, xhtml/xhtml.lisp: rename folder xhtml to html
+
+	* commit c27490ea4c8d4fcaf00f3c264ec35c3f70d78462
+
+2009-01-29  archimag  <archimag@gmail.com>
 
 	* tree/document.lisp, tree/node.lisp: update
 
-2009-01-26 23:28  archimag
+	* commit 15a04f0f76a0d4ea00866e55ffea801ad0acbc9f
+
+2009-01-26  archimag  <archimag@gmail.com>
 
 	* foreign/Makefile, foreign/cl_libxml2.c, foreign/cllibxml2.c,
-	  xslt/xslt.lisp: update
+	xslt/xslt.lisp: update
 
-2009-01-26 23:22  archimag
+	* commit 235dbf03632829d60760b17fa90dc6b0a4d29d8d
 
-	* foreign/cl_libxml2.c, xslt/xslt.lisp: add error handling for
-	  libxslt
+2009-01-26  archimag  <archimag@gmail.com>
 
-2009-01-26 16:55  archimag
+	* foreign/cl_libxml2.c, xslt/xslt.lisp: add error handling
+	for libxslt
 
-	* foreign, foreign/Makefile, foreign/cl_libxml2.c, xslt/xslt.lisp:
-	  update
+	* commit a61c7a6e7cb7e0756703e2e233f3f694c55f259a
 
-2009-01-25 14:46  archimag
+2009-01-26  archimag  <archimag@gmail.com>
 
-	* xhtml/package.lisp, xhtml/xhtml.lisp: implement parse html from
-	  string
+	* foreign/Makefile, foreign/cl_libxml2.c, xslt/xslt.lisp: update
 
-2009-01-22 17:00  archimag
+	* commit 2d1c4c528d03849cc1056e5ebe8dcf019d23247a
+
+2009-01-25  archimag  <archimag@gmail.com>
+
+	* xhtml/package.lisp, xhtml/xhtml.lisp: implement parse html
+	from string
+
+	* commit 4af30ff3fd47e825bbc81f272d008bbea3cd002f
+
+2009-01-22  archimag  <archimag@gmail.com>
 
 	* xpath/expression.lisp: update
 
-2009-01-21 14:24  archimag
+	* commit 414fd065b697e6fee1a132604fea298332e74113
+
+2009-01-21  archimag  <archimag@gmail.com>
 
 	* test/test.lisp, tree/document.lisp, tree/package.lisp,
-	  tree/serialize.lisp, tree/xtree.lisp, xhtml/package.lisp,
-	  xhtml/xhtml.lisp, xslt/stylesheet.lisp: implemented
-	  xtree:with-fake-document, html:html-p, xslt:transform (style (el
-	  node)), updated "release"
+	tree/serialize.lisp, tree/xtree.lisp, xhtml/package.lisp,
+	xhtml/xhtml.lisp, xslt/stylesheet.lisp: implemented
+	xtree:with-fake-document, html:html-p, xslt:transform (style
+	(el node)), updated "release"
 
-2009-01-19 16:49  archimag
+	* commit b2db212232ba0068075b5358dd7be69b3fb7b6a5
+
+2009-01-19  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, doc/BUGS, tree/xtree.lisp: update
 
-2008-12-27 01:59  archimag
+	* commit 27794e5cf07d99666577629c201a49d08983bb94
+
+2008-12-27  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, tree/package.lisp, tree/parse.lisp,
-	  xhtml/package.lisp, xhtml/xhtml.lisp, xslt/package.lisp,
-	  xslt/stylesheet.lisp: update
+	xhtml/package.lisp, xhtml/xhtml.lisp, xslt/package.lisp,
+	xslt/stylesheet.lisp: update
 
-2008-12-26 17:05  archimag
+	* commit 8dc1ee2014813dc76a699bc1257280c2d512cd35
 
-	* cl-libxml2.asd, tree/document.lisp, xhtml, xhtml/package.lisp,
-	  xhtml/xhtml.lisp: initial work on html support
+2008-12-26  archimag  <archimag@gmail.com>
 
-2008-12-23 11:07  archimag
+	* cl-libxml2.asd, tree/document.lisp, xhtml/package.lisp,
+	xhtml/xhtml.lisp: initial work on html support
 
-	* ChangeLog, examples/xslt.lisp: update ChangeLog
-	  version 0.2.5 released
+	* commit e5da28eb55bc159943adc48fbc893fdcbae67553
 
-2008-12-23 10:50  archimag
+2008-12-23  archimag  <archimag@gmail.com>
+
+	* ChangeLog, examples/xslt.lisp: update ChangeLog version 0.2.5
+	released
+
+	* commit 9cb378eb7da315030f4c5434f693fc98ab17d42b
+
+2008-12-23  archimag  <archimag@gmail.com>
 
 	* cl-libxml2-xslt.asd, cl-libxml2.asd, tree/package.lisp,
-	  tree/packages.lisp, xpath/package.lisp, xpath/packages.lisp,
-	  xslt/package.lisp, xslt/packages.lisp: update
+	tree/packages.lisp, xpath/package.lisp, xpath/packages.lisp,
+	xslt/package.lisp, xslt/packages.lisp: update
 
-2008-12-23 10:43  archimag
+	* commit a4c291077a97eee2021dc439a38e59bc856505c3
+
+2008-12-23  archimag  <archimag@gmail.com>
 
 	* tree/xtree.lisp: check buf with xmlFree
 
-2008-12-23 10:31  archimag
+	* commit 57922db577413a01a238f2921c22a48b272ac658
+
+2008-12-23  archimag  <archimag@gmail.com>
 
 	* test/test.lisp, tree/error.lisp, xslt/packages.lisp,
-	  xslt/stylesheet.lisp: some bug fixes
+	xslt/stylesheet.lisp: some bug fixes
 
-2008-12-23 00:10  archimag
+	* commit c1dc3b9cfcaad14dfed75b379fcccb15da7e0215
+
+2008-12-23  archimag  <archimag@gmail.com>
 
 	* test/test.lisp, tree/error.lisp, tree/parse.lisp: bug fixes
 
-2008-12-22 16:48  archimag
+	* commit 42650dd5a8d6d8785a694c71cfd1a0a0a3031495
+
+2008-12-22  archimag  <archimag@gmail.com>
 
 	* tree/attribute.lisp, tree/document.lisp, tree/error.lisp,
-	  tree/namespace.lisp, tree/node.lisp, tree/packages.lisp,
-	  tree/parse.lisp, tree/resolve.lisp, tree/serialize.lisp,
-	  xpath/expression.lisp, xpath/extensions.lisp,
-	  xpath/xpath-context.lisp, xpath/xpath-object.lisp,
-	  xslt/extensions.lisp, xslt/stylesheet.lisp, xslt/xslt.lisp:
-	  update error handling
+	tree/namespace.lisp, tree/node.lisp, tree/packages.lisp,
+	tree/parse.lisp, tree/resolve.lisp, tree/serialize.lisp,
+	xpath/expression.lisp, xpath/extensions.lisp,
+	xpath/xpath-context.lisp, xpath/xpath-object.lisp,
+	xslt/extensions.lisp, xslt/stylesheet.lisp, xslt/xslt.lisp:
+	update error handling
 
-2008-12-19 16:43  archimag
+	* commit ebc44a9d0874921daa678a5dad21453544956d22
 
-	* cl-libxml2.asd, test/test.lisp, tree/error.lisp, tree/parse.lisp:
-	  update
+2008-12-19  archimag  <archimag@gmail.com>
 
-2008-12-18 21:29  archimag
+	* cl-libxml2.asd, test/test.lisp, tree/error.lisp,
+	tree/parse.lisp: update
+
+	* commit 76000a61edeb34c6e9d89d86db93d78c1162df63
+
+2008-12-18  archimag  <archimag@gmail.com>
 
 	* tree/error.lisp: add code for controle memory allocation size
 
-2008-12-18 16:49  archimag
+	* commit 48864b417c54e2155f2138ff1ebf169d952440ce
+
+2008-12-18  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, test/test.lisp, tree/error.lisp,
-	  tree/packages.lisp: warning: tests failed
+	tree/packages.lisp: warning: tests failed
 
-2008-12-18 15:24  archimag
+	* commit a903e63a3cc92f01f5eae2deab0511f60b369395
 
-	* cl-libxml2.asd, tree/error.lisp, tree/packages.lisp: add error
-	  handling
+2008-12-18  archimag  <archimag@gmail.com>
 
-2008-11-29 09:18  archimag
+	* cl-libxml2.asd, tree/error.lisp, tree/packages.lisp: add
+	error handling
 
-	* cl-libxml2.asd, xpath/context.lisp, xpath/extensions.lisp: code
-	  reformation
+	* commit bc4aea7604c5bb200a72950e6445c80d92732558
 
-2008-11-29 09:15  archimag
+2008-11-29  archimag  <archimag@gmail.com>
+
+	* cl-libxml2.asd, xpath/context.lisp, xpath/extensions.lisp:
+	code reformation
+
+	* commit dcdb22740d587e16436ac04ed53e2080adfa8b1f
+
+2008-11-29  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, xpath/context.lisp, xpath/expression.lisp,
-	  xpath/low-level-api.lisp, xpath/node-set.lisp,
-	  xpath/packages.lisp, xpath/xpath-context.lisp,
-	  xpath/xpath-object.lisp: code reformation
+	xpath/low-level-api.lisp, xpath/node-set.lisp,
+	xpath/packages.lisp, xpath/xpath-context.lisp,
+	xpath/xpath-object.lisp: code reformation
 
-2008-11-28 15:00  archimag
+	* commit 47b24f0268d24930c3d08764c1187a0541473461
+
+2008-11-28  archimag  <archimag@gmail.com>
 
 	* xslt/extensions.lisp, xslt/stylesheet.lisp: code reformation
 
-2008-11-28 14:42  archimag
+	* commit 79faebf2f148ad5cf6744eb2702ef2c2f6c77fa7
+
+2008-11-28  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, tree/add-remove.lisp, tree/childs.lisp,
-	  tree/low-level-api.lisp, tree/objects.lisp, tree/xtree.lisp: code
-	  reformation
+	tree/low-level-api.lisp, tree/objects.lisp, tree/xtree.lisp:
+	code reformation
 
-2008-11-28 14:39  archimag
+	* commit d62044b460f0148c61a19c96684f0088c3476e55
+
+2008-11-28  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, tree/add-remove.lisp, tree/childs.lisp,
-	  tree/document.lisp, tree/low-level-api.lisp, tree/node.lisp,
-	  tree/objects.lisp, tree/resolve.lisp: code reformation
+	tree/document.lisp, tree/low-level-api.lisp, tree/node.lisp,
+	tree/objects.lisp, tree/resolve.lisp: code reformation
 
-2008-11-28 14:08  archimag
+	* commit 479294dc8b92def6feb320c14ad1a7b480919f9d
+
+2008-11-28  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, tree/attribute.lisp, tree/childs.lisp,
-	  tree/low-level-api.lisp, tree/namespace.lisp, tree/node.lisp,
-	  tree/objects.lisp, tree/packages.lisp: code reformation
+	tree/low-level-api.lisp, tree/namespace.lisp, tree/node.lisp,
+	tree/objects.lisp, tree/packages.lisp: code reformation
 
-2008-11-28 12:31  archimag
+	* commit 895ef1c005fed515d0ddf2183714cb8086fa9abf
+
+2008-11-28  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, test/test.lisp, tree/childs.lisp,
-	  tree/document.lisp, tree/low-level-api.lisp, tree/objects.lisp,
-	  tree/parse.lisp, tree/serialize.lisp: code reformation
+	tree/document.lisp, tree/low-level-api.lisp, tree/objects.lisp,
+	tree/parse.lisp, tree/serialize.lisp: code reformation
 
-2008-11-28 11:50  archimag
+	* commit b2395ceae3661e85e643bf8e41841d0fa1029319
+
+2008-11-28  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, test/test.lisp, tree/low-level-api.lisp,
-	  tree/parse.lisp, tree/resolve.lisp, tree/serialize.lisp: code
-	  reformation
+	tree/parse.lisp, tree/resolve.lisp, tree/serialize.lisp: code
+	reformation
 
-2008-11-28 08:15  archimag
+	* commit 8a9956f2c00f5d70898041bde4eeb7d1275dc41a
+
+2008-11-28  archimag  <archimag@gmail.com>
 
 	* tree/attribute.lisp, tree/packages.lisp: remove
-	  attrivute-node-value
+	attrivute-node-value
 
-2008-11-27 14:09  archimag
+	* commit 61aaf2bd4606dfdb413e390af06d3c472dc59351
+
+2008-11-27  archimag  <archimag@gmail.com>
 
 	* ChangeLog: update ChangeLog
 
-2008-11-27 13:47  archimag
+	* commit 496960e66ace52c5919eca6700e1aeeeef8989cf
+
+2008-11-27  archimag  <archimag@gmail.com>
 
 	* tree/low-level-api.lisp, tree/parse.lisp, tree/serialize.lisp:
-	  implemented serialize to stream
+	implemented serialize to stream
 
-2008-11-27 12:47  archimag
+	* commit d3c89c8a7bb49807dbd844d87afdc0d9d6b397af
 
-	* test/test.lisp, tree/childs.lisp, tree/low-level-api.lisp: change
-	  implementation text-content
-	  add (setf text-content)
+2008-11-27  archimag  <archimag@gmail.com>
 
-2008-11-27 09:35  archimag
+	* test/test.lisp, tree/childs.lisp, tree/low-level-api.lisp:
+	change implementation text-content add (setf text-content)
+
+	* commit 4fed40cac7941957a880ba79f5ce8c0b0ca625ab
+
+2008-11-27  archimag  <archimag@gmail.com>
 
 	* tree/attribute.lisp, tree/packages.lisp, xpath/packages.lisp,
-	  xslt/packages.lisp: update
+	xslt/packages.lisp: update
 
-2008-11-27 08:20  archimag
+	* commit 241583e455cdd64d755342e05f781470a661beb5
+
+2008-11-27  archimag  <archimag@gmail.com>
 
 	* doc/TODO, tree/serialize.lisp: implement serialize ((el node)
-	  target) for elements
+	target) for elements
 
-2008-11-27 08:16  archimag
+	* commit d05645e7ca070f959f0f089d3f968b85c5fe03be
+
+2008-11-27  archimag  <archimag@gmail.com>
 
 	* tree/objects.lisp, tree/packages.lisp: Add predicates:
-	  element-p
-	  attribute-p
-	  text-p
-	  comment-p
-	  process-instruction-p
+	  element-p attribute-p text-p comment-p process-instruction-p
 
-2008-11-21 13:56  archimag
+	* commit 751d0b7f063f281c1307558c544d50a2331e49ef
+
+2008-11-21  archimag  <archimag@gmail.com>
 
 	* ChangeLog: cl-libxml2-0.2 released!
 
-2008-11-21 13:55  archimag
+	* commit 1e17b2ea20cbb97a9c4c5afc1d807453d071e0ca
 
-	* examples, examples/resolve.lisp, examples/xpath.lisp,
-	  examples/xslt.lisp: add examples folder
+2008-11-21  archimag  <archimag@gmail.com>
 
-2008-11-21 13:20  archimag
+	* examples/resolve.lisp, examples/xpath.lisp, examples/xslt.lisp:
+	add examples folder
+
+	* commit 834fddad1fc53f96feb1e9e2f88601a5ce981723
+
+2008-11-21  archimag  <archimag@gmail.com>
 
 	* ChangeLog: update ChangeLog
 
-2008-11-21 13:19  archimag
+	* commit fef29428014c7ef4aa9e0f95d8375103930f2918
+
+2008-11-21  archimag  <archimag@gmail.com>
 
 	* test/test.lisp, tree/packages.lisp: add more tests
 
-2008-11-21 12:43  archimag
+	* commit c5f1c8c0a02f135b157681392efef052d3bb3ea6
 
-	* test/test.lisp, xpath/expression.lisp: rename in-xpath-object to
-	  in-xpath-result
+2008-11-21  archimag  <archimag@gmail.com>
 
-2008-11-21 12:36  archimag
+	* test/test.lisp, xpath/expression.lisp: rename in-xpath-object
+	to in-xpath-result
+
+	* commit a41285708045c4bf2e19f77732037794f1bda2fb
+
+2008-11-21  archimag  <archimag@gmail.com>
 
 	* test/test.lisp: add test for custom xslt element
 
-2008-11-21 12:27  archimag
+	* commit 15cee72cfe32077540c01aeefffc1023a357fe98
+
+2008-11-21  archimag  <archimag@gmail.com>
 
 	* xslt/extensions.lisp: fix bug in define-xslt-element
 
-2008-11-21 11:53  archimag
+	* commit ddd00224b293c0ef144b3e383c3d9faf640e4d1f
+
+2008-11-21  archimag  <archimag@gmail.com>
 
 	* ChangeLog, cl-libxml2-xslt.asd, cl-libxml2.asd, test/test.lisp,
-	  tree/add-remove.lisp, xpath/context.lisp, xpath/expression.lisp,
-	  xpath/packages.lisp, xslt/extensions.lisp, xslt/packages.lisp,
-	  xslt/stylesheet.lisp, xslt/xslt.lisp: initial support for custom
-	  xslt elements
+	tree/add-remove.lisp, xpath/context.lisp, xpath/expression.lisp,
+	xpath/packages.lisp, xslt/extensions.lisp, xslt/packages.lisp,
+	xslt/stylesheet.lisp, xslt/xslt.lisp: initial support for custom
+	xslt elements
 
-2008-11-20 15:24  archimag
+	* commit 34fe2313eca48f1e37bd3b19b2f84d1cdfa31652
+
+2008-11-20  archimag  <archimag@gmail.com>
 
 	* test/test.lisp, xslt/stylesheet.lisp: implement custom xpath
-	  functions for xslt transformations
+	functions for xslt transformations
 
-2008-11-20 12:46  archimag
+	* commit 1973f8ff417a6c4b231dfce49f9f9a212b3648f5
+
+2008-11-20  archimag  <archimag@gmail.com>
 
 	* test/test.lisp: add test for xpath extension functions with
-	  namespace use
+	namespace use
 
-2008-11-20 12:33  archimag
+	* commit a9ab21a97588ff949520cebed4ea66aa0708b87c
+
+2008-11-20  archimag  <archimag@gmail.com>
 
 	* test/test.lisp, xpath/context.lisp, xpath/expression.lisp,
-	  xpath/xpath-object.lisp: xpath extension functions is implement
+	xpath/xpath-object.lisp: xpath extension functions is implement
 
-2008-11-20 08:44  archimag
+	* commit 7263c0258fdc9e51e5d19835cb6674b91cad27fe
+
+2008-11-20  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, test/test.lisp, xpath/context.lisp,
-	  xpath/expression.lisp, xpath/node-set.lisp, xpath/packages.lisp,
-	  xpath/xpath-object.lisp: rename xpath-result to xpath-object and
-	  functions xpath-result-xxx to xpath-object-xxx
-	  change code placement, add node-set.lisp and xpath-object.lisp
+	xpath/expression.lisp, xpath/node-set.lisp, xpath/packages.lisp,
+	xpath/xpath-object.lisp: rename xpath-result to xpath-object
+	and functions xpath-result-xxx to xpath-object-xxx change code
+	placement, add node-set.lisp and xpath-object.lisp
 
-2008-11-19 16:49  archimag
+	* commit e8f2556f2117fd1e575dbe0a037c657794b71ca2
+
+2008-11-19  archimag  <archimag@gmail.com>
 
 	* doc/TODO, xpath/context.lisp: initial support custom xpath
-	  functions (Step 2)
+	functions (Step 2)
 
-2008-11-19 16:48  archimag
+	* commit e07ec567fcea8c0b6cfb55f1e8e4a7bd7af06006
+
+2008-11-19  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, test/test.lisp, tree/low-level-api.lisp,
-	  tree/parse.lisp, xpath/expression.lisp, xpath/low-level-api.lisp,
-	  xpath/packages.lisp: initial support custom xpath functions
+	tree/parse.lisp, xpath/expression.lisp, xpath/low-level-api.lisp,
+	xpath/packages.lisp: initial support custom xpath functions
 
-2008-11-19 13:18  archimag
+	* commit 52d453db97a6d00ea05a3707479c9bc23be6016b
 
-	* test/test.lisp: add test for check custom URL resolving with use
-	  xslt document()
+2008-11-19  archimag  <archimag@gmail.com>
 
-2008-11-19 12:56  archimag
+	* test/test.lisp: add test for check custom URL resolving with
+	use xslt document()
+
+	* commit a70805a4414682a0ba8d13450ce0ba77601dcb6a
+
+2008-11-19  archimag  <archimag@gmail.com>
 
 	* doc/TODO, test/test.lisp, tree/low-level-api.lisp,
-	  tree/objects.lisp, tree/packages.lisp, tree/parse.lisp: implement
-	  custom URL resolvers
+	tree/objects.lisp, tree/packages.lisp, tree/parse.lisp: implement
+	custom URL resolvers
 
-2008-11-18 13:26  archimag
+	* commit f98d38c4360737f23ed11f7ac2ff7b097584ab87
+
+2008-11-18  archimag  <archimag@gmail.com>
 
 	* tree/objects.lisp, xpath/expression.lisp, xslt/stylesheet.lisp:
-	  refactoring: reimplement part of the resouce management with
-	  garbage-pools
-	  add (gp:defcleanup libxml2-cffi-object-wrapper #'release)
+	refactoring: reimplement part of the resouce management with
+	garbage-pools add (gp:defcleanup libxml2-cffi-object-wrapper
+	#'release)
 
-2008-11-18 12:56  archimag
+	* commit 338110849011ef88ca186221b7adf05d96b1e3cc
+
+2008-11-18  archimag  <archimag@gmail.com>
 
 	* test/test.lisp, xpath/expression.lisp, xpath/packages.lisp:
-	  rename functions:
-	  eval-expression-as-string -> find-string
-	  eval-expression-as-number -> find-number
-	  eval-expression-as-boolean -> find-boolean
-	  eval-expression-as-node -> find-single
+	rename functions: eval-expression-as-string  ->
+	find-string eval-expression-as-number  -> find-number
+	eval-expression-as-boolean -> find-boolean eval-expression-as-node
+	-> find-single
 
-2008-11-18 12:41  archimag
+	* commit 2ed28ab9c3d9ffd26d353aad7dc1cc5c3774a6f8
+
+2008-11-18  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, doc/TODO, test/test.lisp, xpath/expression.lisp,
-	  xpath/low-level-api.lisp, xpath/packages.lisp: add depend from
-	  garbage-pools
-	  implement getpath
+	xpath/low-level-api.lisp, xpath/packages.lisp: add depend from
+	garbage-pools implement getpath
 
-2008-11-17 12:11  archimag
+	* commit f62e902cada1d482b527b03725134a16383c4c63
 
-	* doc/TODO, test/test.lisp, tree/parse.lisp: add parse from array
-	  with octets
+2008-11-17  archimag  <archimag@gmail.com>
 
-2008-11-13 14:23  archimag
+	* doc/TODO, test/test.lisp, tree/parse.lisp: add parse from
+	array with octets
+
+	* commit 6dfef8782bb1a4e68277f084e9d2ade7fe02c610
+
+2008-11-13  archimag  <archimag@gmail.com>
 
 	* test/test.lisp, tree/attribute.lisp, tree/childs.lisp,
-	  tree/packages.lisp, tree/parse.lisp, xpath/expression.lisp,
-	  xpath/packages.lisp: add attribute-node-value,
-	  eval-expression-as-node
-	  bugfix parse from streams
+	tree/packages.lisp, tree/parse.lisp, xpath/expression.lisp,
+	xpath/packages.lisp: add attribute-node-value,
+	eval-expression-as-node bugfix parse from streams
 
-2008-11-13 08:44  archimag
+	* commit 0d9aa730c701e4ea3fa315e04aab54551ae49688
+
+2008-11-13  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd: add depends from alexandria
 
-2008-11-13 08:35  archimag
+	* commit bc1c9566b167b16802d79403d8eda09d85beebb9
+
+2008-11-13  archimag  <archimag@gmail.com>
 
 	* doc/TODO, test/test.lisp, tree/attribute.lisp,
-	  tree/packages.lisp: add with-attributes macro
+	tree/packages.lisp: add with-attributes macro
 
-2008-11-12 08:02  archimag
+	* commit ad5f2851425b7aa9e29d25f29ccb674b2681aa9d
+
+2008-11-12  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, doc/lisplogo_fancy_256.png, test/test.lisp,
-	  tree/low-level-api.lisp, tree/parse.lisp, xpath/expression.lisp,
-	  xpath/packages.lisp: Implemented parse from string and binary
-	  stream.
+	tree/low-level-api.lisp, tree/parse.lisp, xpath/expression.lisp,
+	xpath/packages.lisp: Implemented parse from string and binary
+	stream.
 
-2008-10-27 16:07  archimag
+	* commit f26919eb950173207df117b2f0546ad9b7c50354
+
+2008-10-27  archimag  <archimag@gmail.com>
 
 	* xpath/expression.lisp: update
 
-2008-10-27 15:56  archimag
+	* commit b1a84f33dbeab6fec8411b20c0a35b7d3c6f4fa4
+
+2008-10-27  archimag  <archimag@gmail.com>
 
 	* cl-libxml2-test.asd, doc/TODO, test/test.lisp,
-	  xpath/expression.lisp, xpath/low-level-api.lisp,
-	  xpath/packages.lisp, xslt/packages.lisp, xslt/stylesheet.lisp:
-	  update
+	xpath/expression.lisp, xpath/low-level-api.lisp,
+	xpath/packages.lisp, xslt/packages.lisp, xslt/stylesheet.lisp:
+	update
 
-2008-10-26 20:26  archimag
+	* commit 9da691ecb064cd880f5ab23eb7dc3e371c87d74a
+
+2008-10-26  archimag  <archimag@gmail.com>
 
 	* test/test.lisp, tree/objects.lisp, xpath/expression.lisp,
-	  xpath/packages.lisp: update
+	xpath/packages.lisp: update
 
-2008-10-26 14:28  archimag
+	* commit 1b673a77344bd13bdbd541f9fe2dc94a01d379a8
+
+2008-10-26  archimag  <archimag@gmail.com>
 
 	* tree/low-level-api.lisp, tree/objects.lisp, tree/packages.lisp,
-	  xpath/expression.lisp, xpath/low-level-api.lisp,
-	  xpath/packages.lisp, xslt/stylesheet.lisp: update
+	xpath/expression.lisp, xpath/low-level-api.lisp,
+	xpath/packages.lisp, xslt/stylesheet.lisp: update
 
-2008-10-24 15:36  archimag
+	* commit 9bc777daaf7af9077a63445becf8fb46ce6961dd
 
-	* test/test.lisp, tree/packages.lisp, xpath/expression.lisp: update
+2008-10-24  archimag  <archimag@gmail.com>
 
-2008-10-24 14:42  archimag
+	* test/test.lisp, tree/packages.lisp, xpath/expression.lisp:
+	update
 
-	* cl-libxml2.asd, doc/TODO, test/test.lisp, tree/attribute.lisp,
-	  tree/childs.lisp, tree/objects.lisp, xpath/low-level-api.lisp:
+	* commit 8c476dbb9a7aae4eb341d7fb112afd22aecd1a0e
 
-2008-10-23 14:35  archimag
+2008-10-23  archimag  <archimag@gmail.com>
 
-	* cl-libxml2-xpath.asd, cl-libxml2.asd, doc/TODO, tree/childs.lisp,
-	  tree/low-level-api.lisp, tree/objects.lisp, tree/package.lisp,
-	  tree/packages.lisp: update
+	* cl-libxml2-xpath.asd, cl-libxml2.asd, doc/TODO,
+	tree/childs.lisp, tree/low-level-api.lisp, tree/objects.lisp,
+	tree/package.lisp, tree/packages.lisp: update
 
-2008-10-22 21:18  archimag
+	* commit 049c2e7deef94c5292ac9fc057ffb3f2a5a3b1ac
+
+2008-10-22  archimag  <archimag@gmail.com>
 
 	* cl-libxml2-xslt.asd, cl-libxml2.asd, tree/package.lisp,
-	  tree/stylesheet.lisp, xslt/packages.lisp, xslt/stylesheet.lisp:
-	  update
+	tree/stylesheet.lisp, xslt/packages.lisp, xslt/stylesheet.lisp:
+	update
 
-2008-10-22 21:07  archimag
+	* commit fe3e94cf08317696a14b28bc0d5df7fce3264673
+
+2008-10-22  archimag  <archimag@gmail.com>
 
 	* cl-libxml2-xpath.asd, cl-libxml2.asd, tree/low-level-api.lisp,
-	  tree/package.lisp, xpath, xpath/low-level-api.lisp,
-	  xpath/packages.lisp, xslt: update
+	tree/package.lisp, xpath/low-level-api.lisp, xpath/packages.lisp:
+	update
 
-2008-10-22 15:24  archimag
+	* commit 8cd96bccedf207964525c9d2b4266b2d04acc423
+
+2008-10-22  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, tree/low-level-api.lisp, tree/package.lisp,
-	  tree/stylesheet.lisp: initial support xslt
+	tree/stylesheet.lisp: initial support xslt
 
-2008-10-21 18:45  archimag
+	* commit 8fa4ff3b5fcc2af9a7693280cf9d1c7b10407450
 
-	* doc/BUGS, test/data, test/test.lisp, tree/serialize.lisp: update
+2008-10-21  archimag  <archimag@gmail.com>
 
-2008-10-17 15:12  archimag
+	* doc/BUGS, test/data/1.xml, test/test.lisp, tree/serialize.lisp:
+	update
+
+	* commit f17c6e80ee88085202e31be0b87c3213fa16dfd6
+
+2008-10-17  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, doc/BUGS, doc/TODO, tree/low-level-api.lisp,
-	  tree/parse.lisp, tree/serialize.lisp: update
+	tree/parse.lisp, tree/serialize.lisp: update
 
-2008-10-17 12:00  archimag
+	* commit 9c9bb2e2dbb28ceb716967d9de97112e6ddbf9d3
+
+2008-10-17  archimag  <archimag@gmail.com>
 
 	* doc/TODO, tree/attribute.lisp, tree/childs.lisp,
-	  tree/low-level-api.lisp: update
+	tree/low-level-api.lisp: update
 
-2008-10-17 09:34  archimag
+	* commit 14665c7bd3d396b2497c99457e8f8aed0c881843
 
-	* doc/TODO, test/test.lisp, tree/add-remove.lisp, tree/childs.lisp,
-	  tree/low-level-api.lisp, tree/objects.lisp, tree/package.lisp:
-	  update
+2008-10-17  archimag  <archimag@gmail.com>
 
-2008-10-17 06:24  archimag
+	* doc/TODO, test/test.lisp, tree/add-remove.lisp,
+	tree/childs.lisp, tree/low-level-api.lisp, tree/objects.lisp,
+	tree/package.lisp: update
 
-	* cl-libxml2.asd, core, tree: update
+	* commit 7983f763ac4c4819175cd556c31257a58b2702fc
 
-2008-10-16 20:51  archimag
-
-	* cl-libxml2-test.asd, cl-libxml2.asd, core/attribute.lisp,
-	  core/childs.lisp, core/low-level-api.lisp, core/objects.lisp,
-	  core/package.lisp, core/parse.lisp, core/serialize.lisp,
-	  test/package.lisp, test/test.lisp: update
-
-2008-10-16 15:02  archimag
+2008-10-17  archimag  <archimag@gmail.com>
 
 	* cl-libxml2.asd, core/attribute.lisp, core/childs.lisp,
-	  core/core.lisp, core/low-level-api.lisp, core/objects.lisp,
-	  core/package.lisp, core/parse.lisp, core/serialize.lisp,
-	  doc/TODO, test/test.lisp: update
+	core/low-level-api.lisp, core/objects.lisp, core/package.lisp,
+	core/parse.lisp, core/serialize.lisp, tree/attribute.lisp,
+	tree/childs.lisp, tree/low-level-api.lisp, tree/objects.lisp,
+	tree/package.lisp, tree/parse.lisp, tree/serialize.lisp: update
 
-2008-10-16 06:17  archimag
+	* commit 17aee35d8665f1f936462475ca3360eb6e720011
+
+2008-10-16  archimag  <archimag@gmail.com>
+
+	* cl-libxml2-test.asd, cl-libxml2.asd, core/attribute.lisp,
+	core/childs.lisp, core/low-level-api.lisp, core/objects.lisp,
+	core/package.lisp, core/parse.lisp, core/serialize.lisp,
+	test/package.lisp, test/test.lisp: update
+
+	* commit d254a806c627b750721674df9c8f1246a7fcc4cc
+
+2008-10-16  archimag  <archimag@gmail.com>
+
+	* cl-libxml2.asd, core/attribute.lisp, core/childs.lisp,
+	core/core.lisp, core/low-level-api.lisp, core/objects.lisp,
+	core/package.lisp, core/parse.lisp, core/serialize.lisp, doc/TODO,
+	test/test.lisp: update
+
+	* commit 944a12ddf48a634f0ed81135a6e9d7e574a28224
+
+2008-10-16  archimag  <archimag@gmail.com>
 
 	* core/core.lisp, core/low-level-api.lisp, doc/TODO: update
 
-2008-10-14 14:37  archimag
+	* commit bdf9c1e73416709992c2fcb21d34860ee84c8930
 
-	* doc, doc/TODO: add doc/TODO
+2008-10-14  archimag  <archimag@gmail.com>
 
-2008-10-13 23:14  archimag
+	* doc/TODO: add doc/TODO
+
+	* commit 6daa32db1d982a1d4eed53da4c1992b7365ea8f2
+
+2008-10-13  archimag  <archimag@gmail.com>
 
 	* core/core.lisp, core/low-level-api.lisp, core/package.lisp:
-	  update
+	update
 
-2008-10-13 15:25  archimag
+	* commit a7a04e110cae16d10063b5207a95cbc70291b1f4
+
+2008-10-13  archimag  <archimag@gmail.com>
 
 	* core/core.lisp, core/low-level-api.lisp, core/package.lisp,
-	  test/test.lisp: rename functions name in according with cxml-stp
-	  added attribute-value
+	test/test.lisp: rename functions name in according with cxml-stp
+	added attribute-value
 
-2008-10-13 12:33  archimag
+	* commit 4f2ffd510579baf2f3b9863884e6c0e2bbeee9f4
 
-	* cl-libxml2-test.asd, core/core.lisp, core/package.lisp, test,
-	  test/data, test/data/1.xml, test/package.lisp, test/test.lisp:
-	  first test added
+2008-10-13  archimag  <archimag@gmail.com>
 
-2008-10-13 09:23  archimag
+	* cl-libxml2-test.asd, core/core.lisp, core/package.lisp,
+	test/data/1.xml, test/package.lisp, test/test.lisp: first
+	test added
 
-	* cl-libxml2.asd, core, core/core.lisp, core/low-level-api.lisp,
-	  core/package.lisp: First commit!
+	* commit 88d180428a6f2635d877f05602e9432d2bb77fb8
 
-2008-10-13 07:12  
+2008-10-13  archimag  <archimag@gmail.com>
 
-	* .: Initial directory structure.
+	* cl-libxml2.asd, core/core.lisp, core/low-level-api.lisp,
+	core/package.lisp: First commit!
+
+	* commit 2d7f6c408986c5a914974ac5a1470f51db8a01cb
 
