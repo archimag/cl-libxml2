@@ -12,4 +12,5 @@
            #:with-document-factory
            #:namespace
            #:attributes
-           #:text))
+           #:text
+           #:process-instruction))

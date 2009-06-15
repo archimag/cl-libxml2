@@ -69,11 +69,23 @@
                          (if format-arguments
                              (apply  #'format nil (cons control-string format-arguments))
                              control-string)))
+
+;;; process-instruction
+
+(defun process-instruction (name content)
+  (xtree:append-child *node*
+                      (xtree:make-process-instruction name
+                                                      content)))
   
 ;;; xfactory
 
 (defmacro with-element-factory ((&rest makers) &body args)
-  `(progn ,@(tree-to-commands args makers)))
+  (let ((commands (tree-to-commands args makers)))
+    (when (cdr commands)
+      (error "invalid number of root commands: ~A" (length commands)))
+    `,(car commands)))
 
 (defmacro with-document-factory ((&rest makers) &body args)
-  `(xtree:make-document (with-element-factory (,@makers) ,@args)))
+  `(let ((*node* (xtree:make-document)))
+     ,@(tree-to-commands args makers)
+     *node*))
