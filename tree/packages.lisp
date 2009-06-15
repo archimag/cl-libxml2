@@ -98,6 +98,9 @@
    :remove-attribute
    :with-attributes
 
+   :encode-entitites
+   :encode-special-chars
+
 
    ;; errors
    :xmlerror
