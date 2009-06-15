@@ -289,18 +289,18 @@
                           (XUL "window"
                                (xfactory:namespace "http://www.w3.org/1999/xlink" "xlink")
                                (XUL "vbox"
-                                    (xfactory:attribute :flex 1
+                                    (xfactory:attributes :flex 1
                                                         :width 500)
                                     (loop for i from 1 to 3
                                        do (XUL "label" 
                                                (xfactory:text "text ~A" i)))
                                     (SVG "svg"
-                                         (xfactory:attribute :width "500px"
+                                         (xfactory:attributes :width "500px"
                                                              :height "500px")
                                          (SVG "a"
-                                              (xfactory:attribute "xlink:href" "http://www.w3.org")
+                                              (xfactory:attributes "xlink:href" "http://www.w3.org")
                                               (SVG "rect"
-                                                   (xfactory:attribute :x 100
+                                                   (xfactory:attributes :x 100
                                                                        :y 100
                                                                        :width 300
                                                                        :height 200

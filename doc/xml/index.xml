@@ -42,12 +42,42 @@
         <li>XSLT extension elements</li>
         <li>Translate <libxml2 /> and <libxslt /> errors to Lisp conditions</li>
         <li><a href="http://common-lisp.net/project/iterate/">iterate</a> drivers for enumerate child nodes and etc.</li>
+        <li>The XFACTORY system provides a simple and compact syntax for generating XML</li>
     </ul>
 
     <h2>Recent Changes</h2>
     <ul>
         <li>
-            2009-02-06 Version 0.3 is released
+            2009-06-15 Version 0.3.1
+            <ul>
+                <li>Change licence to Lisp-LGPL</li>
+                <li>The new <strong>XFACTORY</strong> system provides a simple and compact syntax for generating XML</li>
+                <li>Rename cl-libxml2-xslt system to cl-libxslt</li>
+                <li>
+                    New functions:
+                    <ul>
+                        <li><strong>xtree:with-object</strong> macro (for with-libxml2-object replacement)</li>
+                        <li><strong>xtree:make-child-element</strong></li>
+                        <li><strong>xtree:make-child-text</strong></li>
+                        <li><strong>xtree:encode-entitites</strong></li>
+                        <li><strong>xtree:encode-special-chars</strong></li>
+                        <li><strong>xtree:document-properties</strong></li>
+                        <li><strong>xtree:append-document-property</strong></li>
+                    </ul>
+                </li>
+                <li>Add encoding and pretty-print keyword arguments to <strong>xtree:serialize</strong> generic function</li>
+                <li>Add parse-options to <strong>xtree:parse</strong> and <strong>xtree:process-xinclude</strong> functions</li>
+                <li>Add optional argument "document" in function <strong>xtree:make-process-instruction</strong></li>
+                <li>In function <strong>xtree:make-document</strong> document-element argument is optional</li>
+                <li>Now <strong>xtree:namespace-uri</strong> and <strong>xtree:namespace-prefix</strong> is generic functions</li>
+                <li>Implement method (setf <strong>xtree:base-url</strong>) ((empty (eql nil)) (node node))</li>
+                <li>Implement use already exist "xpath context" in <strong>xslt:define-xslt-element</strong></li>
+                <li>Some bug fixes</li>
+            </ul>
+        </li>
+        <br />
+        <li>
+            2009-02-06 Version 0.3
             <ul>
                 <li>Nickname <strong>tree</strong> for <strong>libxml2.tree</strong> package is removed</li>
                 <li>New function <strong>html:parse-html</strong></li>
