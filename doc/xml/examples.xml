@@ -285,6 +285,7 @@
     <code>
 (xtree:with-object (doc (xfactory:with-document-factory ((XUL "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" "xul")
                                                          (SVG "http://www.w3.org/2000/svg" "svg"))
+                          (xfactory:process-instruction "xml-stylesheet" "href=\"style.css\" type=\"text/css\"")
                           (XUL "window"
                                (xfactory:namespace "http://www.w3.org/1999/xlink" "xlink")
                                (XUL "vbox"
@@ -307,6 +308,7 @@
   (xtree:serialize doc *standard-output* :pretty-print t))
 ==>
 &lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;?xml-stylesheet href="style.css" type="text/css"?&gt;
 &lt;xul:window xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:xlink="http://www.w3.org/1999/xlink"&gt;
   &lt;xul:vbox flex="1" width="500"&gt;
     &lt;xul:label&gt;text 1&lt;/xul:label&gt;
