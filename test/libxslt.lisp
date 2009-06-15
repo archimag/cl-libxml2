@@ -1,4 +1,9 @@
 ;;; libxslt.lisp
+;;;
+;;; This file is part of the cl-libxml2 library, released under Lisp-LGPL.
+;;; See file COPYING for details.
+;;;
+;;; Author: Moskvitin Andrey <archimag@gmail.com>
 
 (defpackage :libxml2.xslt.test
   (:use :cl :iter :libxml2.tree :libxml2.xpath :libxml2.xslt :lift)

@@ -1,4 +1,9 @@
-;; cl-libxslt.asd
+;;; cl-libxslt.asd
+;;;
+;;; This file is part of the cl-libxml2 library, released under Lisp-LGPL.
+;;; See file COPYING for details.
+;;;
+;;; Author: Moskvitin Andrey <archimag@gmail.com>
 
 (defpackage :cl-libxslt-system
   (:use :cl :asdf))
@@ -11,8 +16,8 @@
   :components
   ((:module :xslt
             :components
-            ((:file "package")
-             (:file "xslt" :depends-on ("package"))
+            ((:file "packages")
+             (:file "xslt" :depends-on ("packages"))
              (:file "extensions" :depends-on ("xslt"))
              (:file "stylesheet" :depends-on ("extensions"))))))
 

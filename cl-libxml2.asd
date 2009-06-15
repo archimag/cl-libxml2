@@ -1,4 +1,10 @@
-;; cl-libxml2.asd
+;;; cl-libxml2.asd
+;;;
+;;; This file is part of the cl-libxml2 library, released under Lisp-LGPL.
+;;; See file COPYING for details.
+;;;
+;;; Author: Moskvitin Andrey <archimag@gmail.com>
+
 
 (defpackage :cl-libxml2-system
   (:use :cl :asdf))
@@ -23,17 +29,17 @@
              (:file "resolve" :depends-on ("parse"))))
    (:module :xpath
             :components
-            ((:file "package")
-             (:file "node-set" :depends-on ("package"))
+            ((:file "packages")
+             (:file "node-set" :depends-on ("packages"))
              (:file "xpath-object" :depends-on ("node-set"))
-             (:file "xpath-context" :depends-on ("package"))
+             (:file "xpath-context" :depends-on ("packages"))
              (:file "expression" :depends-on ("xpath-object" "xpath-context"))
              (:file "extensions" :depends-on ("expression")))
             :depends-on ("tree"))
    (:module :html
             :components
-            ((:file "package")
-             (:file "html" :depends-on ("package")))
+            ((:file "packages")
+             (:file "html" :depends-on ("packages")))
             :depends-on ("tree"))))
 
 (defmethod perform ((o test-op) (c (eql (find-system 'cl-libxml2))))
@@ -56,4 +62,5 @@
          (failures (funcall (intern (symbol-name 'failures) :lift) test-results)))
     (if (or errors failures)
         (error "test-op failed: ~A"
-               (concatenate 'list errors failures)))))
+               (concatenate 'list errors failures))
+        (print test-results))))

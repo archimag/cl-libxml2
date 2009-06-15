@@ -1,4 +1,9 @@
 ;;; xfactory.lisp
+;;;
+;;; This file is part of the cl-libxml2 library, released under Lisp-LGPL.
+;;; See file COPYING for details.
+;;;
+;;; Author: Moskvitin Andrey <archimag@gmail.com>
 
 (in-package :libxml2.xfactory)
 
@@ -37,7 +42,7 @@
 
 ;;; attribute
 
-(defun attribute (&rest args)
+(defun attributes (&rest args)
   (when (oddp (length args))
     (error "odd number of args to SETF"))
   (iter (for l first args then (cddr l))

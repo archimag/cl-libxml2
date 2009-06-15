@@ -32,4 +32,5 @@
          (failures (funcall (intern (symbol-name 'failures) :lift) test-results)))
     (if (or errors failures)
         (error "test-op failed: ~A"
-               (concatenate 'list errors failures)))))
+               (concatenate 'list errors failures))
+        (print test-results))))
