@@ -74,18 +74,5 @@
     <p>With xslt: </p>
     <code>
         * (asdf:operate &#x27;asdf:test-op :cl-libxslt)
-    </code>
-
-    <h2>Gentoo Linux</h2>
-    <p>For Gentoo users availabe <a href="http://repo.or.cz/w/restas-lisp-overlay.git" rel="nofollow">restas-lisp-overlay</a>: </p>
-
-    <code>
-        $ mkdir /usr/local/overlays
-        $ cd /usr/local/overlays
-        $ git clone http://repo.or.cz/r/gentoo-lisp-overlay.git
-        $ get clone http://repo.or.cz/r/restas-lisp-overlay.git
-        $ echo &quot;PORTDIR_OVERLAY=\&quot;/usr/local/overlays/gentoo-lisp-overlay /usr/local/overlays/restas-lisp-overlay\&quot;&quot; &gt;&gt; /etc/make.conf
-        $ emerge cl-libxml2
-    </code>
-    
+    </code>    
 </page>
