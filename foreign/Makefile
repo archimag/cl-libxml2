@@ -1,10 +1,13 @@
 # This file is part of the cl-libxml2 library, released under Lisp-LGPL.
 # See file COPYING for details.
 #
-# Author: Moskvitin Andrey <archimag@gmail.com>
+# Author: Moskvitin Andrey <archimag@gmail.com>,  Stelian Ionescu <stelian.ionescu-zeus@poste.it>
 
 CC = gcc
 PREFIX = /usr
+
+LIBXML2_CFLAGS = $(shell pkg-config --cflags libxml-2.0)
+LIBXML2_LIBS = $(shell pkg-config --libs libxml-2.0)
 
 INSTALL = install
 INSOPTS = -s -m 755 -o 0 -g 0
@@ -12,7 +15,7 @@ INSOPTS = -s -m 755 -o 0 -g 0
 all: cllibxml2.so
 
 cllibxml2.so: cllibxml2.c
-	$(CC) -I/usr/include/libxml2 -shared -fPIC cllibxml2.c -o cllibxml2.so
+	$(CC) $(CFLAGS) $(LDFLAGS) $(LIBXML2_CFLAGS) $(LIBXML2_LIBS) -shared -fPIC $< -o $@
 
 clean:
 	rm -f cllibxml2.so
