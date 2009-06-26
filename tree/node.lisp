@@ -130,9 +130,10 @@
   (content %xmlCharPtr))
 
 (defun make-child-text (node content)
-  (with-foreign-string (%content content)
-    (%xmlNodeAddContent (pointer node)
-                        %content)))
+  (if content
+      (with-foreign-string (%content content)
+        (%xmlNodeAddContent (pointer node)
+                            %content))))
                       
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
