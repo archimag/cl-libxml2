@@ -13,4 +13,5 @@
            #:namespace
            #:attributes
            #:text
-           #:process-instruction))
+           #:process-instruction
+           #:*node*))
