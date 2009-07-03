@@ -132,7 +132,7 @@
 (defun make-child-text (node content &key encode)
   (if content
       (with-foreign-string (%content (case encode
-                                       (:special-charse (encode-special-chars (document node)
+                                       (:special-chars (encode-special-chars (document node)
                                                                               content))
                                        (:entitites (encode-entitites (document node)
                                                                      content))
