@@ -15,14 +15,13 @@
   :depends-on (#:cffi #:iterate #:puri #:flexi-streams #:alexandria #:garbage-pools #:metabang-bind)
   :components
   ((:module :tree
-            :serial t
             :components
             ((:file "packages")
              (:file "xtree" :depends-on ("packages"))
              (:file "error" :depends-on ("xtree"))
              (:file "namespace" :depends-on ("error"))
              (:file "attribute" :depends-on ("error"))
-             (:file "node" :depends-on ("namespace" "entities"))
+             (:file "node" :depends-on ("namespace"))
              (:file "document" :depends-on ("node"))
              (:file "parse" :depends-on ("document"))
              (:file "serialize" :depends-on ("document"))
