@@ -22,11 +22,12 @@
              (:file "error" :depends-on ("xtree"))
              (:file "namespace" :depends-on ("error"))
              (:file "attribute" :depends-on ("error"))
-             (:file "node" :depends-on ("namespace"))
+             (:file "node" :depends-on ("namespace" "entities"))
              (:file "document" :depends-on ("node"))
              (:file "parse" :depends-on ("document"))
              (:file "serialize" :depends-on ("document"))
-             (:file "resolve" :depends-on ("parse"))))
+             (:file "resolve" :depends-on ("parse"))
+             (:file "entities" :depends-on ("packages"))))
    (:module :xpath
             :components
             ((:file "packages")

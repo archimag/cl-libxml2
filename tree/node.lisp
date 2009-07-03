@@ -129,9 +129,14 @@
   (parent %xmlNodePtr)
   (content %xmlCharPtr))
 
-(defun make-child-text (node content)
+(defun make-child-text (node content &key encode)
   (if content
-      (with-foreign-string (%content content)
+      (with-foreign-string (%content (case encode
+                                       (:special-charse (encode-special-chars (document node)
+                                                                              content))
+                                       (:entitites (encode-entitites (document node)
+                                                                     content))
+                                       (otherwise content)))
         (%xmlNodeAddContent (pointer node)
                             %content))))
                       
