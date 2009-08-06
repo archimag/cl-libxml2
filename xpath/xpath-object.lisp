@@ -23,7 +23,7 @@
   (:xpath-users  8)
   (:xpath-xslt-tree 9))
 
-(defcstruct %xmlXPathObject 
+(defcstruct %xmlXPathObject
   (%type %xmlXPathObjectType)
   (%nodesetval %xmlNodeSetPtr)
   (%boolval :int)
@@ -60,7 +60,8 @@
     (:xpath-undefined nil)
     (:xpath-boolean (> (wrapper-slot-value res '%boolval) 0))
     (:xpath-number  (wrapper-slot-value res '%floatval))
-    (:xpath-string (unless (= 0 (mem-ref (wrapper-slot-value res '%stringval) :uchar))
+    (:xpath-string (unless (or (null-pointer-p (wrapper-slot-value res '%stringval))
+                                (= 0 (mem-ref (wrapper-slot-value res '%stringval) :uchar)))
                      (foreign-string-to-lisp (wrapper-slot-value res '%stringval))))
     (:xpath-nodeset (libxml2.tree::wrapper-slot-wrapper res '%nodesetval 'node-set))
     (otherwise nil)))

@@ -74,8 +74,10 @@ NOTE: this will not change the document content encoding, just the META flag ass
   (:documentation "parse html"))
 
 (defun parse-html (obj &key)
-  (make-instance 'document
-                 :pointer (parse-html/impl obj)))
+  (let ((ptr (parse-html/impl obj)))
+    (if (not (null-pointer-p ptr))
+        (make-instance 'document
+                       :pointer ptr))))
 
 ;;; parse-html ((str string) &key)
 
