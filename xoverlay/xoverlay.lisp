@@ -38,7 +38,7 @@
 (defmethod apply-overlay (origin (overlay xtree:document) &key html)
   (apply-overlay (xtree:parse origin)
                  overlay
-                 :html html)))
+                 :html html))
 
 (defmethod apply-overlay (origin overlay &key html)
   (xtree:with-parse-document (overlay-doc overlay)
