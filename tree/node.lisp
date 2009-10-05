@@ -450,7 +450,8 @@
   (node %xmlNodePtr))
 
 (defun detach (node)
-  (%xmlUnlinkNode (pointer node)))
+  (%xmlUnlinkNode (pointer node))
+  node)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; remove-child
