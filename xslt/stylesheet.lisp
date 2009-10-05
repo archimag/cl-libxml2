@@ -161,6 +161,12 @@
 (defmethod transform (style document)
   (with-parse-document (doc document)
     (transform style doc)))
+
+;;; transfomr (path obj)
+
+(defmethod transform ((path pathname) (doc document))
+  (with-stylesheet (style path)
+    (transform style obj)))
   
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; with-tranform-result
