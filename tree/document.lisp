@@ -183,6 +183,14 @@
 (defun document (node)
   (wrapper-slot-wrapper node '%doc 'document))
 
+(define-libxml2-function ("xmlSetTreeDoc" %xmlSetTreeDoc) :void
+  (tree %xmlNodePtr)
+  (doc %xmlDocPtr))
+
+(defun (setf document) (doc node)
+  (%xmlSetTreeDoc (pointer node)
+                  (pointer doc)))
+  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; document-properties
