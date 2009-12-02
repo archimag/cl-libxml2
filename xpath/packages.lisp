@@ -28,6 +28,7 @@
    :find-number
    :find-boolean
    :find-single-node
+   :find-list
 
    :*default-ns-map*
    :getpath

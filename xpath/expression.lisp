@@ -121,6 +121,15 @@
              (> (node-set-length (xpath-object-value res)) 0))
         (node-set-at (xpath-object-value res) 0))))
 
+(defun find-list (obj expr &key (ns-map *default-ns-map*))
+  (with-xpath-object (res (obj expr ns-map))
+    (if (and res
+             (eql (xpath-object-type res) :xpath-nodeset)
+             (xpath-object-value res))
+        (iter (for node in-nodeset (xpath-object-value res))
+              (collect node)))))
+
+  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; getpath
