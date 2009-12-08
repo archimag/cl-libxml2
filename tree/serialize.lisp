@@ -70,6 +70,35 @@
             (%xmlFree %ptr)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; serialize ((doc document) (s (eql :to-octets)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmethod serialize ((doc document) (s (eql :to-octets)) &key (encoding :utf-8) (pretty-print nil))
+  (with-foreign-string (%encoding (encoding-string encoding))
+    (with-foreign-pointer (%xml-string (foreign-type-size :pointer))
+      (with-foreign-pointer (%xml-string-len (foreign-type-size :pointer))
+        (%xmlDocDumpFormatMemoryEnc (pointer doc)
+                                    %xml-string
+                                    %xml-string-len
+                                    %encoding
+                                    (format-flag pretty-print))
+        (let ((%ptr (mem-ref %xml-string :pointer)))
+          (unwind-protect
+               (let ((octets (make-array (iter (for i from 0)
+                                               (while (not (zerop (mem-ref %ptr :uint8  i))))
+                                               (finally (return i)))
+                                         :element-type '(unsigned-byte 8))))
+                 (iter (for i from 0)
+                       (for octet = (mem-ref %ptr :uint8  i))
+                       (while (not (zerop octet)))
+                       (setf (aref octets i)
+                             octet))
+                 octets)
+            (%xmlFree %ptr)))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; serialize ((doc document) (stream stream))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -83,8 +112,15 @@
 
 (defcallback %write-string-stream :int ((context :pointer) (buffer :pointer) (len :int))
   (declare (ignore context))
-  (write-string (foreign-string-to-lisp buffer :count len) *stream-for-xml-serialize*)
-  len)
+  (flet ((impl (buffer len)
+           (ignore-errors
+             (multiple-value-bind (string count) (foreign-string-to-lisp buffer :count len)
+               (write-string string *stream-for-xml-serialize*)
+               count))))
+    (or (impl buffer len)
+        (impl buffer (- len 1))
+        (impl buffer (- len 2))
+        (impl buffer (- len 3)))))
 
 (defun %stream-writer-callback (stream)
   (if (subtypep (stream-element-type stream)
