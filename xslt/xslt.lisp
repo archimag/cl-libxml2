@@ -17,10 +17,14 @@
   (:unix (:or "libexslt.so" "libexslt.so.0"))
   (t (:default "libexslt")))
 
+(define-foreign-library cllibxml2
+  (:unix (:or "cllibxml2.so"))
+  (t (:default "cllibxml2")))
 
 (with-simple-restart (skip "Skip loading foreign library libxslt.")
   (use-foreign-library libxslt)
-  (use-foreign-library libexslt))
+  (use-foreign-library libexslt)
+  (use-foreign-library cllibxml2))
 
 (define-libxml2-function ("xsltInit" %xsltInit) :void)
 (define-libxml2-function ("exsltRegisterAll" register-exslt-extensions) :void)

@@ -5,7 +5,7 @@
 ;;;
 ;;; Author: Moskvitin Andrey <archimag@gmail.com>
 
-(in-package :libxml2.xfactory)
+(in-package #:libxml2.xfactory)
 
 (defvar *node*)
 

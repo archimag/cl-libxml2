@@ -6,16 +6,13 @@
 CC = gcc
 PREFIX = /usr
 
-LIBXML2_CFLAGS = $(shell pkg-config --cflags libxml-2.0)
-LIBXML2_LIBS = $(shell pkg-config --libs libxml-2.0)
-
 INSTALL = install
 INSOPTS = -s -m 755 -o 0 -g 0
 
 all: cllibxml2.so
 
 cllibxml2.so: cllibxml2.c
-	$(CC) $(CFLAGS) $(LDFLAGS) $(LIBXML2_CFLAGS) $(LIBXML2_LIBS) -shared -fPIC $< -o $@
+	$(CC) $(CFLAGS) $(LDFLAGS) -shared -fPIC $< -o $@
 
 clean:
 	rm -f cllibxml2.so

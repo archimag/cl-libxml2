@@ -1,6 +1,6 @@
 ;;;; xoverlay.lisp
 
-(in-package :libxml2.xoverlay)
+(in-package #:libxml2.xoverlay)
 
 (defgeneric apply-overlay (origin overlay &key html))
 

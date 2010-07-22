@@ -17,18 +17,6 @@
 
 (with-simple-restart (skip "Skip loading foreign library libxml2.")
   (use-foreign-library libxml2))
-
-(define-foreign-library cllibxml2
-  (:unix (:or "cllibxml2.so"))
-  (t (:default "cllibxml2")))
-
-(use-foreign-library cllibxml2)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; check-version
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defcfun ("xmlGetVersion" version) :int)
   
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; base forward declarations

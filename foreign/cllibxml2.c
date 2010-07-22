@@ -5,11 +5,9 @@
 //
 // Author: Moskvitin Andrey <archimag@gmail.com>
 
-
 #include <stdio.h>
 #include <stdarg.h>
-
-#include <libxml/tree.h>
+#include <malloc.h>
 
 typedef void (*lisp_level_error_func) (const char *string);
 
@@ -37,19 +35,5 @@ void cl_libxml2_error_func (lisp_level_error_func lispFun, const char *msg, ...)
         va_end(args);
     }
 }
-
-int xmlGetVersion () {
-    return LIBXML_VERSION;
-}
-
-#if LIBXML_VERSION >= 20700
-int xmlGetDocProperties (xmlDocPtr doc) {
-    return doc->properties;
-}
-
-void xmlSetDocProperties (xmlDocPtr doc, int properties) {
-    doc->properties = properties;
-}
-#endif
 
 

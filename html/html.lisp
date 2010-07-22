@@ -5,8 +5,7 @@
 ;;;
 ;;; Author: Moskvitin Andrey <archimag@gmail.com>
 
-(in-package :libxml2.html)
-
+(in-package #:libxml2.html)
 
 (defctype %htmlDocPtr %xmlDocPtr)
 
