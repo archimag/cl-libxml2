@@ -4,12 +4,10 @@ Dowload and Installation
 Implementation-specific notes
 -----------------------------
 
-`cl-libxml2`_ tested with sbcl and clisp on Gentoo Linux (with use gentoo-lisp-overlay).
+`cl-libxml2`_ is known to work with SBCL and CLISP on Gentoo Linux using gentoo-lisp-overlay.
 
 Requirements
 ------------
-
-`cl-libxml2`_ needs:
 
 * `libxml2`_
 * `libxslt`_ (optional, necessary for xslt support)
@@ -32,11 +30,11 @@ Download `tarballs`_ or get it from git:
 Build C helper library
 ----------------------
 
-libxslt for error handling require callback functions that called with a varying
-number of arguments of varying types (see xsltSetGenericErrorFunc). cffi is do not
-support it. Thus, C helper library are required for translate libxslt errors to lisp
-conditions. The helper library reside in the directory foreign.
-::
+libxslt requires functions with variable arguments list for error
+handling callbacks (see xsltSetGenericErrorFunc). CFFI does not
+support such functions, and, thus, C helper library is required for
+libxslt errors translation into lisp conditions. The helper library
+resides in the directory foreign.  ::
 
   $ cd /path/to/cl-libxml2
   $ make -C foreign
@@ -52,19 +50,19 @@ Register the .asd file, e.g. by symlinking it:
   $ ln -sf `pwd`/cl-libxml2/cl-libxslt.asd /path/to/your/registry/
   $ ln -sf `pwd`/cl-libxml2/xfactory.asd /path/to/your/registry/
 
-The compile cl-libxlm2 without xslt using:
-
-.. code-block:: common-lisp
-
-  (asdf:operate 'asdf:load-op :cl-libxml2)
-
-Or with xslt using
+To compile cl-libxlm2 with XSLT support use:
 
 .. code-block:: common-lisp
 
   (asdf:operate 'asdf:load-op :cl-libxslt)
 
-The compile xfactory system:
+Or without XSLT:
+
+.. code-block:: common-lisp
+
+  (asdf:operate 'asdf:load-op :cl-libxml2)
+
+To compile XFactory system:
 
 .. code-block:: common-lisp
 
@@ -72,24 +70,25 @@ The compile xfactory system:
 
 Run test suite (optional)
 -------------------------
+Compile cl-libxlm2 with XSLT support as described above.
 
-The test suite can be executed using the asdf test-op operator. If cl-libxml2
-has not been loaded with asdf:load-op, the asdf:test-op operator will automatically
-load cl-libxml2.
+Test suite can be launched by asdf's test-op operator. If cl-libxml2
+has not been yet loaded with asdf:load-op, asdf:test-op will do it
+automatically.
 
-Run tests without xslt:
-
-.. code-block:: common-lisp
-
-  (asdf:operate 'asdf:test-op :cl-libxml2)
-
-With xslt:
+Run tests with XSLT:
 
 .. code-block:: common-lisp
 
   (asdf:operate 'asdf:test-op :cl-libxslt)
 
-Run tests for xfactory system:
+Without XSLT:
+
+.. code-block:: common-lisp
+
+  (asdf:operate 'asdf:test-op :cl-libxml2)
+
+And for XFactory system:
 
 .. code-block:: common-lisp
 

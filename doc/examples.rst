@@ -1,11 +1,12 @@
 Code Examples
 =============
 
-cl-libxml2 is a binding to C-library, resource management is necessary! Use:
+cl-libxml2 binds C-library, thus resource management is necessary! Use
+next functions to simplify your life:
 
 * tree:release
 * tree:with-parse-document
-* tree:with-libxml2-object
+* tree:with-object
 * `garbage-pools`_
 
 Tree API
@@ -21,7 +22,7 @@ Tree API
 
 .. code-block:: common-lisp
 
-  (tree:with-libxml2-object (doc (tree:parse "<root />"))
+  (tree:with-object (doc (tree:parse "<root />"))
       ...)
 
 **with-parse-document**

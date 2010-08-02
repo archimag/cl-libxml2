@@ -2,7 +2,7 @@
  About
 =======
 
-:Author:       `Moskvitin Andrey`_
+:Author:       `Andrey Moskvitin`_
 :Homepage:     http://code.google.com/p/cl-libxml2/
 :Discussion:   http://groups.google.com/group/cl-libxml2-devel
 :Licence:      `Lisp LGPL`_
@@ -11,18 +11,18 @@ Features:
 =========
 
 * Interfaces for tree manipulation (like `cxml-stp`_)
-* Interface for an HTML 4.0 non-verifying parser
+* Interface for HTML 4.0 non-validating parser
 * Specific APIs to process HTML tree, especially serialization
 * XPath API
 * XSLT API
 * Custom URL resolvers
 * XPath extension functions
 * XSLT extension elements
-* Translate `libxml2`_ and `libxslt`_ errors to Lisp conditions
-* `iterate`_ drivers for enumerate child nodes and etc.
-* The XFACTORY system provides a simple and compact syntax for generating XML
+* Translates `libxml2`_ and `libxslt`_ errors to Lisp conditions
+* Extends the `iterate`_ with custom drivers for child nodes enumeration, etc
+* The XFACTORY system provides a simple and compact syntax for XML generation
 
-.. _Moskvitin Andrey: archimag@gmail.com
+.. _Andrey Moskvitin: archimag@gmail.com
 .. _Lisp LGPL: http://opensource.franz.com/preamble.html
 
 .. _libxml2: http://www.xmlsoft.org/

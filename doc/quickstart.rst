@@ -1,10 +1,10 @@
 Quick Start
 ===========
 
-Parsing
--------
+Parsing the tree
+----------------
 
-Parsing string to tree:
+Parse string to tree:
 
 .. code-block:: common-lisp
 
@@ -18,31 +18,31 @@ Save result for later:
   (defparameter *doc* *)
   *DOC*
 
-Inspect tree
-------------
+Inspecting the tree
+-------------------
 
-Root element (documentElement):
+Get root element (documentElement):
 
 .. code-block:: common-lisp
 
   (xtree:root *doc*)
   #<LIBXML2.TREE:NODE {C093499}>
 
-Local name of the node (tagName):
+Get local name of the node (tagName):
 
 .. code-block:: common-lisp
 
   (xtree:local-name (xtree:root *doc*))
   "root"
 
-Attribute value:
+Get attribute's value:
 
 .. code-block:: common-lisp
 
   (xtree:attribute-value (xtree:root *doc*) "attr")
   "Hello world!"
 
-Enumerate child nodes:
+Enumerate child's nodes:
 
 .. code-block:: common-lisp
 
@@ -52,10 +52,10 @@ Enumerate child nodes:
         (collect (xtree:local-name node)))
   ("a" "b" "c")
 
-Modify tree
------------
+Tree modification
+-----------------
 
-Change attribute value:
+Change attribute's value:
 
 .. code-block:: common-lisp
 
@@ -69,7 +69,7 @@ Add new attribute:
   (setf (xtree:attribute-value (xtree:root *doc*) "test") "new attribute")
   "new attribute"
 
-Append child nodes:
+Append nodes to child:
 
 .. code-block:: common-lisp
 
@@ -111,10 +111,10 @@ Free memory
   (xtree:release *doc*)
   NIL
 
-To simlify memory management, use
+To simlify memory management use:
 
 * xtree:with-parse-document
-* xtree:with-libxml2-object
+* xtree:with-object
 * `garbage-pools`_
 
 .. code-block:: common-lisp
