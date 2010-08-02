@@ -166,7 +166,7 @@
 
 (defmethod transform ((path pathname) (doc document))
   (with-stylesheet (style path)
-    (transform style obj)))
+    (transform style doc)))
   
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; with-tranform-result
