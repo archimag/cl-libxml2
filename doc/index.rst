@@ -22,7 +22,7 @@ Features:
 * `iterate`_ drivers for enumerate child nodes and etc.
 * The XFACTORY system provides a simple and compact syntax for generating XML
 
-.. _Moskvitin Andrey: mailto:archimag@gmail.com
+.. _Moskvitin Andrey: archimag@gmail.com
 .. _Lisp LGPL: http://opensource.franz.com/preamble.html
 
 .. _libxml2: http://www.xmlsoft.org/
