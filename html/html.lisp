@@ -69,11 +69,14 @@ NOTE: this will not change the document content encoding, just the META flag ass
 ;; parse
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defgeneric parse-html/impl (obj &key)
+;; (defgeneric parse-html/impl (obj &key)
+;;   (:documentation "parse html"))
+
+(defgeneric parse-html (obj &key &allow-other-keys)
   (:documentation "parse html"))
 
-(defun parse-html (obj &key)
-  (let ((ptr (parse-html/impl obj)))
+(defmethod parse-html :around (obj &key &allow-other-keys)
+  (let ((ptr (call-next-method)))
     (if (not (null-pointer-p ptr))
         (make-instance 'document
                        :pointer ptr))))
@@ -86,7 +89,7 @@ NOTE: this will not change the document content encoding, just the META flag ass
   (encoding %xmlCharPtr)
   (options :int))
 
-(defmethod parse-html/impl ((str string)  &key)
+(defmethod parse-html ((str string)  &key)
   (with-foreign-string (%utf8 "utf-8")
     (with-foreign-string (%str str)
       (%htmlReadDoc %str
@@ -101,25 +104,37 @@ NOTE: this will not change the document content encoding, just the META flag ass
   (encoding %xmlCharPtr)
   (options :int))
 
-(defmethod parse-html/impl ((path pathname) &key)
-  (with-foreign-string (%path (format nil "~A" path))
-    (%htmlReadFile %path
-                   (cffi:null-pointer)
-                   0)))
+(defmethod parse-html ((path pathname) &key encoding)
+  (gp:with-garbage-pool ()
+    (let ((%path (gp:cleanup-register (cffi:foreign-string-alloc (format nil "~A" path))
+                                      #'cffi:foreign-string-free))
+          (%encoding (if encoding
+                         (gp:cleanup-register (cffi:foreign-string-alloc encoding)
+                                              #'cffi:foreign-string-free)
+                         (cffi:null-pointer))))
+      (%htmlReadFile %path
+                     %encoding
+                     0))))
 
 ;;; parse-html ((uri puri:uri))
 
-(defmethod parse-html/impl ((uri puri:uri) &key)
-  (with-foreign-string (%path (format nil "~A" uri))
-    (%htmlReadFile %path
-                   (cffi:null-pointer)
-                   0)))
+(defmethod parse-html ((uri puri:uri) &key encoding)
+  (gp:with-garbage-pool ()
+    (let ((%path (gp:cleanup-register (cffi:foreign-string-alloc (format nil "~A" uri))
+                                      #'cffi:foreign-string-free))
+          (%encoding (if encoding
+                         (gp:cleanup-register (cffi:foreign-string-alloc encoding)
+                                              #'cffi:foreign-string-free)
+                         (cffi:null-pointer))))
+      (%htmlReadFile %path
+                     %encoding
+                     0))))
 
 ;;; parse-html ((octets (array unsigned-byte)))
 
-(defmethod parse-html/impl ((octets array) &key)
+(defmethod parse-html ((octets array) &key encoding)
   (flexi-streams:with-input-from-sequence (in octets)
-    (parse-html/impl in)))
+    (parse-html in :encoding encoding)))
 
 
 ;;; parse-html ((stream stream)
@@ -132,9 +147,9 @@ NOTE: this will not change the document content encoding, just the META flag ass
   (encoding %xmlCharPtr)
   (options :int))
 
-(defmethod parse-html/impl ((stream stream) &key)
+(defmethod parse-html ((stream stream) &key encoding)
   (let ((xtree::*stream-for-xml-parse* stream))
-    (with-foreign-string (%utf-8 "utf-8")
+    (with-foreign-string (%utf-8 (or encoding "utf-8"))
       (%htmlReadIO (xtree::%stream-reader-callback xtree::*stream-for-xml-parse*)
                   (cffi:null-pointer)
                   (cffi:null-pointer)
@@ -146,8 +161,8 @@ NOTE: this will not change the document content encoding, just the META flag ass
 ;;; with-parse-html
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro with-parse-html ((var src) &rest body)
-  `(let ((,var (parse-html ,src)))
+(defmacro with-parse-html ((var src &rest keys &key &allow-other-keys) &rest body)
+  `(let ((,var (parse-html ,src ,@keys)))
      (unwind-protect
           (progn ,@body)
        (if ,var (release ,var)))))
