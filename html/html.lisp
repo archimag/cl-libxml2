@@ -245,3 +245,32 @@ NOTE: this will not change the document content encoding, just the META flag ass
                                (null-pointer))
     (xtree::%xmlOutputBufferClose %buf)))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; serialize-html ((node node) (stream stream))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-libxml2-function ("htmlNodeDumpOutput" %htmlNodeDumpOutput) :void
+  (buf xtree::%xmlOutputBufferPtr)
+  (doc %xmlDocPtr)
+  (node %xmlNodePtr)
+  (encoding %xmlCharPtr))
+
+(defmethod serialize-html ((node node) (stream stream) &key)
+  (case (node-type node)
+    (:xml-document-fragment-node
+     (iter (for item in (all-childs node))
+           (serialize-html item stream)))
+    (otherwise
+     (with-foreign-string (%encoding "utf-8")
+       (let ((xtree::*stream-for-xml-serialize* stream))
+         (gp:with-garbage-pool ()
+           (let ((%buffer (gp:cleanup-register (xtree::%xmlOutputBufferCreateIO (xtree::%stream-writer-callback stream)
+                                                                                (null-pointer)
+                                                                                (null-pointer)
+                                                                                (xtree::%xmlFindCharEncodingHandler %encoding))
+                                               #'xtree::%xmlOutputBufferClose)))
+             (%htmlNodeDumpOutput %buffer
+                                  (pointer (document node))
+                                  (pointer node)
+                                  %encoding))))))))
