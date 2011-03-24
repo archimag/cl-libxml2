@@ -167,6 +167,26 @@ NOTE: this will not change the document content encoding, just the META flag ass
           (progn ,@body)
        (if ,var (release ,var)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; parse-document-fragment
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defgeneric parse-html-fragment (html)
+  (:documentation "Parse HTML to document fragment"))
+
+(defmethod parse-html-fragment ((html string))
+  (with-parse-html (doc (format nil "<div>~A</div>" html))
+    (let ((top (first-child (first-child (root doc))))
+          (fragment (make-document-fragment)))
+      (iter (for node in (all-childs top))
+            (append-child fragment (detach node)))
+      fragment)))
+
+(defmacro with-parse-html-fragment ((var src) &rest body)
+  `(let ((,var (parse-html-fragment ,src)))
+     (unwind-protect
+          (progn ,@body)
+       (when ,var (release ,var)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; serialize-html
