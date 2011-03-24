@@ -183,10 +183,8 @@ NOTE: this will not change the document content encoding, just the META flag ass
       fragment)))
 
 (defmacro with-parse-html-fragment ((var src) &rest body)
-  `(let ((,var (parse-html-fragment ,src)))
-     (unwind-protect
-          (progn ,@body)
-       (when ,var (release ,var)))))
+  `(with-object (,var (parse-html-fragment ,src))
+     ,@body))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; serialize-html
