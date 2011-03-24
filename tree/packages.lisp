@@ -34,6 +34,7 @@
            #:make-child-text
            #:make-comment
            #:make-process-instruction
+           #:make-document-fragment
            #:make-ns
            #:copy
 
@@ -42,6 +43,7 @@
            #:text-p
            #:comment-p
            #:process-instruction-p
+           #:document-fragment-p
    
            #:parse
            #:parse-options
@@ -76,6 +78,7 @@
            #:text-content
            #:first-child
            #:last-child
+           #:all-childs
            #:next-sibling
            #:prev-sibling
            #:local-name

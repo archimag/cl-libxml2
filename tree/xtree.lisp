@@ -44,7 +44,7 @@
   (:xml-comment-node 8)
   (:xml-document-node 9)
   (:xml-document-type-node  10)
-  (:xml-document-frag-node  11)
+  (:xml-document-fragment-node  11)
   (:xml-notation-node 12)
   (:xml-html-document-node  13)
   (:xml-dtd-node 14)

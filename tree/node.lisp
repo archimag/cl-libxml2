@@ -152,7 +152,7 @@
   (make-instance 'node
                  :pointer (with-foreign-string (%data data)
                             (%xmlNewComment %data))))
-
+  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; make-process-instruction
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -171,7 +171,18 @@
                                           %name
                                           %content))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; make-document-fragment
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(define-libxml2-function ("xmlNewDocFragment" %xmlNewDocFragment) %xmlNodePtr
+  (doc %xmlDocPtr))
+
+(defun make-document-fragment (&optional document)
+  (make-instance 'node
+                 :pointer (%xmlNewDocFragment (if document
+                                                  (pointer document)
+                                                  (null-pointer)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; predicates
@@ -190,6 +201,7 @@
 (def-node-p text-p :xml-element-text)
 (def-node-p comment-p :xml-comment-node)
 (def-node-p process-instruction-p :xml-pi-node)
+(def-node-p document-fragment-p :xml-document-fragment-node)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -389,6 +401,11 @@
      (while ,var))))
 
 
+;;;; all-childs
+
+(defun all-childs (node)
+  (iter (for item in-child-nodes  node)
+        (collect item)))
 
 
 (defun pointer-to-node (ptr)
