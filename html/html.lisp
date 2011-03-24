@@ -274,3 +274,7 @@ NOTE: this will not change the document content encoding, just the META flag ass
                                   (pointer (document node))
                                   (pointer node)
                                   %encoding))))))))
+
+(defmethod serialize-html ((node node) (target (eql :to-string)) &key)
+  (with-output-to-string (out)
+    (serialize-html node out)))
