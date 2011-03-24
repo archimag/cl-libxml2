@@ -38,6 +38,7 @@
            #:make-ns
            #:copy
 
+           #:real-node-p
            #:element-p
            #:attribute-p
            #:text-p
@@ -79,6 +80,7 @@
            #:first-child
            #:last-child
            #:all-childs
+           #:all-attribute-nodes
            #:next-sibling
            #:prev-sibling
            #:local-name

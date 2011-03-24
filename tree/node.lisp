@@ -58,6 +58,13 @@
   (%xmlFreeNode (pointer node)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; real-node-p
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun real-node-p (node)
+  (if (pointer node) t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; copy
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -406,6 +413,14 @@
 (defun all-childs (node)
   (iter (for item in-child-nodes  node)
         (collect item)))
+
+;;; element-attributes
+
+(defun all-attribute-nodes (element)
+  (unless (eql (node-type element) :xml-element-node)
+    (error "~A is not :xml-element-node" (node-type element)))
+  (iter (for attr in-next-siblings-from (wrapper-slot-node element '%properties))
+        (collect attr)))
 
 
 (defun pointer-to-node (ptr)
