@@ -142,12 +142,16 @@
 
 (defvar *last-error* nil)
 
-(define-condition libxml2-error (error)
-  ((errors :initarg :errors :reader getxmlerrors)
-   (saved-result :initarg :call-result :reader saved-result)))
+(define-condition libxml2-condition (condition)
+  ((errors :initarg :errors :reader getxmlerrors)))
 
-(defmethod print-object ((err libxml2-error) stream)
+(defmethod print-object ((err libxml2-condition) stream)
   (format stream "~{~A~^~%~})" (getxmlerrors err)))
+
+(define-condition libxml2-error (libxml2-condition error) ())
+
+(define-condition libxml2-warning (libxml2-condition warning) ())
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; defin-libxml2-function
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -165,8 +169,7 @@
            (if *libxml2-errors*
                (if (position :xml-err-fatal *libxml2-errors* :key #'error-level)
                    (error 'libxml2-error :errors (nreverse *libxml2-errors*))
-                   ;;(warn "~{~A~^~%~})" *libxml2-errors*)
-                   (warn "~{~A~^~%~})" *libxml2-errors*)))
+                   (warn 'libxml2-warning :errors (nreverse *libxml2-errors*))))
            result))))))
 
 

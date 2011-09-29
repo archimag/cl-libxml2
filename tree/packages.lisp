@@ -105,6 +105,7 @@
            #:last-error
            #:reset-error
            #:libxml2-error
+           #:libxml2-warning
            #:init-error-handling
            #:reset
            #:with-simple-reset))
