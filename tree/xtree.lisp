@@ -12,6 +12,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-foreign-library libxml2
+  (:darwin "libxml2.dynlib")
   (:unix (:or "libxml2.so" "libxml2.so.2"))
   (t (:default "libxml2")))
 
