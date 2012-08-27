@@ -70,7 +70,7 @@
 ;;; with-xpath-object
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro with-xpath-object ((res (obj expr &optional (ns-map '*default-ns-map*))) &rest body)
+(defmacro with-xpath-object ((res (obj expr &optional (ns-map '*default-ns-map*))) &body body)
   `(let ((,res (eval-expression ,obj ,expr :ns-map ,ns-map)))
      (unwind-protect
           (progn ,@body)

@@ -35,7 +35,7 @@
 
 ;;; with-compiled-expression
 
-(defmacro with-compiled-expression ((var expr) &rest body)
+(defmacro with-compiled-expression ((var expr) &body body)
   `(with-libxml2-object (,var (compile-expression ,expr)) ,@body))
      
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
