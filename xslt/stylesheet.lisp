@@ -92,7 +92,7 @@
 ;;; with-stylesheet
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro with-stylesheet ((style obj) &rest body)
+(defmacro with-stylesheet ((style obj) &body body)
   `(let ((,style (parse-stylesheet ,obj)))
      (unwind-protect
           (progn ,@body)
@@ -172,7 +172,7 @@
 ;;; with-tranform-result
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro with-transform-result ((res (style doc)) &rest body)
+(defmacro with-transform-result ((res (style doc)) &body body)
   `(let ((,res (transform ,style ,doc)))
      (unwind-protect
           (progn ,@body)

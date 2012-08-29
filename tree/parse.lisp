@@ -166,7 +166,7 @@
 ;; with-parse-document
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro with-parse-document ((var src &rest options) &rest body)
+(defmacro with-parse-document ((var src &rest options) &body body)
   `(let ((,var (parse ,src ,@options)))
      (unwind-protect
           (progn ,@body)
