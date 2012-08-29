@@ -195,7 +195,7 @@
 ;; with-fake-document
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro with-fake-document ((var root) &rest body)
+(defmacro with-fake-document ((var root) &body body)
   `(let ((,var (make-instance 'document
                               :pointer (%xmlNewDoc (null-pointer)))))
      (unwind-protect

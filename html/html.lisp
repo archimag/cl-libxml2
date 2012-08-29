@@ -161,7 +161,7 @@ NOTE: this will not change the document content encoding, just the META flag ass
 ;;; with-parse-html
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro with-parse-html ((var src &rest keys &key &allow-other-keys) &rest body)
+(defmacro with-parse-html ((var src &rest keys &key &allow-other-keys) &body body)
   `(let ((,var (parse-html ,src ,@keys)))
      (unwind-protect
           (progn ,@body)
@@ -182,7 +182,7 @@ NOTE: this will not change the document content encoding, just the META flag ass
             (append-child fragment (detach node)))
       fragment)))
 
-(defmacro with-parse-html-fragment ((var src) &rest body)
+(defmacro with-parse-html-fragment ((var src) &body body)
   `(with-object (,var (parse-html-fragment ,src))
      ,@body))
 
