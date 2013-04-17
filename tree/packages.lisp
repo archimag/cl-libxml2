@@ -21,7 +21,7 @@
            #:define-libxml2-function))
 
 (defpackage #:libxml2.tree
-  (:use #:cl #:iter #:cffi #:libxml2.private #:metabang.bind)
+  (:use #:cl #:iter #:cffi #:libxml2.private #:metabang.bind #:garbage-pools)
   (:nicknames #:xtree)
   (:export #:node
            #:document

@@ -6,7 +6,7 @@
 ;;; Author: Moskvitin Andrey <archimag@gmail.com>
 
 (defpackage #:libxml2.xslt
-  (:use #:cl #:cffi #:libxml2.private #:libxml2.tree #:iter)
+  (:use #:cl #:cffi #:libxml2.private #:libxml2.tree #:iter #:garbage-pools)
   (:nicknames #:xslt)
   (:export #:stylesheet
            #:parse-stylesheet

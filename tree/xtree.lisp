@@ -109,7 +109,7 @@
       (if obj (release/impl obj)))
   (setf (slot-value obj 'pointer) nil))
 
-(gp:defcleanup libxml2-cffi-object-wrapper #'release)
+(defcleanup libxml2-cffi-object-wrapper #'release)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

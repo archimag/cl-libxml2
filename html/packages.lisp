@@ -6,7 +6,7 @@
 ;;; Author: Moskvitin Andrey <archimag@gmail.com>
 
 (defpackage #:libxml2.html
-  (:use #:cl #:cffi #:libxml2.private #:libxml2.tree #:iter)
+  (:use #:cl #:cffi #:libxml2.private #:libxml2.tree #:iter #:garbage-pools)
   (:nicknames #:html)
   (:export #:html-p
            #:parse-html

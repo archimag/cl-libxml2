@@ -157,13 +157,13 @@
 
 
 (defun register-xpath-extensions (ctxt function-traits)
-  (gp:with-garbage-pool ()
+  (with-garbage-pool ()
     (iter (for (func name ns) in function-traits)
           (%xsltRegisterExtFunction ctxt
-                                    (gp:cleanup-register (foreign-string-alloc (eval name))
+                                    (cleanup-register (foreign-string-alloc (eval name))
                                                          #'foreign-string-free)
                                     (if ns
-                                        (gp:cleanup-register (foreign-string-alloc (eval ns))
+                                        (cleanup-register (foreign-string-alloc (eval ns))
                                                              #'foreign-string-free)
                                         (null-pointer))
                                     (get-callback func)))))
@@ -189,14 +189,14 @@
        ,@body)))
 
 (defun register-xslt-elements (ctxt element-traits)
-  (gp:with-garbage-pool ()
+  (with-garbage-pool ()
     (iter (for (func name ns) in element-traits)
           (%xsltRegisterExtElement ctxt
-                                    (gp:cleanup-register (foreign-string-alloc (eval name))
-                                                         #'foreign-string-free)
+                                    (cleanup-register (foreign-string-alloc (eval name))
+                                                      #'foreign-string-free)
                                     (if ns
-                                        (gp:cleanup-register (foreign-string-alloc (eval ns))
-                                                             #'foreign-string-free)
+                                        (cleanup-register (foreign-string-alloc (eval ns))
+                                                          #'foreign-string-free)
                                         (null-pointer))
                                     (get-callback func)))))
 

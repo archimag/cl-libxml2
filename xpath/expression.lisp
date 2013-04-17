@@ -139,5 +139,5 @@
   (node %xmlNodePtr))
 
 (defun getpath (node)
-  (gp:with-garbage-pool ()
-    (cffi:foreign-string-to-lisp (gp:cleanup-register (%xmlGetNodePath (pointer node)) 'libxml2.tree::%xmlFree))))
+  (with-garbage-pool ()
+    (cffi:foreign-string-to-lisp (cleanup-register (%xmlGetNodePath (pointer node)) 'libxml2.tree::%xmlFree))))

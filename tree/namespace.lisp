@@ -38,11 +38,11 @@
   (prefix %xmlCharPtr))
 
 (defun search-ns-by-prefix (element prefix)
-  (gp:with-garbage-pool ()
+  (with-garbage-pool ()
     (let ((%ns (%xmlSearchNs (pointer (document element))
                              (pointer element)
                              (if prefix
-                                 (gp:cleanup-register (foreign-string-alloc prefix) #'foreign-string-free)
+                                 (cleanup-register (foreign-string-alloc prefix) #'foreign-string-free)
                                  (null-pointer)))))
       (unless (null-pointer-p %ns)
         (make-instance 'ns :pointer %ns)))))
@@ -54,11 +54,11 @@
   (href %xmlCharPtr))
 
 (defun search-ns-by-href (element href)
-  (gp:with-garbage-pool ()
+  (with-garbage-pool ()
     (let ((%ns (%xmlSearchNsByHref (pointer (document element))
                                    (pointer element)
                                    (if href
-                                       (gp:cleanup-register (foreign-string-alloc href) #'foreign-string-free)
+                                       (cleanup-register (foreign-string-alloc href) #'foreign-string-free)
                                        (null-pointer)))))
       (unless (null-pointer-p %ns)
         (make-instance 'ns :pointer %ns)))))

@@ -72,7 +72,7 @@
   (ctxt %xmlXPathContextPtr))
 
 (defun value-pop (&optional (ctxt *parser-context*))
-  (xpath-object-value (gp:object-register (make-instance 'xpath-object
+  (xpath-object-value (object-register (make-instance 'xpath-object
                                                          :pointer (%valuePop ctxt)))))
 
 ;;; define-xpath-function
@@ -84,12 +84,12 @@
         (ignore-nargs (unless args '(declare (ignore %nargs)))))
   `(defcallback ,name :void ((%ctxt %xmlXPathParserContextPtr) (%nargs :int))
      ,ignore-nargs
-     (gp:with-garbage-pool ()
-         (bind ,bindings
-           (value-push (let ((*parser-context* (make-instance 'xpath-parser-context
-                                                              :pointer %ctxt)))
-                         ,@body)
-                       %ctxt))))))
+     (with-garbage-pool ()
+       (bind ,bindings
+             (value-push (let ((*parser-context* (make-instance 'xpath-parser-context
+                                                                :pointer %ctxt)))
+                           ,@body)
+                         %ctxt))))))
 
 
 

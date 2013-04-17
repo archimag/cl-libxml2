@@ -46,7 +46,7 @@
 (defmacro with-custom-resolvers ((&rest resolvers) &body body)
   `(let ((*resolvers* (list ,@resolvers))
          (*stream-for-xml-parse*))     
-     (gp:with-garbage-pool () ,@body)))
+     (with-garbage-pool () ,@body)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; resolve-file/url
@@ -71,7 +71,7 @@
 
 (defun resolve-string (str %ctxt)
   (%xmlNewStringInputStream %ctxt
-                            (gp:cleanup-register (foreign-string-alloc str) #'foreign-string-free)))
+                            (cleanup-register (foreign-string-alloc str) #'foreign-string-free)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; resolve-stream

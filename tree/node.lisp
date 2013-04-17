@@ -97,11 +97,11 @@
         (setf (foreign-slot-value %node
                                   '%xmlNode
                                   '%ns)
-              (gp:with-garbage-pool ()
+              (with-garbage-pool ()
                 (%xmlNewNs %node
-                           (gp:cleanup-register (foreign-string-alloc href) #'foreign-string-free)
+                           (cleanup-register (foreign-string-alloc href) #'foreign-string-free)
                            (if prefix
-                               (gp:cleanup-register (foreign-string-alloc prefix)  #'foreign-string-free)
+                               (cleanup-register (foreign-string-alloc prefix)  #'foreign-string-free)
                                (null-pointer))))))
     (make-instance 'node
                    :pointer %node)))

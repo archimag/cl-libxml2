@@ -81,11 +81,11 @@
 ;;; parse-stylesheet (obj)
 
 (defmethod parse-stylesheet/impl (obj)
-  (gp:with-garbage-pool ()
-    (let* ((doc (gp:object-register (parse obj)))
+  (with-garbage-pool ()
+    (let* ((doc (object-register (parse obj)))
            (%style (parse-stylesheet/impl (parse obj))))
       (unless (null-pointer-p %style)
-        (progn (gp:cancel-object-cleanup doc)
+        (progn (cancel-object-cleanup doc)
                %style)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -114,16 +114,16 @@
 (defun prepare-xsl-params (params)
   (if params
       (let* ((array-length (1+ (* 2 (hash-table-count params))))
-             (%array (gp:cleanup-register (foreign-alloc :pointer
+             (%array (cleanup-register (foreign-alloc :pointer
                                                          :count array-length
                                                          :initial-element (null-pointer))
                                           #'foreign-free)))
         (iter (for (name value) in-hashtable params)
               (for i upfrom 0 by 2)
               (setf (mem-aref %array :pointer i)
-                    (gp:cleanup-register (foreign-string-alloc name) #'foreign-string-free))
+                    (cleanup-register (foreign-string-alloc name) #'foreign-string-free))
               (setf (mem-aref %array :pointer (1+ i))
-                    (gp:cleanup-register (foreign-string-alloc value) #'foreign-string-free)))
+                    (cleanup-register (foreign-string-alloc value) #'foreign-string-free)))
         %array)
       (null-pointer)))
     
@@ -141,7 +141,7 @@
 ;;; transform (style (doc document))
 
 (defmethod transform (style (doc document))
-  (gp:with-garbage-pool ()  
+  (with-garbage-pool ()  
     (with-transform-context (%ctxt (style doc))
       (libxml2.tree::make-libxml2-cffi-object-wrapper/impl (%xsltApplyStylesheetUser (pointer style)
                                                                                      (pointer doc)

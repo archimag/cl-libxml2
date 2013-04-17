@@ -27,9 +27,9 @@ Returns: a new document
 "
   (flet ((toforeign (str)
            (if str
-               (gp:cleanup-register (foreign-string-alloc str) #'foreign-string-free)
+               (cleanup-register (foreign-string-alloc str) #'foreign-string-free)
                (null-pointer))))
-    (gp:with-garbage-pool ()
+    (with-garbage-pool ()
       (make-instance 'document
                      :pointer (%htmlNewDocNoDtD (toforeign uri)
                                                 (toforeign external-id))))))
@@ -105,12 +105,12 @@ NOTE: this will not change the document content encoding, just the META flag ass
   (options :int))
 
 (defmethod parse-html ((path pathname) &key encoding)
-  (gp:with-garbage-pool ()
-    (let ((%path (gp:cleanup-register (cffi:foreign-string-alloc (format nil "~A" path))
-                                      #'cffi:foreign-string-free))
+  (with-garbage-pool ()
+    (let ((%path (cleanup-register (cffi:foreign-string-alloc (format nil "~A" path))
+                                   #'cffi:foreign-string-free))
           (%encoding (if encoding
-                         (gp:cleanup-register (cffi:foreign-string-alloc encoding)
-                                              #'cffi:foreign-string-free)
+                         (cleanup-register (cffi:foreign-string-alloc encoding)
+                                           #'cffi:foreign-string-free)
                          (cffi:null-pointer))))
       (%htmlReadFile %path
                      %encoding
@@ -119,12 +119,12 @@ NOTE: this will not change the document content encoding, just the META flag ass
 ;;; parse-html ((uri puri:uri))
 
 (defmethod parse-html ((uri puri:uri) &key encoding)
-  (gp:with-garbage-pool ()
-    (let ((%path (gp:cleanup-register (cffi:foreign-string-alloc (format nil "~A" uri))
-                                      #'cffi:foreign-string-free))
+  (with-garbage-pool ()
+    (let ((%path (cleanup-register (cffi:foreign-string-alloc (format nil "~A" uri))
+                                   #'cffi:foreign-string-free))
           (%encoding (if encoding
-                         (gp:cleanup-register (cffi:foreign-string-alloc encoding)
-                                              #'cffi:foreign-string-free)
+                         (cleanup-register (cffi:foreign-string-alloc encoding)
+                                           #'cffi:foreign-string-free)
                          (cffi:null-pointer))))
       (%htmlReadFile %path
                      %encoding
@@ -264,8 +264,8 @@ NOTE: this will not change the document content encoding, just the META flag ass
     (otherwise
      (with-foreign-string (%encoding "utf-8")
        (let ((xtree::*stream-for-xml-serialize* stream))
-         (gp:with-garbage-pool ()
-           (let ((%buffer (gp:cleanup-register (xtree::%xmlOutputBufferCreateIO (xtree::%stream-writer-callback stream)
+         (with-garbage-pool ()
+           (let ((%buffer (cleanup-register (xtree::%xmlOutputBufferCreateIO (xtree::%stream-writer-callback stream)
                                                                                 (null-pointer)
                                                                                 (null-pointer)
                                                                                 (xtree::%xmlFindCharEncodingHandler %encoding))

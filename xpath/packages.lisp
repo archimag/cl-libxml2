@@ -6,7 +6,7 @@
 ;;; Author: Moskvitin Andrey <archimag@gmail.com>
 
 (defpackage #:libxml2.xpath
-  (:use #:cl #:cffi #:iter #:libxml2.private #:libxml2.tree #+sbcl #:sb-ext #:metabang.bind)
+  (:use #:cl #:cffi #:iter #:libxml2.private #:libxml2.tree #+sbcl #:sb-ext #:metabang.bind #:garbage-pools)
   (:nicknames #:xpath)
   (:export #:compiled-expression
            #:compile-expression

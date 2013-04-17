@@ -124,21 +124,21 @@
 (defvar *private-xpath-context*)
 
 (defmacro with-%context ((var doc node ns-map) &rest body)
-  `(gp:with-garbage-pool (xpath-context-pool)
+  `(with-garbage-pool (xpath-context-pool)
      (let ((,var (if (boundp '*private-xpath-context*) *private-xpath-context*
-                     (gp:cleanup-register (%xmlXPathNewContext (pointer ,doc))
-                                          #'%xmlXPathFreeContext
-                                          xpath-context-pool))))
+                     (cleanup-register (%xmlXPathNewContext (pointer ,doc))
+                                       #'%xmlXPathFreeContext
+                                       xpath-context-pool))))
        #+sbcl(declare (sb-ext:muffle-conditions sb-ext:code-deletion-note))
        (if (boundp 'libxml2.xpath::*lisp-xpath-functions*)
-           (gp:with-garbage-pool ()
+           (with-garbage-pool ()
              (iter (for (func name ns) in *lisp-xpath-functions*)
                    (%xmlXPathRegisterFuncNS ,var
-                                            (gp:cleanup-register (foreign-string-alloc (eval name))
-                                                                 #'foreign-string-free)
+                                            (cleanup-register (foreign-string-alloc (eval name))
+                                                              #'foreign-string-free)
                                             (if ns
-                                                (gp:cleanup-register (foreign-string-alloc (eval ns))
-                                                                     #'foreign-string-free)
+                                                (cleanup-register (foreign-string-alloc (eval ns))
+                                                                  #'foreign-string-free)
                                                 (null-pointer))
                                             (get-callback func)))))
        (if ,node
