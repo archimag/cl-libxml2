@@ -123,7 +123,7 @@
 
 (defvar *private-xpath-context*)
 
-(defmacro with-%context ((var doc node ns-map) &rest body)
+(defmacro with-%context ((var doc node ns-map) &body body)
   `(with-garbage-pool (xpath-context-pool)
      (let ((,var (if (boundp '*private-xpath-context*) *private-xpath-context*
                      (cleanup-register (%xmlXPathNewContext (pointer ,doc))

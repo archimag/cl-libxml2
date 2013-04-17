@@ -116,13 +116,13 @@
 ;; with-libxml2-object
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro with-libxml2-object ((var value) &rest body)
+(defmacro with-libxml2-object ((var value) &body body)
   `(let ((,var ,value))
      (unwind-protect 
           (progn ,@body)
        (if ,var (release ,var)))))
 
-(defmacro with-object ((var value) &rest body)
+(defmacro with-object ((var value) &body body)
   `(with-libxml2-object (,var ,value) ,@body))
 
 
