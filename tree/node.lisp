@@ -95,7 +95,7 @@
                               %name))))
     (if href
         (setf (foreign-slot-value %node
-                                  '%xmlNode
+                                  '(:struct %xmlNode)
                                   '%ns)
               (with-garbage-pool ()
                 (%xmlNewNs %node
@@ -513,7 +513,7 @@
 (defmethod namespace-uri ((node node))
    (let ((%ns (wrapper-slot-value node '%ns)))
      (unless (null-pointer-p %ns)
-       (cffi:foreign-string-to-lisp (cffi:foreign-slot-value %ns '%xmlNs '%href)))))
+       (cffi:foreign-string-to-lisp (cffi:foreign-slot-value %ns '(:struct %xmlNs) '%href)))))
 
 ;;; namespace-prefix
 

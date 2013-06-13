@@ -184,8 +184,8 @@
      (let ((,style-node (make-instance 'node :pointer %inst))
            (,input-node (make-instance 'node :pointer %node))
            (,output-parent (make-instance 'node
-                                          :pointer (foreign-slot-value %ctxt '%xsltTransformContext '%insert)))
-           (xpath::*private-xpath-context* (foreign-slot-value %ctxt '%xsltTransformContext '%xpathCtxt)))
+                                          :pointer (foreign-slot-value %ctxt '(:struct %xsltTransformContext) '%insert)))
+           (xpath::*private-xpath-context* (foreign-slot-value %ctxt '(:struct %xsltTransformContext) '%xpathCtxt)))
        ,@body)))
 
 (defun register-xslt-elements (ctxt element-traits)

@@ -27,7 +27,7 @@
 
 (defun node-set-length (nodeset)
   (foreign-slot-value (pointer nodeset)
-                      '%xmlNodeSet
+                      '(:struct %xmlNodeSet)
                       '%nodeNr))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

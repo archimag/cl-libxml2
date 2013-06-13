@@ -200,11 +200,11 @@
                               :pointer (%xmlNewDoc (null-pointer)))))
      (unwind-protect
           (progn
-            (setf (foreign-slot-value (pointer ,var) '%xmlDoc '%children) (pointer ,root))
-            (setf (foreign-slot-value (pointer ,var) '%xmlDoc '%last) (pointer ,root))
+            (setf (foreign-slot-value (pointer ,var) '(:struct %xmlDoc) '%children) (pointer ,root))
+            (setf (foreign-slot-value (pointer ,var) '(:struct %xmlDoc) '%last) (pointer ,root))
             ,@body)
        (progn
-         (setf (foreign-slot-value (pointer ,var) '%xmlDoc '%children) (null-pointer))
-         (setf (foreign-slot-value (pointer ,var) '%xmlDoc '%last) (null-pointer))
+         (setf (foreign-slot-value (pointer ,var) '(:struct %xmlDoc) '%children) (null-pointer))
+         (setf (foreign-slot-value (pointer ,var) '(:struct %xmlDoc) '%last) (null-pointer))
          (release ,var)))))
      

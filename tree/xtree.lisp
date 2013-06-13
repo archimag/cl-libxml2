@@ -86,9 +86,9 @@
   `(progn
      (defclass ,wrapper-name (libxml2-cffi-object-wrapper) ())
      (defmethod wrapper-slot-value ((obj ,wrapper-name) slot)
-       (cffi:foreign-slot-value (pointer obj) (quote ,cffi-type) slot))
+       (cffi:foreign-slot-value (pointer obj) '(:struct ,cffi-type) slot))
      (defmethod (setf wrapper-slot-value) (value (obj ,wrapper-name) slot)
-       (setf (cffi:foreign-slot-value (pointer obj) (quote ,cffi-type) slot) value))))
+       (setf (cffi:foreign-slot-value (pointer obj) '(:struct ,cffi-type) slot) value))))
 
 (defun make-libxml2-cffi-object-wrapper/impl (%ptr wrapper-type)
   (unless (null-pointer-p %ptr)

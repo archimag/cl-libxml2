@@ -78,9 +78,9 @@
 
 (defun make-xmlerror (err)
   (make-instance 'xmlerror
-                 :message (string-right-trim '(#\Newline) (foreign-string-to-lisp (foreign-slot-value err '%xmlError '%message)))
-                 :domain (foreign-slot-value err '%xmlError '%domain)
-                 :level (foreign-slot-value err '%xmlError '%level)))
+                 :message (string-right-trim '(#\Newline) (foreign-string-to-lisp (foreign-slot-value err '(:struct %xmlError) '%message)))
+                 :domain (foreign-slot-value err '(:struct %xmlError) '%domain)
+                 :level (foreign-slot-value err '(:struct %xmlError) '%level)))
 
 (defmethod print-object ((err xmlerror) stream)
   (format stream

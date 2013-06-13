@@ -86,7 +86,7 @@
   ;; xmlStructuredErrorFunc	error	: the callback in case of errors
   (%error	%xmlStructuredErrorFunc)
   ;; xmlError	lastError	: the last error
-  (%lastError	xtree::%xmlError)
+  (%lastError	(:struct xtree::%xmlError))
   ;; xmlNodePtr	debugNode	: the source node XSLT dictionary
   (%debugNode	%xmlNodePtr)
   ;; xmlDictPtr	dict	: dictionary if any
@@ -143,7 +143,7 @@
                                             (get-callback func)))))
        (if ,node
            (setf (foreign-slot-value %ctxt
-                                     '%xmlXPathContext
+                                     '(:struct %xmlXPathContext)
                                      '%node)
                  (pointer ,node)))
        (if ,ns-map
