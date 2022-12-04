@@ -3,19 +3,21 @@
 #
 # Author: Moskvitin Andrey <archimag@gmail.com>,  Stelian Ionescu <stelian.ionescu-zeus@poste.it>
 
-CC = gcc
-PREFIX = /usr
+CC ?= gcc
+PREFIX ?= /usr
 
-INSTALL = install
-INSOPTS = -s -m 755 -o 0 -g 0
+INSTALL ?= install
+INSOPTS ?= -s -m 755 -o 0 -g 0
+LIBNAME ?= cllibxml2.so
 
-all: cllibxml2.so
+all: $(LIBNAME)
 
-cllibxml2.so: cllibxml2.c
+$(LIBNAME): cllibxml2.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -fPIC $< -o $@
 
 clean:
-	rm -f cllibxml2.so
+	rm -f $(LIBNAME)
 
 install: all
-	 $(INSTALL) $(INSOPTS) cllibxml2.so $(PREFIX)/lib
+	 mkdir -p "$(PREFIX)/lib"
+	 $(INSTALL) $(INSOPTS) $(LIBNAME) $(PREFIX)/lib

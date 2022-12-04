@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 typedef void (*lisp_level_error_func) (const char *string);
 

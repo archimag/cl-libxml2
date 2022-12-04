@@ -10,14 +10,17 @@
 ;;; Define and load libxslt
 
 (define-foreign-library libxslt
+  (:darwin "libxslt.dylib")
   (:unix (:or "libxslt.so" "libxslt.so.1"))
   (t (:default "libxslt")))
 
 (define-foreign-library libexslt
+  (:darwin "libexslt.dylib")
   (:unix (:or "libexslt.so" "libexslt.so.0"))
   (t (:default "libexslt")))
 
 (define-foreign-library cllibxml2
+  (:darwin "cllibxml2.dylib")
   (:unix (:or "cllibxml2.so"))
   (t (:default "cllibxml2")))
 
